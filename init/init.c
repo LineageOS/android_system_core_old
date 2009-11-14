@@ -82,6 +82,8 @@ static time_t process_needs_restart;
 
 static const char *ENV[32];
 
+static unsigned emmc_boot = 0;
+
 /* add_environment - add "key=value" to the current environment */
 int add_environment(const char *key, const char *val)
 {
@@ -585,6 +587,10 @@ static void import_kernel_nv(char *name, int in_qemu)
             strlcpy(bootloader, value, sizeof(bootloader));
         } else if (!strcmp(name,"androidboot.hardware")) {
             strlcpy(hardware, value, sizeof(hardware));
+        } else if (!strcmp(name,"androidboot.emmc")) {
+            if (!strcmp(value,"true")) {
+                emmc_boot = 1;
+            }
         } else {
             qemu_cmdline(name, value);
         }
@@ -869,6 +875,14 @@ int main(int argc, char **argv)
     INFO("device init\n");
     device_fd = device_init();
 
+    if (emmc_boot){
+        action_for_each_trigger("emmc", action_add_queue_tail);
+        drain_action_queue();
+    }else{
+        action_for_each_trigger("nand", action_add_queue_tail);
+        drain_action_queue();
+    }
+
     property_init();
     
     // only listen for keychords if ro.debuggable is true
@@ -927,6 +941,7 @@ int main(int argc, char **argv)
     property_set("ro.hardware", hardware);
     snprintf(tmp, PROP_VALUE_MAX, "%d", revision);
     property_set("ro.revision", tmp);
+    property_set("ro.emmc",emmc_boot ? "1" : "0");
 
         /* execute all the boot actions to get us started */
     action_for_each_trigger("init", action_add_queue_tail);
