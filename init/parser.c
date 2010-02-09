@@ -140,6 +140,7 @@ int lookup_keyword(const char *s)
         if (!strcmp(s, "ritical")) return K_critical;
         break;
     case 'd':
+        if (!strcmp(s, "evwait")) return K_devwait;
         if (!strcmp(s, "isabled")) return K_disabled;
         if (!strcmp(s, "omainname")) return K_domainname;
         if (!strcmp(s, "evice")) return K_device;
@@ -794,6 +795,13 @@ static void parse_line_action(struct parse_state* state, int nargs, char **args)
             n > 2 ? "arguments" : "argument");
         return;
     }
+
+    if (kw == K_devwait)
+        if (!strncmp(act->name, "early-init", 10)) {
+            parse_error(state, "%s in early-init prohibited\n", args[0]);
+            return;
+        }
+
     cmd = malloc(sizeof(*cmd) + sizeof(char*) * nargs);
     cmd->func = kw_func(kw);
     cmd->nargs = nargs;

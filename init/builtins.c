@@ -30,6 +30,7 @@
 #include <sys/mount.h>
 #include <sys/resource.h>
 #include <linux/loop.h>
+#include <poll.h>
 
 #include "init.h"
 #include "keywords.h"
@@ -595,4 +596,51 @@ int do_device(int nargs, char **args) {
     add_devperms_partners(source, get_mode(args[2]), decode_uid(args[3]),
                           decode_uid(args[4]), prefix);
     return 0;
+}
+
+int do_devwait(int nargs, char **args) {
+
+    int dev_fd, uevent_fd, rc, timeout = DEVWAIT_TIMEOUT;
+    struct pollfd ufds[1];
+
+    uevent_fd = open_uevent_socket();
+
+    ufds[0].fd = uevent_fd;
+    ufds[0].events = POLLIN;
+
+    for(;;) {
+
+        dev_fd = open(args[1], O_RDONLY);
+	if (dev_fd < 0)
+	    if (errno != ENOENT) {
+                ERROR("%s: open failed with error %d\n", __func__, errno);
+                rc = -errno;
+		break;
+            }
+	else
+	    return 0;
+
+        ufds[0].revents = 0;
+
+        rc = poll(ufds, 1, DEVWAIT_POLL_TIME);
+        if (rc == 0)
+            continue;
+	else if (rc < 0) {
+	        ERROR("%s: poll request failed for file: %s\n", __func__, args[1]);
+		break;
+	}
+
+	if (timeout > 0)
+		timeout -= DEVWAIT_POLL_TIME;
+	else {
+		ERROR("%s: timed out waiting on file: %s\n", __func__, args[1]);
+		rc = -ETIME;
+		break;
+	}
+
+        if (ufds[0].revents == POLLIN)
+            handle_device_fd(uevent_fd);
+    }
+
+    return rc;
 }

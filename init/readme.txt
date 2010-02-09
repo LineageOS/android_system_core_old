@@ -125,6 +125,9 @@ service-exited-<name>
 Commands
 --------
 
+devwait <name>
+   Stall further initialization until device <name> is created.
+
 exec <path> [ <argument> ]*
    Fork and execute a program (<path>).  This will block until
    the program completes execution.  It is best to avoid exec

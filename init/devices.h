@@ -17,6 +17,10 @@
 #ifndef _INIT_DEVICES_H
 #define _INIT_DEVICES_H
 
+#define DEVWAIT_TIMEOUT 10000 /* 10 seconds */
+#define DEVWAIT_POLL_TIME 50
+
+int open_uevent_socket(void);
 extern void handle_device_fd(int fd);
 extern int device_init(void);
 extern void qemu_init(void);
