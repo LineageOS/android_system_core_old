@@ -820,11 +820,12 @@ static void parse_line_action(struct parse_state* state, int nargs, char **args)
         return;
     }
 
-    if (kw == K_devwait)
+    if (kw == K_devwait) {
         if (!strncmp(act->name, "early-init", 10)) {
             parse_error(state, "%s in early-init prohibited\n", args[0]);
             return;
         }
+    }
 
     cmd = malloc(sizeof(*cmd) + sizeof(char*) * nargs);
     cmd->func = kw_func(kw);

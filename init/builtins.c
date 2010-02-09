@@ -622,33 +622,33 @@ int do_devwait(int nargs, char **args) {
     for(;;) {
 
         dev_fd = open(args[1], O_RDONLY);
-	if (dev_fd < 0) {
-	    if (errno != ENOENT) {
+        if (dev_fd < 0) {
+            if (errno != ENOENT) {
                 ERROR("%s: open failed with error %d\n", __func__, errno);
                 rc = -errno;
-		break;
+                break;
             }
-	} else {
-	    return 0;
-	}
+        } else {
+            return 0;
+        }
 
         ufds[0].revents = 0;
 
         rc = poll(ufds, 1, DEVWAIT_POLL_TIME);
-        if (rc == 0)
-            continue;
-	else if (rc < 0) {
-	        ERROR("%s: poll request failed for file: %s\n", __func__, args[1]);
-		break;
-	}
 
-	if (timeout > 0)
-		timeout -= DEVWAIT_POLL_TIME;
-	else {
-		ERROR("%s: timed out waiting on file: %s\n", __func__, args[1]);
-		rc = -ETIME;
-		break;
-	}
+        if (rc == 0) {
+            if (timeout > 0)
+                timeout -= DEVWAIT_POLL_TIME;
+            else {
+                ERROR("%s: timed out waiting on file: %s\n", __func__, args[1]);
+                rc = -ETIME;
+                break;
+            }
+            continue;
+        } else if (rc < 0) {
+            ERROR("%s: poll request failed for file: %s\n", __func__, args[1]);
+            break;
+        }
 
         if (ufds[0].revents == POLLIN)
             handle_device_fd(uevent_fd);
