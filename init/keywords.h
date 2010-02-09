@@ -28,6 +28,7 @@ int do_chown(int nargs, char **args);
 int do_chmod(int nargs, char **args);
 int do_loglevel(int nargs, char **args);
 int do_device(int nargs, char **args);
+int do_devwait(int nargs, char **args);
 #define __MAKE_KEYWORD_ENUM__
 #define KEYWORD(symbol, flags, nargs, func) K_##symbol,
 enum {
@@ -76,6 +77,7 @@ enum {
     KEYWORD(loglevel,    COMMAND, 1, do_loglevel)
     KEYWORD(device,      COMMAND, 4, do_device)
     KEYWORD(ioprio,      OPTION,  0, 0)
+    KEYWORD(devwait,     COMMAND, 1, do_devwait)
 #ifdef __MAKE_KEYWORD_ENUM__
     KEYWORD_COUNT,
 };
