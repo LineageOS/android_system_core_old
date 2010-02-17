@@ -302,7 +302,6 @@ int       create_jdwp_connection_fd(int  jdwp_pid);
 #endif
 
 #if !ADB_HOST
-void framebuffer_service(int fd, void *cookie);
 void log_service(int fd, void *cookie);
 void remount_service(int fd, void *cookie);
 char * get_log_file_path(const char * log_name);
