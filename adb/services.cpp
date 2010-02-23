@@ -355,8 +355,10 @@ static int create_subproc_raw(const char *cmd, const char *arg0, const char *arg
 
 #if ADB_HOST
 #define SHELL_COMMAND "/bin/sh"
+#define ALTERNATE_SHELL_COMMAND ""
 #else
 #define SHELL_COMMAND "/system/bin/sh"
+#define ALTERNATE_SHELL_COMMAND "/sbin/sh"
 #endif
 
 #if !ADB_HOST
@@ -397,6 +399,9 @@ static int create_subproc_thread(const char *name, const subproc_mode mode)
     int ret_fd;
     pid_t pid = -1;
 
+    const char* shell_command;
+    struct stat st;
+
     const char *arg0, *arg1;
     if (name == 0 || *name == 0) {
         arg0 = "-"; arg1 = 0;
@@ -404,12 +409,19 @@ static int create_subproc_thread(const char *name, const subproc_mode mode)
         arg0 = "-c"; arg1 = name;
     }
 
+    if (stat(ALTERNATE_SHELL_COMMAND, &st) == 0) {
+        shell_command = ALTERNATE_SHELL_COMMAND;
+    }
+    else {
+        shell_command = SHELL_COMMAND;
+    }
+
     switch (mode) {
     case SUBPROC_PTY:
-        ret_fd = create_subproc_pty(SHELL_COMMAND, arg0, arg1, &pid);
+        ret_fd = create_subproc_pty(shell_command, arg0, arg1, &pid);
         break;
     case SUBPROC_RAW:
-        ret_fd = create_subproc_raw(SHELL_COMMAND, arg0, arg1, &pid);
+        ret_fd = create_subproc_raw(shell_command, arg0, arg1, &pid);
         break;
     default:
         fprintf(stderr, "invalid subproc_mode %d\n", mode);
