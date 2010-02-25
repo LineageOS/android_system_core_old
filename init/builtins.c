@@ -611,14 +611,15 @@ int do_devwait(int nargs, char **args) {
     for(;;) {
 
         dev_fd = open(args[1], O_RDONLY);
-	if (dev_fd < 0)
+	if (dev_fd < 0) {
 	    if (errno != ENOENT) {
                 ERROR("%s: open failed with error %d\n", __func__, errno);
                 rc = -errno;
 		break;
             }
-	else
+	} else {
 	    return 0;
+	}
 
         ufds[0].revents = 0;
 
