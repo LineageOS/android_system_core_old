@@ -1,7 +1,7 @@
 
 /* libs/cutils/sched_policy.c
 **
-** Copyright 2007, The Android Open Source Project
+** Copyright 2009, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License"); 
 ** you may not use this file except in compliance with the License. 
@@ -60,6 +60,14 @@ static int add_tid_to_cgroup(int tid, const char *grp_name)
     sprintf(text, "%d", tid);
     if (write(fd, text, strlen(text)) < 0) {
         close(fd);
+        /*
+         * If the thread is in the process of exiting,
+         * don't flag an error
+         */
+        if (errno == ESRCH)
+            return 0;
+        LOGW("add_tid_to_cgroup failed to write '%s' (%s)\n", path,
+             strerror(errno));
         return -1;
     }
 
