@@ -187,6 +187,10 @@ struct atransport
         /* a list of adisconnect callbacks called when the transport is kicked */
     int          kicked;
     adisconnect  disconnects;
+
+#if ADB_HOST
+    int          offline_retry;
+#endif
 };
 
 
@@ -247,6 +251,14 @@ int adb_main(int is_daemon, int server_port);
 void init_transport_registration(void);
 int  list_transports(char *buf, size_t  bufsize);
 void update_transports(void);
+
+#if ADB_HOST
+/* Maximum retries in offline connection */
+#define ADB_OFFLINE_RETRY_MAX  20
+
+/* Re-attempt connection on offline transports */
+void start_stale_transport_scanner(void);
+#endif
 
 asocket*  create_device_tracker(void);
 

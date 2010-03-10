@@ -141,9 +141,13 @@ void put_apacket(apacket *p)
     free(p);
 }
 
-void handle_online(void)
+void handle_online(atransport *t)
 {
     D("adb: online\n");
+#if ADB_HOST
+    t->offline_retry = 0;
+#endif
+>>>>>>> bcb239e... adb: New host background thread to scan for stale connections
 }
 
 void handle_offline(atransport *t)
@@ -151,6 +155,9 @@ void handle_offline(atransport *t)
     D("adb: offline\n");
     //Close the associated usb
     run_transport_disconnects(t);
+#if ADB_HOST
+    t->offline_retry = ADB_OFFLINE_RETRY_MAX;
+#endif
 }
 
 #if TRACE_PACKETS
@@ -325,7 +332,7 @@ void handle_packet(apacket *p, atransport *t)
             handle_offline(t);
         }
         parse_banner((char*) p->data, t);
-        handle_online();
+        handle_online(t);
         if(!HOST) send_connect(t);
         break;
 
@@ -853,6 +860,9 @@ int adb_main(int is_daemon, int server_port)
 
 #if ADB_HOST
     HOST = 1;
+
+    start_stale_transport_scanner();
+
     usb_vendors_init();
     usb_init();
     local_init(DEFAULT_ADB_LOCAL_TRANSPORT_PORT);

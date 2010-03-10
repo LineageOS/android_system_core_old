@@ -588,6 +588,9 @@ static void transport_registration_func(int _fd, unsigned ev, void *data)
     if (t->connection_state != CS_NOPERM) {
         /* initial references are the two threads */
         t->ref_count = 2;
+#if ADB_HOST
+        t->offline_retry = ADB_OFFLINE_RETRY_MAX;
+#endif
 
         if(adb_socketpair(s)) {
             fatal_errno("cannot open transport socketpair");
@@ -646,6 +649,53 @@ void init_transport_registration(void)
 
     fdevent_set(&transport_registration_fde, FDE_READ);
 }
+
+#if ADB_HOST
+static void* stale_transport_scanner(void *ptr)
+{
+    atransport *t;
+    apacket    *p;
+
+    while (1) {
+        adb_mutex_lock(&transport_lock);
+        for (t = transport_list.next; t != &transport_list; t = t->next) {
+            if ((t->connection_state != CS_OFFLINE)
+                ||
+                (t->ref_count != 2)
+                ||
+                (t->offline_retry <= 0)) {
+                /* Transport not stale, gave up, or in shutdown state */
+                continue;
+            }
+
+            /* Transport in offline state */
+            t->offline_retry--;
+
+            /* Retry connection */
+            p = get_apacket();
+            p->msg.command = A_SYNC;
+            p->msg.arg0 = 1;
+            p->msg.arg1 = ++(t->sync_token);
+            p->msg.magic = A_SYNC ^ 0xffffffff;
+            if (write_packet(t->fd, &p))
+                put_apacket(p);
+        }
+        adb_mutex_unlock(&transport_lock);
+
+        adb_sleep_ms(2000);
+    }
+
+    return NULL;
+}
+
+void start_stale_transport_scanner ()
+{
+    adb_thread_t tid;
+    if (adb_thread_create(&tid, stale_transport_scanner, NULL)) {
+        D("Failed to create stale transport scanner\n");
+    }
+}
+#endif
 
 /* the fdevent select pump is single threaded */
 static void register_transport(atransport *transport)
