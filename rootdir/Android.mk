@@ -42,6 +42,7 @@ DIRS := $(addprefix $(TARGET_ROOT_OUT)/, \
 		sys \
 		system \
 		data \
+        sd-ext \
 	) \
 	$(TARGET_OUT_DATA)
 
