@@ -167,6 +167,9 @@ static struct perms_ devperms[] = {
     { "/dev/bus/usb/",      0660,   AID_ROOT,       AID_USB,        1 },
     { "/dev/system_bus_freq", 0660, AID_SYSTEM,       AID_SYSTEM,       0 },
     { "/dev/cpu_dma_latency", 0660, AID_SYSTEM,       AID_SYSTEM,       0 },
+    { "/dev/msm_vidc_reg", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
+    { "/dev/msm_vidc_dec", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
+    { "/dev/msm_vidc_enc", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
     { NULL, 0, 0, 0, 0 },
 };
 
