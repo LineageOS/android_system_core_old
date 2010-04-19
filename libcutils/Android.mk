@@ -102,7 +102,7 @@ LOCAL_MODULE := libcutils
 LOCAL_SRC_FILES := $(commonSources) ashmem-dev.c mq.c
 
 ifeq ($(TARGET_ARCH),arm)
-LOCAL_SRC_FILES += memset32.S atomic-android-armv6.S
+LOCAL_SRC_FILES += memset32.S atomic-android-arm.S
 else  # !arm
 ifeq ($(TARGET_ARCH),sh)
 LOCAL_SRC_FILES += memory.c atomic-android-sh.c
