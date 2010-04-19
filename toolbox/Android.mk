@@ -41,6 +41,7 @@ TOOLS := \
 	top \
 	iftop \
 	id \
+	uptime \
 	vmstat
 
 ifndef TINY_TOOLBOX

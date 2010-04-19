@@ -55,6 +55,8 @@
 #define VENDOR_ID_FOXCONN       0x0489
 // Dell's USB Vendor ID
 #define VENDOR_ID_DELL          0x413c
+// Nvidia's USB Vendor ID
+#define VENDOR_ID_NVIDIA        0x0955
 // Garmin-Asus's USB Vendor ID
 #define VENDOR_ID_GARMIN_ASUS   0x091E
 
@@ -70,6 +72,10 @@ int builtInVendorIds[] = {
     VENDOR_ID_SONY_ERICSSON,
     VENDOR_ID_FOXCONN,
     VENDOR_ID_DELL,
+<<<<<<< HEAD:adb/usb_vendors.c
+=======
+    VENDOR_ID_NVIDIA,
+>>>>>>> 457d81cec12fce6e38c0dcd94d33d06036c2618a:adb/usb_vendors.c
     VENDOR_ID_GARMIN_ASUS,
 };
 
