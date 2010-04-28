@@ -69,7 +69,7 @@ loglevel 3
     chmod 0771 /data
 
     # Mount compressed filesystems
-    mount squashfs loop@/system/modules/modules.sqf /system/modules ro
+    mount squashfs loop@/system/lib/modules/modules.sqf /system/lib/modules ro
     mount squashfs loop@/system/xbin/xbin.sqf /system/xbin ro
 
     # Create dump dir and collect dumps.
