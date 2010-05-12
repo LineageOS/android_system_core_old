@@ -27,7 +27,7 @@ static void announce(const prop_info *pi)
     char name[PROP_NAME_MAX];
     char value[PROP_VALUE_MAX];
     char *x;
-    
+
     __system_property_read(pi, name, value);
 
     for(x = value; *x; x++) {
@@ -43,7 +43,7 @@ int watchprops_main(int argc, char *argv[])
     unsigned serial = pa->serial;
     unsigned count = pa->count;
     unsigned n;
-    
+
     if(count >= 1024) exit(1);
 
     for(n = 0; n < count; n++) {
@@ -55,6 +55,7 @@ int watchprops_main(int argc, char *argv[])
         do {
             __futex_wait(&pa->serial, serial, 0);
         } while(pa->serial == serial);
+        serial = pa->serial;
 
         while(count < pa->count){
             watchlist[count].pi = __system_property_find_nth(count);
