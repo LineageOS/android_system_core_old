@@ -147,7 +147,6 @@ void handle_online(atransport *t)
 #if ADB_HOST
     t->offline_retry = 0;
 #endif
->>>>>>> bcb239e... adb: New host background thread to scan for stale connections
 }
 
 void handle_offline(atransport *t)
