@@ -387,11 +387,11 @@ service poweroff /system/bin/shutdown
 service dnsmasq /system/bin/logwrapper /system/bin/dnsmasq -d
     disabled
 
-service tether_on /system/bin/logwrapper /system/bin/sh /system/bin/usb-tether start
+service tether_on /system/bin/logwrapper /system/bin/sh /system/bin/tether start
     disabled
     oneshot
 
-service tether_off /system/bin/logwrapper /system/bin/sh /system/bin/usb-tether stop
+service tether_off /system/bin/logwrapper /system/bin/sh /system/bin/tether stop
     disabled
     oneshot
 
