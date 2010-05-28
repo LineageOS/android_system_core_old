@@ -842,7 +842,7 @@ int adb_main(int is_daemon, int server_port)
 {
 #if !ADB_HOST
     int secure = 0;
-    int port;
+    int port = -1;
     char value[PROPERTY_VALUE_MAX];
 #endif
 
@@ -943,14 +943,19 @@ int adb_main(int is_daemon, int server_port)
     property_get("service.adb.tcp.port", value, "");
     if (!value[0])
         property_get("persist.adb.tcp.port", value, "");
-    if (sscanf(value, "%d", &port) == 1 && port > 0) {
+    sscanf(value, "%d", &port);
+
+    if (port > 0) {
         // listen on TCP port specified by service.adb.tcp.port property
         local_init(port);
-    } else if (access("/dev/android_adb", F_OK) == 0) {
-        // listen on USB
-        usb_init();
-    } else {
-        // listen on default port
+    }
+
+    if (access("/dev/android_adb", F_OK) == 0) {
+	// listen on USB
+	usb_init();
+    } else if(port == -1) {
+        // listen on default port if we have no USB to connect to and we didn't
+	// connect to an explicit port above
         local_init(DEFAULT_ADB_LOCAL_TRANSPORT_PORT);
     }
     init_jdwp();
