@@ -383,10 +383,7 @@ service reboot /system/bin/shutdown -r
 service poweroff /system/bin/shutdown
     disabled
 
-# USB internet sharing
-service dnsmasq /system/bin/logwrapper /system/bin/dnsmasq -d
-    disabled
-
+# internet sharing
 service tether_on /system/bin/logwrapper /system/bin/sh /system/bin/tether start
     disabled
     oneshot
