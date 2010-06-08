@@ -171,6 +171,8 @@ static struct fs_path_config android_files[] = {
          * Do not change. */
     { 02755, AID_ROOT,      AID_NET_RAW,   "system/bin/ping" },
     { 02755, AID_ROOT,      AID_INET,      "system/bin/netcfg" },
+       	/* pppd-ril must be 4750 for Motorola Droid Froyo+ */
+    { 04750, AID_ROOT,      AID_RADIO,      "system/bin/pppd-ril" },
     	/* the following four files are INTENTIONALLY set-uid, but they
 	 * are NOT included on user builds. */
     { 06755, AID_ROOT,      AID_ROOT,      "system/xbin/su" },
