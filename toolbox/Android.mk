@@ -8,7 +8,7 @@ TOOLS := \
 	insmod \
 	rmmod \
 	lsmod \
-    ifconfig \
+	ifconfig \
 	setconsole \
 	mkdir \
 	rmdir \
@@ -45,8 +45,7 @@ TOOLS := \
 	vmstat
 
 ifndef TINY_TOOLBOX
-    TOOLS +=
-        cat \
+    TOOLS += \
         ln \
         ls \
         mount \
