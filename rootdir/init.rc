@@ -152,6 +152,10 @@ loglevel 3
     chown system system /data/dalvik-cache
     chmod 0771 /data/dalvik-cache
 
+    mkdir /cache/dalvik-cache 0771 system system
+    chown system system /cache/dalvik-cache
+    chmod 0771 /cache/dalvik-cache
+
     # create the lost+found directories, so as to enforce our permissions
     mkdir /data/lost+found 0770
     mkdir /cache/lost+found 0770
