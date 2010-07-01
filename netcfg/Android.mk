@@ -10,7 +10,7 @@ LOCAL_MODULE:= netcfg
 #LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_SBIN_UNSTRIPPED)
 #LOCAL_STATIC_LIBRARIES := libcutils libc
 
-LOCAL_SHARED_LIBRARIES := libcextended libc libnetutils
+LOCAL_SHARED_LIBRARIES := libc libnetutils
 
 include $(BUILD_EXECUTABLE)
 endif
