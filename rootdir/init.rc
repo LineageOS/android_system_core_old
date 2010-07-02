@@ -16,6 +16,7 @@ loglevel 3
     export EXTERNAL_STORAGE /mnt/sdcard
     export ASEC_MOUNTPOINT /mnt/asec
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar
+    export TERMINFO /system/etc/terminfo
 
 # Backward compatibility
     symlink /system/etc /etc
@@ -90,6 +91,10 @@ loglevel 3
     mount yaffs2 mtd@userdata /data nosuid nodev
     chown system system /data
     chmod 0771 /data
+
+    # Mount compressed filesystems
+    mount squashfs loop@/system/lib/modules/modules.sqf /system/lib/modules ro
+    mount squashfs loop@/system/xbin/xbin.sqf /system/xbin ro
 
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
