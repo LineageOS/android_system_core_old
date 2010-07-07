@@ -274,7 +274,7 @@ on boot
     exec /system/xbin/run-parts /system/etc/init.d
 
 # Include extra init file
-    import /init.extra.rc
+    import /system/etc/init.local.rc
 
     class_start default
 
