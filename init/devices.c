@@ -177,6 +177,7 @@ static struct perms_ devperms[] = {
     { "/dev/msm_vidc_reg", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
     { "/dev/msm_vidc_dec", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
     { "/dev/msm_vidc_enc", 0660, AID_SYSTEM,       AID_AUDIO,       1 },
+    { "/dev/gemini0",   0660,   AID_SYSTEM,     AID_SYSTEM,     1 },
     { NULL, 0, 0, 0, 0 },
 };
 
