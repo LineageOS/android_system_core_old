@@ -122,6 +122,7 @@ static struct perms_ devperms[] = {
     { "/dev/pmem",          0660,   AID_SYSTEM,     AID_GRAPHICS,   0 },
     { "/dev/pmem_adsp",     0660,   AID_SYSTEM,     AID_AUDIO,      1 },
     { "/dev/pmem_camera",   0660,   AID_SYSTEM,     AID_CAMERA,     1 },
+    { "/dev/pmem_venc",     0660,   AID_SYSTEM,     AID_AUDIO,      1 },
     { "/dev/oncrpc/",       0660,   AID_ROOT,       AID_SYSTEM,     1 },
     { "/dev/adsp/",         0660,   AID_SYSTEM,     AID_AUDIO,      1 },
     { "/dev/snd/",          0660,   AID_SYSTEM,     AID_AUDIO,      1 },
