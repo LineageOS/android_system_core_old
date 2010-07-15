@@ -29,6 +29,8 @@
 #include <linux/if.h>
 #include <linux/sockios.h>
 #include <linux/route.h>
+#include <linux/ipv6_route.h>
+#include <netdb.h>
 #include <linux/wireless.h>
 
 #ifdef ANDROID
@@ -43,6 +45,7 @@
 #endif
 
 static int ifc_ctl_sock = -1;
+static int ifc_ctl_sock6 = -1;
 void printerr(char *fmt, ...);
 
 static const char *ipaddr_to_string(uint32_t addr)
@@ -64,11 +67,30 @@ int ifc_init(void)
     return ifc_ctl_sock < 0 ? -1 : 0;
 }
 
+int ifc_init6(void)
+{
+    if (ifc_ctl_sock6 == -1) {
+        ifc_ctl_sock6 = socket(AF_INET6, SOCK_DGRAM, 0);
+        if (ifc_ctl_sock6 < 0) {
+            printerr("socket() failed: %s\n", strerror(errno));
+        }
+    }
+    return ifc_ctl_sock6 < 0 ? -1 : 0;
+}
+
 void ifc_close(void)
 {
     if (ifc_ctl_sock != -1) {
         (void)close(ifc_ctl_sock);
         ifc_ctl_sock = -1;
+    }
+}
+
+void ifc_close6(void)
+{
+    if (ifc_ctl_sock6 != -1) {
+        (void)close(ifc_ctl_sock6);
+        ifc_ctl_sock6 = -1;
     }
 }
 
@@ -186,41 +208,58 @@ int ifc_get_info(const char *name, in_addr_t *addr, in_addr_t *mask, unsigned *f
 }
 
 
-int ifc_create_default_route(const char *name, in_addr_t addr)
+int ifc_create_default_route(const char *name, in_addr_t gateway)
 {
-    struct rtentry rt;
-
-    memset(&rt, 0, sizeof(rt));
-    
-    rt.rt_dst.sa_family = AF_INET;
-    rt.rt_flags = RTF_UP | RTF_GATEWAY;
-    rt.rt_dev = (void*) name;
-    init_sockaddr_in(&rt.rt_genmask, 0);
-    init_sockaddr_in(&rt.rt_gateway, addr);
-    
-    return ioctl(ifc_ctl_sock, SIOCADDRT, &rt);
+    return ifc_add_ipv4_route(name, gateway, 0);
 }
 
 int ifc_add_host_route(const char *name, in_addr_t addr)
 {
+    return ifc_add_ipv4_route(name, addr, 32);
+}
+
+in_addr_t get_mask_from_prefix_length(int prefix_length)
+{
+    in_addr_t mask = 0;
+
+    mask = ~mask << (32 - prefix_length);
+    mask = htonl(mask);
+
+    return mask;
+}
+
+int ifc_add_ipv4_route(const char *name, in_addr_t addr, int prefix_length)
+{
     struct rtentry rt;
     int result;
+    int error;
+    in_addr_t mask;
 
     memset(&rt, 0, sizeof(rt));
-    
+
     rt.rt_dst.sa_family = AF_INET;
-    rt.rt_flags = RTF_UP | RTF_HOST;
     rt.rt_dev = (void*) name;
-    init_sockaddr_in(&rt.rt_dst, addr);
-    init_sockaddr_in(&rt.rt_genmask, 0);
-    init_sockaddr_in(&rt.rt_gateway, 0);
-    
+
+    if (prefix_length == 32) {
+        rt.rt_flags = RTF_UP | RTF_HOST;
+        init_sockaddr_in(&rt.rt_dst, addr);
+        init_sockaddr_in(&rt.rt_gateway, 0);
+        init_sockaddr_in(&rt.rt_genmask, 0);
+    } else {
+        rt.rt_flags = RTF_UP | RTF_GATEWAY;
+        init_sockaddr_in(&rt.rt_gateway, addr);
+        mask = get_mask_from_prefix_length(prefix_length);
+        init_sockaddr_in(&rt.rt_genmask, mask);
+    }
+
     ifc_init();
     result = ioctl(ifc_ctl_sock, SIOCADDRT, &rt);
     if (result < 0 && errno == EEXIST) {
         result = 0;
     }
+    error = errno;
     ifc_close();
+    errno = error;
     return result;
 }
 
@@ -435,4 +474,81 @@ ifc_configure(const char *ifname,
     property_set(dns_prop_name, dns2 ? ipaddr_to_string(dns2) : "");
 
     return 0;
+}
+
+int ifc_add_route(const char *name, const char *addr, int prefix_length)
+{
+    int ret = 0;
+    struct sockaddr_in ipv4_addr;
+    struct sockaddr_in6 ipv6_addr;
+    struct addrinfo *result, hints;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;/* Allow IPv4 or IPv6 */
+    hints.ai_flags = AI_NUMERICHOST;
+
+    ret = getaddrinfo(addr, NULL, &hints, &result);
+
+    if (ret != 0) {
+        printerr("getaddrinfo failed: invalid address %s\n", addr);
+        return -1;
+    }
+
+    if (result->ai_family == AF_INET6) {
+        memcpy(&ipv6_addr, result->ai_addr, sizeof(struct sockaddr_in6));
+        ret = ifc_add_ipv6_route(name, ipv6_addr.sin6_addr, prefix_length);
+    } else if(result->ai_family == AF_INET) {
+        memcpy(&ipv4_addr, result->ai_addr, sizeof(struct sockaddr_in));
+        ret = ifc_add_ipv4_route(name, ipv4_addr.sin_addr.s_addr, prefix_length);
+    } else {
+        printerr("ifc_add_route: getaddrinfo returned un supported address family %d\n",
+            result->ai_family);
+        ret = -1;
+    }
+    freeaddrinfo(result);
+    return ret;
+}
+
+int ifc_add_ipv6_route(const char *name, struct in6_addr in6_a, int prefix_length)
+{
+    struct in6_rtmsg rtmsg;
+    int result;
+    int ifindex;
+    int error;
+
+    memset(&rtmsg, 0, sizeof(rtmsg));
+
+    ifindex = if_nametoindex(name);
+
+    if (ifindex == 0) {
+        printerr("if_nametoindex() failed: interface %s\n", name);
+        return -1;
+    }
+
+    rtmsg.rtmsg_ifindex = ifindex;
+
+    if (prefix_length == 128) {
+        rtmsg.rtmsg_flags = RTF_UP | RTF_HOST;
+        rtmsg.rtmsg_dst = in6_a;
+        rtmsg.rtmsg_dst_len = prefix_length;
+    } else {
+        rtmsg.rtmsg_flags = RTF_UP | RTF_GATEWAY;
+        rtmsg.rtmsg_gateway = in6_a;
+    }
+
+    ifc_init6();
+
+    if (ifc_ctl_sock6 < 0) {
+        return -1;
+    }
+
+    result = ioctl(ifc_ctl_sock6, SIOCADDRT, &rtmsg);
+    if (result < 0 && errno == EEXIST) {
+        result = 0;
+        errno = 0;
+    }
+    error = errno;
+    ifc_close6();
+    errno = error;
+    return result;
 }
