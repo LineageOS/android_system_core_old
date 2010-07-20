@@ -89,6 +89,7 @@ static time_t process_needs_restart;
 static const char *ENV[32];
 
 static unsigned emmc_boot = 0;
+static unsigned battchg_pause = 0;
 
 /* add_environment - add "key=value" to the current environment */
 int add_environment(const char *key, const char *val)
@@ -425,6 +426,10 @@ static void import_kernel_nv(char *name, int in_qemu)
             if (!strcmp(value, "true")) {
                 emmc_boot =1;
             }
+        } else if (!strcmp(name,"androidboot.battchg_pause")) {
+            if (!strcmp(value,"true")) {
+                battchg_pause = 1;
+            }
         }
     } else {
         /* in the emulator, export any kernel option with the
@@ -744,6 +749,11 @@ int main(int argc, char **argv)
     queue_builtin_action(property_service_init_action, "property_service_init");
     queue_builtin_action(signal_init_action, "signal_init");
     queue_builtin_action(check_startup_action, "check_startup");
+
+    /* pause if necessary */
+    if (battchg_pause) {
+        action_for_each_trigger("boot-pause", action_add_queue_tail);
+    }
 
     /* execute all the boot actions to get us started */
     action_for_each_trigger("early-boot", action_add_queue_tail);
