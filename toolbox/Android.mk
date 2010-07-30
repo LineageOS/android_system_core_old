@@ -44,7 +44,7 @@ TOOLS := \
 	uptime \
 	vmstat \
 	nandread \
-        ionice
+	ionice
 
 ifndef TINY_TOOLBOX
     TOOLS += \
