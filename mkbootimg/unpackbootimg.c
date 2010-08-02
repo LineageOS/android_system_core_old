@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     total_read += header.kernel_size;
     fwrite(kernel, header.kernel_size, 1, k);
     fclose(k);
-    
+
     //printf("total read: %d\n", header.kernel_size);
     total_read += read_padding(f, header.kernel_size, header.page_size);
 
