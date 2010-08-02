@@ -510,8 +510,6 @@ static int load_firmware(int fw_fd, int loading_fd, int data_fd)
         return -1;
     len_to_copy = st.st_size;
 
-    write(loading_fd, "1", 1);  /* start transfer */
-
     while (len_to_copy > 0) {
         char buf[PAGE_SIZE];
         ssize_t nr;
@@ -538,11 +536,6 @@ static int load_firmware(int fw_fd, int loading_fd, int data_fd)
     }
 
 out:
-    if(!ret)
-        write(loading_fd, "0", 1);  /* successful end of transfer */
-    else
-        write(loading_fd, "-1", 2); /* abort transfer */
-
     return ret;
 }
 
@@ -574,18 +567,27 @@ static void process_firmware_event(struct uevent *uevent)
     if(loading_fd < 0)
         goto file_free_out;
 
+    write(loading_fd, "1", 1);  /* start transfer */
+
     data_fd = open(data, O_WRONLY);
-    if(data_fd < 0)
+    if(data_fd < 0) {
+        write(loading_fd, "-1", 2); /* abort transfer */
         goto loading_close_out;
+    }
 
     fw_fd = open(file, O_RDONLY);
-    if(fw_fd < 0)
+    if(fw_fd < 0) {
+        write(loading_fd, "-1", 2); /* abort transfer */
         goto data_close_out;
+    }
 
-    if(!load_firmware(fw_fd, loading_fd, data_fd))
+    if(!load_firmware(fw_fd, loading_fd, data_fd)) {
+        write(loading_fd, "0", 1);  /* successful end of transfer */
         log_event_print("firmware copy success { '%s', '%s' }\n", root, file);
-    else
+    } else {
+        write(loading_fd, "-1", 2); /* abort transfer */
         log_event_print("firmware copy failure { '%s', '%s' }\n", root, file);
+    }
 
     close(fw_fd);
 data_close_out:
