@@ -149,6 +149,8 @@ int main(int argc, char **argv)
             hdr.tags_addr =    base + 0x00000100;
         } else if(!strcmp(arg, "--ramdiskaddr")) {
             hdr.ramdisk_addr = strtoul(val, 0, 16);
+        } else if (!strcmp(arg, "--pagesize")) {
+            hdr.page_size = atoi(val);
         } else if(!strcmp(arg, "--board")) {
             board = val;
         } else {
