@@ -65,6 +65,7 @@ int usage(void)
             "       [ --board <boardname> ]\n"
             "       [ --base <address> ]\n"
             "       [ --pagesize <pagesize> ]\n"
+            "       [ --ramdiskaddr <address> ]\n"
             "       -o|--output <filename>\n"
             );
     return 1;
