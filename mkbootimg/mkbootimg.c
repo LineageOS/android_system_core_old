@@ -72,7 +72,7 @@ int usage(void)
 
 
 
-static unsigned char padding[2048] = { 0, };
+static unsigned char padding[8192] = { 0, };
 
 int write_padding(int fd, unsigned pagesize, unsigned itemsize)
 {
