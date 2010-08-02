@@ -30,6 +30,7 @@ LOCAL_MODULE_TAGS := eng
 LOCAL_SHARED_LIBRARIES := libcutils libc
 include $(BUILD_EXECUTABLE)
 
+ifneq "$(findstring armv5te-vfp,$(TARGET_ARCH_VARIANT))" "armv5te-vfp"
 ifeq ($(ARCH_ARM_HAVE_VFP),true)
 include $(CLEAR_VARS)
 
@@ -45,5 +46,5 @@ LOCAL_MODULE_TAGS := eng
 LOCAL_SHARED_LIBRARIES := libcutils libc
 include $(BUILD_EXECUTABLE)
 endif # ARCH_ARM_HAVE_VFP == true
-
+endif # TARGET_ARCH_VARIANT == armv5te-vfp
 endif # TARGET_ARCH == arm
