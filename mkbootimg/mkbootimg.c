@@ -151,7 +151,7 @@ int main(int argc, char **argv)
         } else if(!strcmp(arg, "--ramdiskaddr")) {
             hdr.ramdisk_addr = strtoul(val, 0, 16);
         } else if (!strcmp(arg, "--pagesize")) {
-            hdr.page_size = strtoul(val, 0, 16);
+            pagesize = strtoul(val, 0, 16);
         } else if(!strcmp(arg, "--board")) {
             board = val;
         } else {
