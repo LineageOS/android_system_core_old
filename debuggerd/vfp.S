@@ -3,6 +3,9 @@
     .global crash
     .type crash, %function
 crash:
+#ifdef __ARM_ARCH_5__ 
+    //armv5-vfp doesn't have fconstd instruction
+#else  //#ifdef __ARM_ARCH_5__ 
     fconstd   d0, #0
     fconstd   d1, #1
     fconstd   d2, #2
@@ -37,6 +40,7 @@ crash:
     fconstd   d30, #30
     fconstd   d31, #31
 #endif
+#endif  //#ifdef __ARM_ARCH_5__ 
     mov       r0, #0
     str       r0, [r0]
     bx        lr
