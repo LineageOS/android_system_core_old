@@ -656,3 +656,7 @@ int do_devwait(int nargs, char **args) {
 
     return rc;
 }
+
+int do_umount(int nargs, char **args) {
+    return umount(args[1]);
+}
