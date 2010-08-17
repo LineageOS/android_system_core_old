@@ -875,6 +875,9 @@ int adb_main(int is_daemon, int server_port)
     /* run adbd in secure mode if ro.secure is set and
     ** we are not in the emulator
     */
+    // Always run adbd as root. This hack is necessary for devices
+    // where the boot image is not replaceable.
+    /*
     property_get("ro.kernel.qemu", value, "");
     if (strcmp(value, "1") != 0) {
         property_get("ro.secure", value, "");
@@ -893,6 +896,7 @@ int adb_main(int is_daemon, int server_port)
             }
         }
     }
+    */
 
     /* don't listen on a port (default 5037) if running in secure mode */
     /* don't run as root if we are running in secure mode */
