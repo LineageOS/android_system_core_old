@@ -12,20 +12,22 @@
 
 typedef unsigned char byte;
 
-void read_padding(FILE* f, unsigned itemsize)
+int read_padding(FILE* f, unsigned itemsize, int pagesize)
 {
-    byte buf[2048];
-    int pagesize = 2048;
+    byte* buf = (byte*)malloc(sizeof(byte) * pagesize);
     unsigned pagemask = pagesize - 1;
     unsigned count;
 
     if((itemsize & pagemask) == 0) {
-        return;
+        free(buf);
+        return 0;
     }
 
     count = pagesize - (itemsize & pagemask);
 
     fread(buf, count, 1, f);
+    free(buf);
+    return count;
 }
 
 void write_string_to_file(char* file, char* string)
@@ -77,7 +79,7 @@ int main(int argc, char** argv)
     
     total_read += sizeof(header);
     //printf("total read: %d\n", total_read);
-    read_padding(f, sizeof(header));
+    total_read += read_padding(f, sizeof(header), header.page_size);
 
     sprintf(tmp, "%s/%s", directory, basename(argv[1]));
     strcat(tmp, "-zImage");
@@ -85,12 +87,12 @@ int main(int argc, char** argv)
     byte* kernel = (byte*)malloc(header.kernel_size);
     //printf("Reading kernel...\n");
     fread(kernel, header.kernel_size, 1, f);
+    total_read += header.kernel_size;
     fwrite(kernel, header.kernel_size, 1, k);
     fclose(k);
-    
-    total_read += sizeof(header);
+
     //printf("total read: %d\n", header.kernel_size);
-    read_padding(f, header.kernel_size);
+    total_read += read_padding(f, header.kernel_size, header.page_size);
 
     sprintf(tmp, "%s/%s", directory, basename(argv[1]));
     strcat(tmp, "-ramdisk.gz");
@@ -98,10 +100,12 @@ int main(int argc, char** argv)
     byte* ramdisk = (byte*)malloc(header.ramdisk_size);
     //printf("Reading ramdisk...\n");
     fread(ramdisk, header.ramdisk_size, 1, f);
+    total_read += header.ramdisk_size;
     fwrite(ramdisk, header.ramdisk_size, 1, r);
     fclose(r);
     
     fclose(f);
     
+    //printf("Total Read: %d\n", total_read);
     return 0;
 }
