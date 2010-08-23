@@ -64,6 +64,7 @@ int main(int argc, char** argv)
     fread(&header, sizeof(header), 1, f);
     printf("BOARD_KERNEL_CMDLINE %s\n", header.cmdline);
     printf("BOARD_KERNEL_BASE %x\n", header.kernel_addr - 0x00008000);
+    printf("BOARD_PAGE_SIZE %x\n", header.page_size);
     
     //printf("cmdline...\n");
     sprintf(tmp, "%s/%s", directory, basename(argv[1]));
