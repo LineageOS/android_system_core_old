@@ -34,6 +34,7 @@ void write_string_to_file(char* file, char* string)
 {
     FILE* f = fopen(file, "w");
     fwrite(string, strlen(string), 1, f);
+    fwrite("\n", 1, 1, f);
     fclose(f);
 }
 
@@ -63,8 +64,8 @@ int main(int argc, char** argv)
     //printf("Reading header...\n");
     fread(&header, sizeof(header), 1, f);
     printf("BOARD_KERNEL_CMDLINE %s\n", header.cmdline);
-    printf("BOARD_KERNEL_BASE %x\n", header.kernel_addr - 0x00008000);
-    printf("BOARD_PAGE_SIZE %x\n", header.page_size);
+    printf("BOARD_KERNEL_BASE %08x\n", header.kernel_addr - 0x00008000);
+    printf("BOARD_PAGE_SIZE %08x\n", header.page_size);
     
     //printf("cmdline...\n");
     sprintf(tmp, "%s/%s", directory, basename(argv[1]));
@@ -75,8 +76,15 @@ int main(int argc, char** argv)
     sprintf(tmp, "%s/%s", directory, basename(argv[1]));
     strcat(tmp, "-base");
     char basetmp[200];
-    sprintf(basetmp, "%x", header.kernel_addr - 0x00008000);
+    sprintf(basetmp, "%08x", header.kernel_addr - 0x00008000);
     write_string_to_file(tmp, basetmp);
+
+    //printf("pagesize...\n");
+    sprintf(tmp, "%s/%s", directory, basename(argv[1]));
+    strcat(tmp, "-pagesize");
+    char pagesizetmp[200];
+    sprintf(pagesizetmp, "%08x", header.page_size);
+    write_string_to_file(tmp, pagesizetmp);
     
     total_read += sizeof(header);
     //printf("total read: %d\n", total_read);
