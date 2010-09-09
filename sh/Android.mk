@@ -29,8 +29,7 @@ LOCAL_SRC_FILES:= \
 	bltin/echo.c \
 	init.c
 
-LOCAL_MODULE:= ash
-LOCAL_MODULE_TAGS:= shell_ash
+LOCAL_MODULE:= sh
 
 LOCAL_CFLAGS += -DSHELL -DWITH_LINENOISE
 
@@ -52,19 +51,3 @@ make_ash_files:
 	sh ./mkinit.sh $(PRIVATE_SRC_FILES) 
 
 include $(BUILD_EXECUTABLE)
-
-
-# create /system/bin/sh symlink to $(TARGET_SHELL)
-# not the optimal place for this, but a fitting one
-
-OUTSYSTEMBINSH := $(TARGET_OUT)/bin/sh
-LOCAL_MODULE := systembinsh
-$(OUTSYSTEMBINSH): | $(TARGET_SHELL)
-$(OUTSYSTEMBINSH): LOCAL_MODULE := $(LOCAL_MODULE)
-$(OUTSYSTEMBINSH):
-	@echo "Symlink: $@ -> $(TARGET_SHELL)"
-	@rm -rf $@
-	$(hide) ln -sf $(TARGET_SHELL) $@
-
-ALL_DEFAULT_INSTALLED_MODULES += $(OUTSYSTEMBINSH)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(OUTSYSTEMBINSH)
