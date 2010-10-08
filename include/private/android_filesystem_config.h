@@ -52,6 +52,7 @@
 #define AID_VPN           1016  /* vpn system */
 #define AID_KEYSTORE      1017  /* keystore subsystem */
 #define AID_USB           1018  /* USB devices */
+#define AID_WIMAX         1030  /* wimax subsystem */
 
 #define AID_SHELL         2000  /* adb and debug shell user */
 #define AID_CACHE         2001  /* cache access */
@@ -107,6 +108,7 @@ static struct android_id_info android_ids[] = {
     { "net_admin", AID_NET_ADMIN, },
     { "misc",      AID_MISC, },
     { "nobody",    AID_NOBODY, },
+    { "wimax",     AID_WIMAX, },
 };
 
 #define android_id_count \
