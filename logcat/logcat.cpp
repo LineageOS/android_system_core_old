@@ -242,6 +242,7 @@ static void show_help(const char *cmd)
                     "                  other pruning activity is oldest first. Special case ~!\n"
                     "                  represents an automatic quicker pruning for the noisiest\n"
                     "                  UID as determined by the current statistics.\n"
+                    "  -C              colored output\n"
                     "  -P '<list> ...' set prune white and ~black list, using same format as\n"
                     "                  printed above. Must be quoted.\n");
 
@@ -308,6 +309,11 @@ static const char *multiplier_of_size(unsigned long value)
     return multipliers[i];
 }
 
+static void setColoredOutput()
+{
+    android_log_setColoredOutput(g_logformat);
+}
+
 int main(int argc, char **argv)
 {
     int err;
@@ -339,7 +345,7 @@ int main(int argc, char **argv)
     for (;;) {
         int ret;
 
-        ret = getopt(argc, argv, "cdt:T:gG:sQf:r:n:v:b:BSpP:");
+        ret = getopt(argc, argv, "cdt:T:gG:sQf:r:n:v:b:BSpCP:");
 
         if (ret < 0) {
             break;
@@ -439,6 +445,10 @@ int main(int argc, char **argv)
 
             case 'P':
                 setPruneList = optarg;
+            break;
+
+            case 'C':
+                setColoredOutput();
             break;
 
             case 'b': {
