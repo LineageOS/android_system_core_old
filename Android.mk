@@ -15,6 +15,9 @@
 #
 LOCAL_PATH := $(my-dir)
 
+ifeq ($(USE_IPV6_ROUTE),true)
+  LOCAL_CFLAGS := -DIPV6_SUPPORTED
+endif
 ifneq ($(TARGET_SIMULATOR),true)
   include $(call first-makefiles-under,$(LOCAL_PATH))
 else

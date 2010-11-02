@@ -29,7 +29,9 @@
 #include <linux/if.h>
 #include <linux/sockios.h>
 #include <linux/route.h>
+#ifdef IPV6_SUPPORTED
 #include <linux/ipv6_route.h>
+#endif
 #include <netdb.h>
 #include <linux/wireless.h>
 
@@ -69,12 +71,14 @@ int ifc_init(void)
 
 int ifc_init6(void)
 {
+#ifdef IPV6_SUPPORTED
     if (ifc_ctl_sock6 == -1) {
         ifc_ctl_sock6 = socket(AF_INET6, SOCK_DGRAM, 0);
         if (ifc_ctl_sock6 < 0) {
             printerr("socket() failed: %s\n", strerror(errno));
         }
     }
+#endif
     return ifc_ctl_sock6 < 0 ? -1 : 0;
 }
 
@@ -511,8 +515,9 @@ int ifc_add_route(const char *name, const char *addr, int prefix_length)
 
 int ifc_add_ipv6_route(const char *name, struct in6_addr in6_a, int prefix_length)
 {
+    int result = -1;
+#ifdef IPV6_SUPPORTED
     struct in6_rtmsg rtmsg;
-    int result;
     int ifindex;
     int error;
 
@@ -537,11 +542,13 @@ int ifc_add_ipv6_route(const char *name, struct in6_addr in6_a, int prefix_lengt
     }
 
     ifc_init6();
+#endif
 
     if (ifc_ctl_sock6 < 0) {
         return -1;
     }
 
+#ifdef IPV6_SUPPORTED
     result = ioctl(ifc_ctl_sock6, SIOCADDRT, &rtmsg);
     if (result < 0 && errno == EEXIST) {
         result = 0;
@@ -550,5 +557,6 @@ int ifc_add_ipv6_route(const char *name, struct in6_addr in6_a, int prefix_lengt
     error = errno;
     ifc_close6();
     errno = error;
+#endif
     return result;
 }
