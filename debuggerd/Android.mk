@@ -31,6 +31,7 @@ LOCAL_SHARED_LIBRARIES := libcutils libc
 include $(BUILD_EXECUTABLE)
 
 ifneq "$(findstring armv5te-vfp,$(TARGET_ARCH_VARIANT))" "armv5te-vfp"
+ifneq "$(findstring armv6-vfp,$(TARGET_ARCH_VARIANT))" "armv6-vfp"
 ifeq ($(ARCH_ARM_HAVE_VFP),true)
 include $(CLEAR_VARS)
 
@@ -47,4 +48,5 @@ LOCAL_SHARED_LIBRARIES := libcutils libc
 include $(BUILD_EXECUTABLE)
 endif # ARCH_ARM_HAVE_VFP == true
 endif # TARGET_ARCH_VARIANT == armv5te-vfp
+endif # TARGET_ARCH_VARIANT == armv6-vfp
 endif # TARGET_ARCH == arm
