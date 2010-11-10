@@ -560,6 +560,78 @@ int mtd_name_to_number(const char *name)
     return -1;
 }
 
+#define MAX_MMC_PARTITIONS 16
+
+static struct {
+    char name[16];
+    int number;
+} mmc_part_map[MAX_MMC_PARTITIONS];
+
+static int mmc_part_count = -1;
+
+static void find_mmc_partitions(void)
+{
+    int fd;
+    char buf[1024];
+    char *pmmcbufp;
+    ssize_t pmmcsize;
+    int r;
+
+    fd = open("/proc/emmc", O_RDONLY);
+    if (fd < 0)
+        return;
+
+    buf[sizeof(buf) - 1] = '\0';
+    pmmcsize = read(fd, buf, sizeof(buf) - 1);
+    pmmcbufp = buf;
+    while (pmmcsize > 0) {
+        int mmcnum, mmcsize, mmcerasesize;
+        char mmcname[16];
+        mmcname[0] = '\0';
+        mmcnum = -1;
+        r = sscanf(pmmcbufp, "mmc%d: %x %x %15s",
+                   &mmcnum, &mmcsize, &mmcerasesize, mmcname);
+        if ((r == 4) && (mmcname[0] == '"')) {
+            char *x = strchr(mmcname + 1, '"');
+            if (x) {
+                *x = 0;
+            }
+            INFO("mmc partition %d, %s\n", mmcnum, mmcname + 1);
+            if (mmc_part_count < MAX_MMC_PARTITIONS) {
+                strcpy(mmc_part_map[mmc_part_count].name, mmcname + 1);
+                mmc_part_map[mmc_part_count].number = mmcnum;
+                mmc_part_count++;
+            } else {
+                ERROR("too many mmc partitions\n");
+            }
+        }
+        while (pmmcsize > 0 && *pmmcbufp != '\n') {
+            pmmcbufp++;
+            pmmcsize--;
+        }
+        if (pmmcsize > 0) {
+            pmmcbufp++;
+            pmmcsize--;
+        }
+    }
+    close(fd);
+}
+
+int mmc_name_to_number(const char *name)
+{
+    int n;
+    if (mmc_part_count < 0) {
+        mmc_part_count = 0;
+        find_mmc_partitions();
+    }
+    for (n = 0; n < mmc_part_count; n++) {
+        if (!strcmp(name, mmc_part_map[n].name)) {
+            return mmc_part_map[n].number;
+        }
+    }
+    return -1;
+}
+
 static void import_kernel_nv(char *name, int in_qemu)
 {
     char *value = strchr(name, '=');

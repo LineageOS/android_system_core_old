@@ -341,6 +341,19 @@ int do_mount(int nargs, char **args)
         }
 
         return 0;
+    } else if (!strncmp(source, "emmc@", 5)) {
+        n = mmc_name_to_number(source + 5);
+        if (n < 0) {
+            return -1;
+        }
+
+        sprintf(tmp, "/dev/block/mmcblk%d", n);
+
+        if (mount(tmp, target, system, flags, options) < 0) {
+            return -1;
+        }
+
+        return 0;
     } else if (!strncmp(source, "loop@", 5)) {
         int mode, loop, fd;
         struct loop_info info;
