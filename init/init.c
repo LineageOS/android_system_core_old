@@ -564,7 +564,7 @@ int mtd_name_to_number(const char *name)
 
 static struct {
     char name[16];
-    int number;
+    char part[8];
 } mmc_part_map[MAX_MMC_PARTITIONS];
 
 static int mmc_part_count = -1;
@@ -585,21 +585,21 @@ static void find_mmc_partitions(void)
     pmmcsize = read(fd, buf, sizeof(buf) - 1);
     pmmcbufp = buf;
     while (pmmcsize > 0) {
-        int mmcnum, mmcsize, mmcerasesize;
-        char mmcname[16];
+        int mmcsize, mmcerasesize;
+        char mmcname[16], mmcpart[8];
         mmcname[0] = '\0';
-        mmcnum = -1;
-        r = sscanf(pmmcbufp, "mmc%d: %x %x %15s",
-                   &mmcnum, &mmcsize, &mmcerasesize, mmcname);
+        mmcpart[0] = '\0';
+        r = sscanf(pmmcbufp, "mmcblk%s: %x %x %15s",
+                   mmcpart, &mmcsize, &mmcerasesize, mmcname);
         if ((r == 4) && (mmcname[0] == '"')) {
             char *x = strchr(mmcname + 1, '"');
             if (x) {
                 *x = 0;
             }
-            INFO("mmc partition %d, %s\n", mmcnum, mmcname + 1);
+            INFO("mmc partition %s, %s\n", mmcpart, mmcname + 1);
             if (mmc_part_count < MAX_MMC_PARTITIONS) {
                 strcpy(mmc_part_map[mmc_part_count].name, mmcname + 1);
-                mmc_part_map[mmc_part_count].number = mmcnum;
+                strcpy(mmc_part_map[mmc_part_count].part, mmcpart);
                 mmc_part_count++;
             } else {
                 ERROR("too many mmc partitions\n");
@@ -617,19 +617,20 @@ static void find_mmc_partitions(void)
     close(fd);
 }
 
-int mmc_name_to_number(const char *name)
+char *mmc_name_to_number(const char *name)
 {
     int n;
+    char c[8] = { '\0' };
     if (mmc_part_count < 0) {
         mmc_part_count = 0;
         find_mmc_partitions();
     }
     for (n = 0; n < mmc_part_count; n++) {
         if (!strcmp(name, mmc_part_map[n].name)) {
-            return mmc_part_map[n].number;
+            return mmc_part_map[n].part;
         }
     }
-    return -1;
+    return c;
 }
 
 static void import_kernel_nv(char *name, int in_qemu)
