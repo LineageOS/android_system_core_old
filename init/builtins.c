@@ -342,12 +342,13 @@ int do_mount(int nargs, char **args)
 
         return 0;
     } else if (!strncmp(source, "emmc@", 5)) {
-        n = mmc_name_to_number(source + 5);
-        if (n < 0) {
+        char part[4];
+        strcpy(part, mmc_name_to_number(source + 5));
+        if (part[0] == '\0') {
             return -1;
         }
 
-        sprintf(tmp, "/dev/block/mmcblk%d", n);
+        sprintf(tmp, "/dev/block/mmcblk%s", part);
 
         if (mount(tmp, target, system, flags, options) < 0) {
             return -1;
