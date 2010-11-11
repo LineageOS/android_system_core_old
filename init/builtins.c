@@ -120,7 +120,7 @@ static int __ifupdown(const char *interface, int up)
         ifr.ifr_flags &= ~IFF_UP;
 
     ret = ioctl(s, SIOCSIFFLAGS, &ifr);
-    
+
 done:
     close(s);
     return ret;
@@ -199,7 +199,7 @@ int do_exec(int nargs, char **args)
         if (WEXITSTATUS(status) != 0) {
             ERROR("exec: pid %1d exited with return code %d: %s", (int)pid, WEXITSTATUS(status), strerror(status));
         }
-        
+
     }
     return 0;
 }
@@ -479,7 +479,7 @@ int do_sysclktz(int nargs, char **args)
         return -1;
 
     memset(&tz, 0, sizeof(tz));
-    tz.tz_minuteswest = atoi(args[1]);   
+    tz.tz_minuteswest = atoi(args[1]);
     if (settimeofday(NULL, &tz))
         return -1;
     return 0;
@@ -502,10 +502,10 @@ int do_copy(int nargs, char **args)
     if (nargs != 3)
         return -1;
 
-    if (stat(args[1], &info) < 0) 
+    if (stat(args[1], &info) < 0)
         return -1;
 
-    if ((fd1 = open(args[1], O_RDONLY)) < 0) 
+    if ((fd1 = open(args[1], O_RDONLY)) < 0)
         goto out_err;
 
     if ((fd2 = open(args[2], O_WRONLY|O_CREAT|O_TRUNC, 0660)) < 0)
@@ -626,15 +626,39 @@ int do_devwait(int nargs, char **args) {
 
     int dev_fd, uevent_fd, rc, timeout = DEVWAIT_TIMEOUT;
     struct pollfd ufds[1];
+    char tmp[64];
+    char *source;
+    int n;
 
     uevent_fd = open_uevent_socket();
 
     ufds[0].fd = uevent_fd;
     ufds[0].events = POLLIN;
 
+    source = args[1];
+
+    if (!strncmp(source, "mtd@", 4)) {
+        n = mtd_name_to_number(source + 4);
+        if (n < 0) {
+            return -1;
+        }
+
+        sprintf(tmp, "/dev/block/mtdblock%d", n);
+        source = tmp;
+
+    } else if (!strncmp(source, "emmc@", 5)) {
+        n = mmc_name_to_number(source + 5);
+        if (n < 0) {
+            return -1;
+        }
+
+        sprintf(tmp, "/dev/block/mmcblk%d", n);
+        source = tmp;
+    }
+
     for(;;) {
 
-        dev_fd = open(args[1], O_RDONLY);
+        dev_fd = open(source, O_RDONLY);
         if (dev_fd < 0) {
             if (errno != ENOENT) {
                 ERROR("%s: open failed with error %d\n", __func__, errno);
@@ -653,13 +677,13 @@ int do_devwait(int nargs, char **args) {
             if (timeout > 0)
                 timeout -= DEVWAIT_POLL_TIME;
             else {
-                ERROR("%s: timed out waiting on file: %s\n", __func__, args[1]);
+                ERROR("%s: timed out waiting on file: %s\n", __func__, source);
                 rc = -ETIME;
                 break;
             }
             continue;
         } else if (rc < 0) {
-            ERROR("%s: poll request failed for file: %s\n", __func__, args[1]);
+            ERROR("%s: poll request failed for file: %s\n", __func__, source);
             break;
         }
 

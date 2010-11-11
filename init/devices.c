@@ -139,6 +139,8 @@ static struct perms_ devperms[] = {
 #endif
     { "/dev/akm8976_daemon",0640,   AID_COMPASS,    AID_SYSTEM,     0 },
     { "/dev/akm8976_aot",   0640,   AID_COMPASS,    AID_SYSTEM,     0 },
+    { "/dev/akm8975_daemon",0640,   AID_COMPASS,    AID_SYSTEM,     0 },
+    { "/dev/akm8975_aot",   0640,   AID_COMPASS,    AID_SYSTEM,     0 },
     { "/dev/akm8973_daemon",0640,   AID_COMPASS,    AID_SYSTEM,     0 },
     { "/dev/akm8973_aot",   0640,   AID_COMPASS,    AID_SYSTEM,     0 },
     { "/dev/bma150",        0640,   AID_COMPASS,    AID_SYSTEM,     0 },
