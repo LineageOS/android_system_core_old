@@ -633,8 +633,20 @@ int do_devwait(int nargs, char **args) {
     ufds[0].events = POLLIN;
 
     for(;;) {
+        if (!strncmp(args[1], "emmc@", 5)) {
+            char tmp[64];
+            char part[8];
+            strcpy(part, mmc_name_to_number(args[1] + 5));
+            if (part[0] == '\0') {
+                return -1;
+            }
 
-        dev_fd = open(args[1], O_RDONLY);
+            sprintf(tmp, "/dev/block/mmcblk%s", part);
+
+            dev_fd = open(tmp, O_RDONLY);
+        } else {
+            dev_fd = open(args[1], O_RDONLY);
+        }
         if (dev_fd < 0) {
             if (errno != ENOENT) {
                 ERROR("%s: open failed with error %d\n", __func__, errno);
