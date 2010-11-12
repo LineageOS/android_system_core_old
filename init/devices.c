@@ -174,6 +174,7 @@ static struct perms_ devperms[] = {
     { "/dev/msm_wma",       0660,   AID_SYSTEM,     AID_AUDIO,      0 },
     { "/dev/msm_wmapro",    0660,   AID_SYSTEM,     AID_AUDIO,      0 },
     { "/dev/htc-acoustic",  0660,   AID_SYSTEM,     AID_AUDIO,      0 },
+    { "/dev/htc-acdb",      0660,   AID_SYSTEM,     AID_AUDIO,      0 },
     { "/dev/vdec",          0660,   AID_SYSTEM,     AID_AUDIO,      0 },
     { "/dev/q6venc",        0660,   AID_SYSTEM,     AID_AUDIO,      0 },
     { "/dev/snd/dsp",       0660,   AID_SYSTEM,     AID_AUDIO,      0 },
