@@ -150,7 +150,16 @@ int __android_log_write(int prio, const char *tag, const char *msg)
         !strcmp(tag, "STK") ||
         !strcmp(tag, "CDMA") ||
         !strcmp(tag, "PHONE") ||
-        !strcmp(tag, "SMS")) {
+        !strcmp(tag, "SMS") ||
+        !strcmp(tag, "KINETO") ||
+        !strncmp(tag, "KIPC", 4) ||
+        !strncmp(tag, "Kineto", 6) ||
+        !strncmp(tag, "QCRIL", 5) ||
+        !strncmp(tag, "QC-RIL", 6) ||
+        !strncmp(tag, "QC-QMI", 6) ||
+        !strncmp(tag, "QC-ONCRPC", 9) ||
+        !strncmp(tag, "QC-DSI", 6)
+        )
             log_id = LOG_ID_RADIO;
             // Inform third party apps/ril/radio.. to use Rlog or RLOG
             snprintf(tmp_tag, sizeof(tmp_tag), "use-Rlog/RLOG-%s", tag);
@@ -185,7 +194,16 @@ int __android_log_buf_write(int bufID, int prio, const char *tag, const char *ms
         !strcmp(tag, "STK") ||
         !strcmp(tag, "CDMA") ||
         !strcmp(tag, "PHONE") ||
-        !strcmp(tag, "SMS"))) {
+        !strcmp(tag, "SMS") ||
+        !strcmp(tag, "KINETO") ||
+        !strncmp(tag, "KIPC", 4) ||
+        !strncmp(tag, "Kineto", 6) ||
+        !strncmp(tag, "QCRIL", 5) ||
+        !strncmp(tag, "QC-RIL", 6) ||
+        !strncmp(tag, "QC-QMI", 6) ||
+        !strncmp(tag, "QC-ONCRPC", 9) ||
+        !strncmp(tag, "QC-DSI", 6)
+        )
             bufID = LOG_ID_RADIO;
             // Inform third party apps/ril/radio.. to use Rlog or RLOG
             snprintf(tmp_tag, sizeof(tmp_tag), "use-Rlog/RLOG-%s", tag);
