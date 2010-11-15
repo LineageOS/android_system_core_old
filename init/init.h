@@ -18,7 +18,7 @@
 #define _INIT_INIT_H
 
 int mtd_name_to_number(const char *name);
-int mmc_name_to_number(const char *name);
+int mmc_name_to_part(const char *name, char *dest);
 
 void handle_control_message(const char *msg, const char *arg);
 
@@ -77,7 +77,7 @@ struct command
     int nargs;
     char *args[1];
 };
-    
+
 struct action {
         /* node in list of all actions */
     struct listnode alist;
@@ -88,7 +88,7 @@ struct action {
 
     unsigned hash;
     const char *name;
-    
+
     struct listnode commands;
     struct command *current;
 };
@@ -131,7 +131,7 @@ struct service {
     time_t time_started;    /* time of last start */
     time_t time_crashed;    /* first crash within inspection window */
     int nr_crashed;         /* number of times crashed within window */
-    
+
     uid_t uid;
     gid_t gid;
     gid_t supp_gids[NR_SVC_SUPP_GIDS];
@@ -141,7 +141,7 @@ struct service {
     struct svcenvinfo *envvars;
 
     struct action onrestart;  /* Actions to execute on restart. */
-    
+
     /* keycodes for triggering this service via /dev/keychord */
     int *keycodes;
     int nkeycodes;
@@ -182,3 +182,4 @@ void queue_all_property_triggers();
 int load_565rle_image( char *file_name );
 
 #endif	/* _INIT_INIT_H */
+
