@@ -88,7 +88,7 @@ static unsigned emmc_boot = 0;
 int add_environment(const char *key, const char *val)
 {
     int n;
- 
+
     for (n = 0; n < 31; n++) {
         if (!ENV[n]) {
             size_t len = strlen(key) + strlen(val) + 2;
@@ -170,7 +170,7 @@ void service_start(struct service *svc, const char *dynamic_args)
          */
     svc->flags &= (~(SVC_DISABLED|SVC_RESTARTING));
     svc->time_started = 0;
-    
+
         /* running processes require no additional work -- if
          * they're in the process of exiting, we've ensured
          * that they will immediately restart on exit, unless
@@ -219,7 +219,7 @@ void service_start(struct service *svc, const char *dynamic_args)
 
         for (si = svc->sockets; si; si = si->next) {
             int s = create_socket(si->name,
-                                  !strcmp(si->type, "dgram") ? 
+                                  !strcmp(si->type, "dgram") ?
                                   SOCK_DGRAM : SOCK_STREAM,
                                   si->perm, si->uid, si->gid);
             if (s >= 0) {
@@ -456,7 +456,7 @@ static void msg_start(const char *name)
 
         svc = service_find_by_name(tmp);
     }
-    
+
     if (svc) {
         service_start(svc, args);
     } else {
@@ -545,7 +545,7 @@ static void find_mtd_partitions(void)
     close(fd);
 }
 
-int mtd_name_to_number(const char *name) 
+int mtd_name_to_number(const char *name)
 {
     int n;
     if (mtd_part_count < 0) {
@@ -564,7 +564,7 @@ int mtd_name_to_number(const char *name)
 
 static struct {
     char name[16];
-    int number;
+    char part[8];
 } mmc_part_map[MAX_MMC_PARTITIONS];
 
 static int mmc_part_count = -1;
@@ -586,20 +586,20 @@ static void find_mmc_partitions(void)
     pmmcbufp = buf;
     while (pmmcsize > 0) {
         int mmcnum, mmcsize, mmcerasesize;
-        char mmcname[16];
+        char mmcname[16], mmcpart[8];
         mmcname[0] = '\0';
-        mmcnum = -1;
-        r = sscanf(pmmcbufp, "mmc%d: %x %x %15s",
-                   &mmcnum, &mmcsize, &mmcerasesize, mmcname);
+        mmcpart[0] = '\0';
+        r = sscanf(pmmcbufp, "mmcblk%7s: %x %x %15s",
+                   mmcpart, &mmcsize, &mmcerasesize, mmcname);
         if ((r == 4) && (mmcname[0] == '"')) {
             char *x = strchr(mmcname + 1, '"');
             if (x) {
                 *x = 0;
             }
-            INFO("mmc partition %d, %s\n", mmcnum, mmcname + 1);
+            INFO("mmc partition %s, %s\n", mmcpart, mmcname + 1);
             if (mmc_part_count < MAX_MMC_PARTITIONS) {
                 strcpy(mmc_part_map[mmc_part_count].name, mmcname + 1);
-                mmc_part_map[mmc_part_count].number = mmcnum;
+                strcpy(mmc_part_map[mmc_part_count].part, mmcpart);
                 mmc_part_count++;
             } else {
                 ERROR("too many mmc partitions\n");
@@ -617,16 +617,17 @@ static void find_mmc_partitions(void)
     close(fd);
 }
 
-int mmc_name_to_number(const char *name)
+int mmc_name_to_part(const char *name, char *dest)
 {
-    int n;
+    int n, k;
     if (mmc_part_count < 0) {
         mmc_part_count = 0;
         find_mmc_partitions();
     }
     for (n = 0; n < mmc_part_count; n++) {
         if (!strcmp(name, mmc_part_map[n].name)) {
-            return mmc_part_map[n].number;
+            k = sprintf(dest, "%s", mmc_part_map[n].part);
+            return k;
         }
     }
     return -1;
@@ -826,7 +827,7 @@ int open_keychord()
     int fd, ret;
 
     service_for_each(add_service_keycodes);
-    
+
     /* nothing to do if no services require keychords */
     if (!keychords)
         return -1;
@@ -929,7 +930,7 @@ int main(int argc, char **argv)
          */
     open_devnull_stdio();
     log_init();
-    
+
     INFO("reading config file\n");
     parse_config_file("/init.rc");
 
@@ -956,7 +957,7 @@ int main(int argc, char **argv)
     }
 
     property_init();
-    
+
     // only listen for keychords if ro.debuggable is true
     keychord_fd = open_keychord();
 
@@ -995,7 +996,7 @@ int main(int argc, char **argv)
     }
 
     if (qemu[0])
-        import_kernel_cmdline(1); 
+        import_kernel_cmdline(1);
 
     if (!strcmp(bootmode,"factory"))
         property_set("ro.factorytest", "1");
@@ -1053,8 +1054,8 @@ int main(int argc, char **argv)
     queue_all_property_triggers();
     drain_action_queue();
 
-        /* enable property triggers */   
-    property_triggers_enabled = 1;     
+        /* enable property triggers */
+    property_triggers_enabled = 1;
 
     ufds[0].fd = device_fd;
     ufds[0].events = POLLIN;
@@ -1132,3 +1133,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
