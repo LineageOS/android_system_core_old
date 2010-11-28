@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAABX//+II\u003d",
+        "filename": "init/builtins.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 65
+      },
+      "writtenOn": "2010-11-28T11:02:29Z",
+      "side": 0,
+      "message": "part will be the entire path:\n/dev/block/mmcblkXpY\n\nThis will buffer overflow.\nNot to mention it won\u0027t work ,since you will get \n/dev/block/dev/block/mmcblkXpY",
+      "revId": "71eb2313caa12fb9f65cf7b367ceb16477db0e45",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
