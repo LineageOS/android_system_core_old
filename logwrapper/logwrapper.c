@@ -44,7 +44,7 @@ void usage() {
         "    fault address is set to the status of wait()\n");
 }
 
-void parent(const char *tag, int seg_fault_on_exit, int parent_read) {
+int parent(const char *tag, int seg_fault_on_exit, int parent_read) {
     int status;
     char buffer[4096];
 
@@ -102,6 +102,8 @@ void parent(const char *tag, int seg_fault_on_exit, int parent_read) {
                 strerror(errno), errno);
     if (seg_fault_on_exit)
         *(int *)status = 0;  // causes SIGSEGV with fault_address = status
+
+    return (WIFSIGNALED(status) || WIFSTOPPED(status)) ? -1 : WEXITSTATUS(status);
 }
 
 void child(int argc, char* argv[]) {
@@ -123,6 +125,7 @@ int main(int argc, char* argv[]) {
 
     int parent_ptty;
     int child_ptty;
+    int status;
     char *child_devname = NULL;
 
     if (argc < 2) {
@@ -174,8 +177,8 @@ int main(int argc, char* argv[]) {
         setgid(AID_LOG);
         setuid(AID_LOG);
 
-        parent(argv[1], seg_fault_on_exit, parent_ptty);
+        status = parent(argv[1], seg_fault_on_exit, parent_ptty);
     }
 
-    return 0;
+    return status;
 }
