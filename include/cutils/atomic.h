@@ -112,6 +112,12 @@ int android_atomic_acquire_cas(int32_t oldvalue, int32_t newvalue,
         volatile int32_t* addr);
 int android_atomic_release_cas(int32_t oldvalue, int32_t newvalue,
         volatile int32_t* addr);
+#if defined(__ARM_ARCH__) || defined (__ARM_EABI__)
+int android_atomic_cmpxchg(int32_t oldvalue, int32_t newvalue,
+        volatile int32_t* addr);
+#else
+#define android_atomic_cmpxchg android_atomic_release_cas
+#endif
 
 /*
  * Aliases for code using an older version of this header.  These are now
@@ -119,7 +125,6 @@ int android_atomic_release_cas(int32_t oldvalue, int32_t newvalue,
  * in a future release.
  */
 #define android_atomic_write android_atomic_release_store
-#define android_atomic_cmpxchg android_atomic_release_cas
 
 #ifdef __cplusplus
 } // extern "C"
