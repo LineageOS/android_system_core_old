@@ -44,8 +44,7 @@ TOOLS := \
 	uptime \
 	vmstat \
 	nandread \
-	ionice \
-	lsof
+	ionice 
 
 ifndef TINY_TOOLBOX
     TOOLS += \
@@ -57,7 +56,8 @@ ifndef TINY_TOOLBOX
         df \
         chmod \
         chown \
-        mv 
+        mv \
+        lsof	
 endif
 
 LOCAL_SRC_FILES:= \
