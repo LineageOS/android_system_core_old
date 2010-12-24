@@ -80,3 +80,6 @@
 /sys/devices/virtual/input/input*   enable      0660  root   input
 /sys/devices/virtual/input/input*   poll_delay  0660  root   input
 
+# video encoder on 720p-enabled 8k targets
+/dev/pmem_venc            0660   system     audio
+
