@@ -17,8 +17,12 @@
 #ifndef _INIT_DEVICES_H
 #define _INIT_DEVICES_H
 
+#define DEVWAIT_TIMEOUT 10000 /* 10 seconds */
+#define DEVWAIT_POLL_TIME 50
+
 #include <sys/stat.h>
 
+int open_uevent_socket(void);
 extern void handle_device_fd();
 extern void device_init(void);
 extern int add_dev_perms(const char *name, const char *attr,

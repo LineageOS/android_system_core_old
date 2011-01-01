@@ -55,12 +55,15 @@ struct uevent {
     int minor;
 };
 
-static int open_uevent_socket(void)
+int open_uevent_socket(void)
 {
     struct sockaddr_nl addr;
     int sz = 64*1024; // XXX larger? udev uses 16MB!
     int on = 1;
-    int s;
+    static int s = -1;
+
+    if (s >= 0)
+	  return s;
 
     memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
