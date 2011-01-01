@@ -88,6 +88,7 @@ int lookup_keyword(const char *s)
         if (!strcmp(s, "ritical")) return K_critical;
         break;
     case 'd':
+	   if (!strcmp(s, "evwait")) return K_devwait;
         if (!strcmp(s, "isabled")) return K_disabled;
         if (!strcmp(s, "omainname")) return K_domainname;
         break;
@@ -142,6 +143,7 @@ int lookup_keyword(const char *s)
         break;
     case 'u':
         if (!strcmp(s, "ser")) return K_user;
+	   if (!strcmp(s, "mount")) return K_umount;
         break;
     case 'w':
         if (!strcmp(s, "rite")) return K_write;
@@ -459,6 +461,7 @@ static void *parse_service(struct parse_state *state, int nargs, char **args)
 static void parse_line_service(struct parse_state *state, int nargs, char **args)
 {
     struct service *svc = state->context;
+    struct action *act = state->context;
     struct command *cmd;
     int i, kw, kw_nargs;
 
@@ -552,6 +555,12 @@ static void parse_line_service(struct parse_state *state, int nargs, char **args
         if (nargs < kw_nargs) {
             parse_error(state, "%s requires %d %s\n", args[0], kw_nargs - 1,
                 kw_nargs > 2 ? "arguments" : "argument");
+            break;
+        }
+
+    if (kw == K_devwait)
+        if (!strncmp(act->name, "early-init", 10)) {
+            parse_error(state, "%s in early-init prohibited\n", args[0]);
             break;
         }
 
