@@ -73,8 +73,6 @@
 
 #define FUSE_UNKNOWN_INO 0xffffffff
 
-#define MOUNT_POINT "/mnt/sdcard"
-
 struct handle {
     struct node *node;
     int fd;
@@ -162,7 +160,7 @@ void attr_from_stat(struct fuse_attr *attr, struct stat *s)
     if (attr->mode & 0100) {
         attr->mode = (attr->mode & (~0777)) | 0775;
     } else {
-        attr->mode = (attr->mode & (~0777)) | 0664;
+        attr->mode = (attr->mode & (~0777)) | 0666;
     }
 
         /* all files owned by root.sdcard */
@@ -460,7 +458,7 @@ void handle_fuse_request(struct fuse *fuse, struct fuse_in_header *hdr, void *da
         TRACE("MKNOD %s @ %llx\n", name, hdr->nodeid);
         path = node_get_path(node, buffer, name);
 
-        req->mode = (req->mode & (~0777)) | 0664;
+        req->mode = (req->mode & (~0777)) | 0666;
         res = mknod(path, req->mode, req->rdev); /* XXX perm?*/
         if (res < 0) {
             fuse_status(fuse, hdr->unique, -errno);
@@ -735,7 +733,7 @@ void handle_fuse_requests(struct fuse *fuse)
     }
 }
 
-int main(int argc, char **argv)
+int do_main(int argc, char **argv)
 {
     struct fuse fuse;
     char opts[256];
@@ -744,23 +742,20 @@ int main(int argc, char **argv)
     unsigned uid;
     unsigned gid;
     const char *path;
+    const char *mnt_point;
 
-    if (argc != 4) {
-        ERROR("usage: sdcard <path> <uid> <gid>\n");
+    if (argc != 5) {
+        ERROR("usage: sdcard <path> <uid> <gid> <mnt_point>\n");
         return -1;
     }
 
     uid = strtoul(argv[2], 0, 10);
     gid = strtoul(argv[3], 0, 10);
-    if (!uid || !gid) {
-        ERROR("uid and gid must be nonzero\n");
-        return -1;
-    }
-
     path = argv[1];
+    mnt_point = argv[4];
 
-        /* cleanup from previous instance, if necessary */
-    umount2(MOUNT_POINT, 2);
+    /* cleanup from previous instance, if necessary */
+    umount2(mnt_point, 2);
 
     fd = open("/dev/fuse", O_RDWR);
     if (fd < 0){
@@ -771,25 +766,38 @@ int main(int argc, char **argv)
     sprintf(opts, "fd=%i,rootmode=40000,default_permissions,allow_other,"
             "user_id=%d,group_id=%d", fd, uid, gid);
     
-    res = mount("/dev/fuse", MOUNT_POINT, "fuse", MS_NOSUID | MS_NODEV, opts);
+    res = mount("/dev/fuse", mnt_point, "fuse", MS_NOSUID | MS_NODEV, opts);
     if (res < 0) {
         ERROR("cannot mount fuse filesystem (%d)\n", errno);
         return -1;
     }
 
-    if (setgid(gid) < 0) {
-        ERROR("cannot setgid!\n");
-        return -1;
+    /* If uid/gid are specified, change to the specified uid/gid */
+    if (gid && setgid(gid) < 0) {
+       ERROR("cannot setgid!\n");
+       return -1;
     }
-    if (setuid(uid) < 0) {
-        ERROR("cannot setuid!\n");
-        return -1;
+    if (uid && setuid(uid) < 0) {
+       ERROR("cannot setuid!\n");
+       return -1;
     }
-
     fuse_init(&fuse, fd, path);
-
+    
     umask(0);
+    
+    /* Notify anyone waiting on this process. */
+    kill(getppid(), SIGUSR1);
+    
     handle_fuse_requests(&fuse);
     
     return 0;
 }
+
+/* Shell over main so that we can make sure that all paths notify parent that we're done doing what we can. */
+int main(int argc, char **argv)
+{
+    do_main(argc, argv);
+    kill(getppid(), SIGUSR1);
+    return 0;
+}
+
