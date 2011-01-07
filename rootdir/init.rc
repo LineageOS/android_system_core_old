@@ -108,6 +108,10 @@ on post-fs
     chown system system /data
     chmod 0771 /data
 
+    # Mount compressed filesystems
+    mount squashfs loop@/system/lib/modules/modules.sqf /system/lib/modules ro
+    mount squashfs loop@/system/xbin/xbin.sqf /system/xbin ro
+
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
     # storing dumps on platforms which do not have a dedicated dump partition.
