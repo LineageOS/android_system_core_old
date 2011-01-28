@@ -172,7 +172,7 @@ main(int argc, char **argv)
 	init();
 	setstackmark(&smark);
 	procargs(argc, argv);
-	if (argv[0] && argv[0][0] == '-') {
+	if (argv[1] && argv[1][0] == '-') {
 		state = 1;
 		read_profile("/etc/profile");
 state1:
