@@ -1,8 +1,8 @@
-/*	$NetBSD: main.c,v 1.48 2003/09/14 12:09:29 jmmv Exp $	*/
+/*        $NetBSD: main.c,v 1.48 2003/09/14 12:09:29 jmmv Exp $        */
 
 /*-
  * Copyright (c) 1991, 1993
- *	The Regents of the University of California.  All rights reserved.
+ *        The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Kenneth Almquist.
@@ -35,12 +35,12 @@
 #include <sys/cdefs.h>
 #ifndef lint
 __COPYRIGHT("@(#) Copyright (c) 1991, 1993\n\
-	The Regents of the University of California.  All rights reserved.\n");
+        The Regents of the University of California.  All rights reserved.\n");
 #endif /* not lint */
 
 #ifndef lint
 #if 0
-static char sccsid[] = "@(#)main.c	8.7 (Berkeley) 7/19/95";
+static char sccsid[] = "@(#)main.c        8.7 (Berkeley) 7/19/95";
 #else
 __RCSID("$NetBSD: main.c,v 1.48 2003/09/14 12:09:29 jmmv Exp $");
 #endif
@@ -100,122 +100,122 @@ int main(int, char **);
 int
 main(int argc, char **argv)
 {
-	struct jmploc jmploc;
-	struct stackmark smark;
-	volatile int state;
-	char *shinit;
+        struct jmploc jmploc;
+        struct stackmark smark;
+        volatile int state;
+        char *shinit;
 
 #if PROFILE
-	monitor(4, etext, profile_buf, sizeof profile_buf, 50);
+        monitor(4, etext, profile_buf, sizeof profile_buf, 50);
 #endif
-	state = 0;
-	if (setjmp(jmploc.loc)) {
-		/*
-		 * When a shell procedure is executed, we raise the
-		 * exception EXSHELLPROC to clean up before executing
-		 * the shell procedure.
-		 */
-		switch (exception) {
-		case EXSHELLPROC:
-			rootpid = getpid();
-			rootshell = 1;
-			minusc = NULL;
-			state = 3;
-			break;
+        state = 0;
+        if (setjmp(jmploc.loc)) {
+                /*
+                 * When a shell procedure is executed, we raise the
+                 * exception EXSHELLPROC to clean up before executing
+                 * the shell procedure.
+                 */
+                switch (exception) {
+                case EXSHELLPROC:
+                        rootpid = getpid();
+                        rootshell = 1;
+                        minusc = NULL;
+                        state = 3;
+                        break;
 
-		case EXEXEC:
-			exitstatus = exerrno;
-			break;
+                case EXEXEC:
+                        exitstatus = exerrno;
+                        break;
 
-		case EXERROR:
-			exitstatus = 2;
-			break;
+                case EXERROR:
+                        exitstatus = 2;
+                        break;
 
-		default:
-			break;
-		}
+                default:
+                        break;
+                }
 
-		if (exception != EXSHELLPROC) {
-			if (state == 0 || iflag == 0 || ! rootshell)
-				exitshell(exitstatus);
-		}
-		reset();
-		if (exception == EXINT
+                if (exception != EXSHELLPROC) {
+                        if (state == 0 || iflag == 0 || ! rootshell)
+                                exitshell(exitstatus);
+                }
+                reset();
+                if (exception == EXINT
 #if ATTY
-		 && (! attyset() || equal(termval(), "emacs"))
+                 && (! attyset() || equal(termval(), "emacs"))
 #endif
-		 ) {
-			out2c('\n');
-			flushout(&errout);
-		}
-		popstackmark(&smark);
-		FORCEINTON;				/* enable interrupts */
-		if (state == 1)
-			goto state1;
-		else if (state == 2)
-			goto state2;
-		else if (state == 3)
-			goto state3;
-		else
-			goto state4;
-	}
-	handler = &jmploc;
+                 ) {
+                        out2c('\n');
+                        flushout(&errout);
+                }
+                popstackmark(&smark);
+                FORCEINTON;                                /* enable interrupts */
+                if (state == 1)
+                        goto state1;
+                else if (state == 2)
+                        goto state2;
+                else if (state == 3)
+                        goto state3;
+                else
+                        goto state4;
+        }
+        handler = &jmploc;
 #ifdef DEBUG
 #if DEBUG == 2
-	debug = 1;
+        debug = 1;
 #endif
-	opentrace();
-	trputs("Shell args:  ");  trargs(argv);
+        opentrace();
+        trputs("Shell args:  ");  trargs(argv);
 #endif
-	rootpid = getpid();
-	rootshell = 1;
-	init();
-	setstackmark(&smark);
-	procargs(argc, argv);
-	if (argv[0] && argv[0][0] == '-') {
-		state = 1;
-		read_profile("/etc/profile");
+        rootpid = getpid();
+        rootshell = 1;
+        init();
+        setstackmark(&smark);
+        procargs(argc, argv);
+        if (argv[1] && argv[1][0] == '-') {
+                state = 1;
+                read_profile("/etc/profile");
 state1:
-		state = 2;
-		read_profile(".profile");
-	}
+                state = 2;
+                read_profile(".profile");
+        }
 state2:
-	state = 3;
-	if (getuid() == geteuid() && getgid() == getegid()) {
-		if ((shinit = lookupvar("ENV")) != NULL && *shinit != '\0') {
-			state = 3;
-			read_profile(shinit);
-		}
-	}
+        state = 3;
+        if (getuid() == geteuid() && getgid() == getegid()) {
+                if ((shinit = lookupvar("ENV")) != NULL && *shinit != '\0') {
+                        state = 3;
+                        read_profile(shinit);
+                }
+        }
 state3:
-	state = 4;
-	if (sflag == 0 || minusc) {
-		static int sigs[] =  {
-		    SIGINT, SIGQUIT, SIGHUP, 
+        state = 4;
+        if (sflag == 0 || minusc) {
+                static int sigs[] =  {
+                    SIGINT, SIGQUIT, SIGHUP,
 #ifdef SIGTSTP
-		    SIGTSTP,
+                    SIGTSTP,
 #endif
-		    SIGPIPE
-		};
+                    SIGPIPE
+                };
 #define SIGSSIZE (sizeof(sigs)/sizeof(sigs[0]))
-		int i;
+                int i;
 
-		for (i = 0; i < SIGSSIZE; i++)
-		    setsignal(sigs[i], 0);
-	}
+                for (i = 0; i < SIGSSIZE; i++)
+                    setsignal(sigs[i], 0);
+        }
 
-	if (minusc)
-		evalstring(minusc, 0);
+        if (minusc)
+                evalstring(minusc, 0);
 
-	if (sflag || minusc == NULL) {
-state4:	/* XXX ??? - why isn't this before the "if" statement */
-		cmdloop(1);
-	}
+        if (sflag || minusc == NULL) {
+state4:        /* XXX ??? - why isn't this before the "if" statement */
+                cmdloop(1);
+        }
 #if PROFILE
-	monitor(0);
+        monitor(0);
 #endif
-	exitshell(exitstatus);
-	/* NOTREACHED */
+        exitshell(exitstatus);
+        /* NOTREACHED */
 }
 
 
@@ -227,46 +227,46 @@ state4:	/* XXX ??? - why isn't this before the "if" statement */
 void
 cmdloop(int top)
 {
-	union node *n;
-	struct stackmark smark;
-	int inter;
-	int numeof = 0;
+        union node *n;
+        struct stackmark smark;
+        int inter;
+        int numeof = 0;
 
-	TRACE(("cmdloop(%d) called\n", top));
-	setstackmark(&smark);
-	for (;;) {
-		if (pendingsigs)
-			dotrap();
-		inter = 0;
-		if (iflag && top) {
-			inter = 1;
-			showjobs(out2, SHOW_CHANGED);
-			flushout(&errout);
-		}
-		n = parsecmd(inter);
-		/* showtree(n); DEBUG */
-		if (n == NEOF) {
-			if (!top || numeof >= 50)
-				break;
-			if (!stoppedjobs()) {
-				if (!Iflag)
-					break;
-				out2str("\nUse \"exit\" to leave shell.\n");
-			}
-			numeof++;
-		} else if (n != NULL && nflag == 0) {
-			job_warning = (job_warning == 2) ? 1 : 0;
-			numeof = 0;
-			evaltree(n, 0);
-		}
-		popstackmark(&smark);
-		setstackmark(&smark);
-		if (evalskip == SKIPFILE) {
-			evalskip = 0;
-			break;
-		}
-	}
-	popstackmark(&smark);
+        TRACE(("cmdloop(%d) called\n", top));
+        setstackmark(&smark);
+        for (;;) {
+                if (pendingsigs)
+                        dotrap();
+                inter = 0;
+                if (iflag && top) {
+                        inter = 1;
+                        showjobs(out2, SHOW_CHANGED);
+                        flushout(&errout);
+                }
+                n = parsecmd(inter);
+                /* showtree(n); DEBUG */
+                if (n == NEOF) {
+                        if (!top || numeof >= 50)
+                                break;
+                        if (!stoppedjobs()) {
+                                if (!Iflag)
+                                        break;
+                                out2str("\nUse \"exit\" to leave shell.\n");
+                        }
+                        numeof++;
+                } else if (n != NULL && nflag == 0) {
+                        job_warning = (job_warning == 2) ? 1 : 0;
+                        numeof = 0;
+                        evaltree(n, 0);
+                }
+                popstackmark(&smark);
+                setstackmark(&smark);
+                if (evalskip == SKIPFILE) {
+                        evalskip = 0;
+                        break;
+                }
+        }
+        popstackmark(&smark);
 }
 
 
@@ -278,31 +278,31 @@ cmdloop(int top)
 STATIC void
 read_profile(const char *name)
 {
-	int fd;
-	int xflag_set = 0;
-	int vflag_set = 0;
+        int fd;
+        int xflag_set = 0;
+        int vflag_set = 0;
 
-	INTOFF;
-	if ((fd = open(name, O_RDONLY)) >= 0)
-		setinputfd(fd, 1);
-	INTON;
-	if (fd < 0)
-		return;
-	/* -q turns off -x and -v just when executing init files */
-	if (qflag)  {
-	    if (xflag)
-		    xflag = 0, xflag_set = 1;
-	    if (vflag)
-		    vflag = 0, vflag_set = 1;
-	}
-	cmdloop(0);
-	if (qflag)  {
-	    if (xflag_set)
-		    xflag = 1;
-	    if (vflag_set)
-		    vflag = 1;
-	}
-	popfile();
+        INTOFF;
+        if ((fd = open(name, O_RDONLY)) >= 0)
+                setinputfd(fd, 1);
+        INTON;
+        if (fd < 0)
+                return;
+        /* -q turns off -x and -v just when executing init files */
+        if (qflag)  {
+            if (xflag)
+                    xflag = 0, xflag_set = 1;
+            if (vflag)
+                    vflag = 0, vflag_set = 1;
+        }
+        cmdloop(0);
+        if (qflag)  {
+            if (xflag_set)
+                    xflag = 1;
+            if (vflag_set)
+                    vflag = 1;
+        }
+        popfile();
 }
 
 
@@ -314,16 +314,16 @@ read_profile(const char *name)
 void
 readcmdfile(char *name)
 {
-	int fd;
+        int fd;
 
-	INTOFF;
-	if ((fd = open(name, O_RDONLY)) >= 0)
-		setinputfd(fd, 1);
-	else
-		error("Can't open %s", name);
-	INTON;
-	cmdloop(0);
-	popfile();
+        INTOFF;
+        if ((fd = open(name, O_RDONLY)) >= 0)
+                setinputfd(fd, 1);
+        else
+                error("Can't open %s", name);
+        INTON;
+        cmdloop(0);
+        popfile();
 }
 
 
@@ -337,58 +337,58 @@ readcmdfile(char *name)
 STATIC char *
 find_dot_file(char *basename)
 {
-	char *fullname;
-	const char *path = pathval();
-	struct stat statb;
+        char *fullname;
+        const char *path = pathval();
+        struct stat statb;
 
-	/* don't try this for absolute or relative paths */
-	if (strchr(basename, '/'))
-		return basename;
+        /* don't try this for absolute or relative paths */
+        if (strchr(basename, '/'))
+                return basename;
 
-	while ((fullname = padvance(&path, basename)) != NULL) {
-		if ((stat(fullname, &statb) == 0) && S_ISREG(statb.st_mode)) {
-			/*
-			 * Don't bother freeing here, since it will
-			 * be freed by the caller.
-			 */
-			return fullname;
-		}
-		stunalloc(fullname);
-	}
+        while ((fullname = padvance(&path, basename)) != NULL) {
+                if ((stat(fullname, &statb) == 0) && S_ISREG(statb.st_mode)) {
+                        /*
+                         * Don't bother freeing here, since it will
+                         * be freed by the caller.
+                         */
+                        return fullname;
+                }
+                stunalloc(fullname);
+        }
 
-	/* not found in the PATH */
-	error("%s: not found", basename);
-	/* NOTREACHED */
+        /* not found in the PATH */
+        error("%s: not found", basename);
+        /* NOTREACHED */
 }
 
 int
 dotcmd(int argc, char **argv)
 {
-	exitstatus = 0;
+        exitstatus = 0;
 
-	if (argc >= 2) {		/* That's what SVR2 does */
-		char *fullname;
-		struct stackmark smark;
+        if (argc >= 2) {                /* That's what SVR2 does */
+                char *fullname;
+                struct stackmark smark;
 
-		setstackmark(&smark);
-		fullname = find_dot_file(argv[1]);
-		setinputfile(fullname, 1);
-		commandname = fullname;
-		cmdloop(0);
-		popfile();
-		popstackmark(&smark);
-	}
-	return exitstatus;
+                setstackmark(&smark);
+                fullname = find_dot_file(argv[1]);
+                setinputfile(fullname, 1);
+                commandname = fullname;
+                cmdloop(0);
+                popfile();
+                popstackmark(&smark);
+        }
+        return exitstatus;
 }
 
 
 int
 exitcmd(int argc, char **argv)
 {
-	if (stoppedjobs())
-		return 0;
-	if (argc > 1)
-		exitstatus = number(argv[1]);
-	exitshell(exitstatus);
-	/* NOTREACHED */
+        if (stoppedjobs())
+                return 0;
+        if (argc > 1)
+                exitstatus = number(argv[1]);
+        exitshell(exitstatus);
+        /* NOTREACHED */
 }
