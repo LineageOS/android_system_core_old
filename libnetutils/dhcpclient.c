@@ -131,6 +131,7 @@ void get_dhcp_info(uint32_t *ipaddr, uint32_t *gateway, uint32_t *mask,
 static int ifc_configure(const char *ifname, dhcp_info *info)
 {
     char dns_prop_name[PROPERTY_KEY_MAX];
+    char gw_prop_name[PROPERTY_KEY_MAX];
 
     if (ifc_set_addr(ifname, info->ipaddr)) {
         printerr("failed to set ipaddr %s: %s\n", ipaddr(info->ipaddr), strerror(errno));
@@ -149,6 +150,8 @@ static int ifc_configure(const char *ifname, dhcp_info *info)
     property_set(dns_prop_name, info->dns1 ? ipaddr(info->dns1) : "");
     snprintf(dns_prop_name, sizeof(dns_prop_name), "net.%s.dns2", ifname);
     property_set(dns_prop_name, info->dns2 ? ipaddr(info->dns2) : "");
+    snprintf(gw_prop_name, sizeof(gw_prop_name), "net.%s.gw", ifname);
+    property_set(gw_prop_name, info->gateway ? ipaddr(info->gateway) : "");
 
     last_good_info = *info;
 
