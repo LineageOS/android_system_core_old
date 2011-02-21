@@ -1,5 +1,7 @@
 # Copyright 2005 The Android Open Source Project
 
+ifneq ($(TARGET_PROVIDES_INIT),true)
+
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -51,3 +53,5 @@ ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 # local module name
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
     $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(SYMLINKS)
+
+endif
