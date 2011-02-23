@@ -406,6 +406,9 @@ static void import_kernel_nv(char *name, int in_qemu)
             strlcpy(console, value, sizeof(console));
         } else if (!strcmp(name,"androidboot.mode")) {
             strlcpy(bootmode, value, sizeof(bootmode));
+        /* Samsung Bootloader recovery cmdline */
+        } else if (!strcmp(name,"bootmode")) {
+            strlcpy(bootmode, value, sizeof(bootmode));
         } else if (!strcmp(name,"androidboot.serialno")) {
             strlcpy(serialno, value, sizeof(serialno));
         } else if (!strcmp(name,"androidboot.baseband")) {
@@ -696,9 +699,20 @@ int main(int argc, char **argv)
     /* pull the kernel commandline and ramdisk properties file in */
     import_kernel_cmdline(0);
 
-    get_hardware_name(hardware, &revision);
-    snprintf(tmp, sizeof(tmp), "/init.%s.rc", hardware);
-    init_parse_config_file(tmp);
+#ifdef BOARD_PROVIDES_BOOTMODE
+    /* Samsung Galaxy S: special bootmode for recovery
+     * Samsung Bootloader only knows one Kernel, which has to detect
+     * from bootmode if it should run recovery. */
+    if (!strcmp(bootmode, "2"))
+        init_parse_config_file("/recovery.rc");
+    else
+#endif
+     {
+        get_hardware_name(hardware, &revision);
+        snprintf(tmp, sizeof(tmp), "/init.%s.rc", hardware);
+        init_parse_config_file(tmp);
+     }
+
 
     action_for_each_trigger("early-init", action_add_queue_tail);
 
