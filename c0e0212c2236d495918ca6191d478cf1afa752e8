@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAACn///Zk\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 171
+      },
+      "writtenOn": "2011-02-24T19:36:04Z",
+      "side": 1,
+      "message": "As coded recovery will load init.rc + reocvery.rc as coded, boot will be init.rc and init.\u003chwname\u003e.rc If this is intended all is well;",
+      "revId": "c0e0212c2236d495918ca6191d478cf1afa752e8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAACn///Zo\u003d",
+        "filename": "init/init.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 171
+      },
+      "writtenOn": "2011-02-24T19:36:04Z",
+      "side": 1,
+      "message": "I\u0027d rather this condition be part of a build option -DBOARD_PROVIDES_BOOTMODE (or similar) thus changing this:\n\n#ifdef BOARD_PROVIDES_BOOTMODE\nif(!strcmp(bootmode, \"2\"))\n  init_parse_config_file(\"/recovery.rc\");\nelse\n#endif\n{\n  \u003cload /init.%s.rc\u003e\n}\n\u003crest of code\u003e",
+      "revId": "c0e0212c2236d495918ca6191d478cf1afa752e8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
