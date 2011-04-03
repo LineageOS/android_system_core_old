@@ -84,6 +84,14 @@ struct {
     { "persist.service.", AID_SYSTEM,   0 },
     { "persist.security.",AID_SYSTEM,   0 },
     { "wimax.",           AID_SYSTEM,   1000 },
+    { "net.pdp1",         AID_RADIO,    AID_RADIO },
+    { "net.pdp2",         AID_RADIO,    AID_RADIO },
+    { "net.pdp3",         AID_RADIO,    AID_RADIO },
+    { "net.pdp4",         AID_RADIO,    AID_RADIO },
+    { "net.vsnet0",       AID_RADIO,    AID_RADIO },
+    { "net.vsnet1",       AID_RADIO,    AID_RADIO },
+    { "net.vsnet2",       AID_RADIO,    AID_RADIO },
+    { "net.vsnet3",       AID_RADIO,    AID_RADIO },
     { NULL, 0, 0 }
 };
 
@@ -96,7 +104,11 @@ struct {
     unsigned int uid;
     unsigned int gid;
 } control_perms[] = {
-    { "dumpstate",AID_SHELL, AID_LOG },
+    { "dumpstate",   AID_SHELL, AID_LOG   },
+    { "rawip_vsnet1",AID_RADIO, AID_RADIO },
+    { "rawip_vsnet2",AID_RADIO, AID_RADIO },
+    { "rawip_vsnet3",AID_RADIO, AID_RADIO },
+    { "rawip_vsnet4",AID_RADIO, AID_RADIO },
      {NULL, 0, 0 }
 };
 
