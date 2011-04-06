@@ -10,7 +10,6 @@ TOOLS := \
 	lsmod \
 	ifconfig \
 	setconsole \
-	mkdir \
 	rmdir \
 	reboot \
 	getevent \
@@ -48,6 +47,7 @@ TOOLS := \
 
 ifndef TINY_TOOLBOX
     TOOLS += \
+        mkdir \
         ln \
         ls \
         mount \
