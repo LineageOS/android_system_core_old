@@ -51,6 +51,7 @@
 
 #if defined(__arm__)
 #   define ANDROID_ARM_CODEGEN  1
+#   include <machine/cpu-features.h>
 #else
 #   define ANDROID_ARM_CODEGEN  0
 #endif
