@@ -119,6 +119,7 @@ static void rect_generic(context_t* c, size_t yc);
 static void rect_memcpy(context_t* c, size_t yc);
 
 #if defined( __arm__)
+extern "C" void scanline_t32cb16_neon(uint16_t *dst, uint32_t *src, size_t ct);
 extern "C" void scanline_t32cb16blend_arm(uint16_t*, uint32_t*, size_t);
 extern "C" void scanline_t32cb16_arm(uint16_t *dst, uint32_t *src, size_t ct);
 extern "C" void scanline_col32cb16blend_neon(uint16_t *dst, uint32_t *col, size_t ct);
@@ -2126,6 +2127,10 @@ void scanline_t32cb16(context_t* c)
     int sR, sG, sB;
     uint32_t s, d;
 
+#if ((ANDROID_CODEGEN >= ANDROID_CODEGEN_ASM) && defined(__arm__)) && \
+    defined(__ARM_HAVE_NEON) && BYTE_ORDER == LITTLE_ENDIAN
+    scanline_t32cb16_neon(dst, src, ct);
+#else
     if (ct==1 || uint32_t(dst)&2) {
 last_one:
         s = GGL_RGBA_TO_HOST( *src++ );
@@ -2154,6 +2159,7 @@ last_one:
     if (ct > 0) {
         goto last_one;
     }
+#endif
 }
 
 void scanline_t32cb16blend(context_t* c)
