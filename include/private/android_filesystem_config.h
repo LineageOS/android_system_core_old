@@ -174,6 +174,7 @@ static struct fs_path_config android_files[] = {
     { 00644, AID_SYSTEM,    AID_SYSTEM,    "data/app/*" },
     { 00644, AID_SYSTEM,    AID_SYSTEM,    "data/app-private/*" },
     { 00644, AID_APP,       AID_APP,       "data/data/*" },
+    { 04755, AID_ROOT,      AID_SYSTEM,    "system/bin/pppd" },
         /* the following two files are INTENTIONALLY set-gid and not set-uid.
          * Do not change. */
     { 02755, AID_ROOT,      AID_NET_RAW,   "system/bin/ping" },
