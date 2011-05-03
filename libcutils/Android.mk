@@ -117,6 +117,14 @@ LOCAL_SRC_FILES_x86_64 += \
         arch-x86_64/android_memset16.S \
         arch-x86_64/android_memset32.S \
 
+ifneq ($(TARGET_RECOVERY_PRE_COMMAND),)
+    LOCAL_CFLAGS += -DRECOVERY_PRE_COMMAND='$(TARGET_RECOVERY_PRE_COMMAND)'
+endif
+
+ifeq ($(TARGET_RECOVERY_PRE_COMMAND_CLEAR_REASON),true)
+    LOCAL_CFLAGS += -DRECOVERY_PRE_COMMAND_CLEAR_REASON
+endif
+
 LOCAL_C_INCLUDES := $(libcutils_c_includes)
 LOCAL_STATIC_LIBRARIES := liblog
 ifneq ($(ENABLE_CPUSETS),)
