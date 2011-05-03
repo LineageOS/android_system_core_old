@@ -213,25 +213,46 @@ int android_reboot_with_callback(
     int cmd, int flags __unused, const char *arg,
     void (*cb_on_remount)(const struct mntent*))
 {
-    int ret;
+    int ret = 0;
+    int reason = -1;
+
+#ifdef RECOVERY_PRE_COMMAND
+    if (cmd == (int) ANDROID_RB_RESTART2) {
+        if (arg && strlen(arg) > 0) {
+            char cmd[PATH_MAX];
+            sprintf(cmd, RECOVERY_PRE_COMMAND " %s", arg);
+            system(cmd);
+        }
+    }
+#endif
+
     remount_ro(cb_on_remount);
     switch (cmd) {
         case ANDROID_RB_RESTART:
-            ret = reboot(RB_AUTOBOOT);
+            reason = RB_AUTOBOOT;
             break;
 
         case ANDROID_RB_POWEROFF:
             ret = reboot(RB_POWER_OFF);
-            break;
+            return ret;
 
         case ANDROID_RB_RESTART2:
-            ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
-                           LINUX_REBOOT_CMD_RESTART2, arg);
+            // REBOOT_MAGIC
             break;
 
         default:
-            ret = -1;
+            return -1;
     }
+
+#ifdef RECOVERY_PRE_COMMAND_CLEAR_REASON
+    reason = RB_AUTOBOOT;
+#endif
+
+    if (reason != -1)
+        ret = reboot(reason);
+    else
+        ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+                      LINUX_REBOOT_CMD_RESTART2, arg);
 
     return ret;
 }
