@@ -104,23 +104,3 @@ ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 # local module name
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
     $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(SYMLINKS)
-
-# Create separate executables for tools that depend on
-# additional shared libraries
-include $(CLEAR_VARS)
-
-ifneq ($(BOARD_SUPPORTS_GRALLOC_FB_READ),)
-	LOCAL_CFLAGS += -DGRALLOC_FB_READ_SUPPORTED
-	LOCAL_CFLAGS += -include $(BOARD_SUPPORTS_GRALLOC_FB_READ)
-endif
-
-ifneq ($(TARGET_RECOVERY_WRITE_MISC_PART),)
-	LOCAL_CFLAGS += -DRECOVERY_WRITE_MISC_PART='$(TARGET_RECOVERY_WRITE_MISC_PART)'
-endif
-
-LOCAL_SRC_FILES := fbread.c
-LOCAL_SHARED_LIBRARIES := libcutils libc libhardware
-LOCAL_MODULE := fbread
-LOCAL_MODULE_TAGS := eng
-
-include $(BUILD_EXECUTABLE)
