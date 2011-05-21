@@ -84,6 +84,7 @@ struct {
     { "persist.service.", AID_SYSTEM,   0 },
     { "persist.security.",AID_SYSTEM,   0 },
     { "wimax.",           AID_SYSTEM,   1000 },
+    { "net.pdp0",         AID_RADIO,    0 },
     { "net.pdp1",         AID_RADIO,    AID_RADIO },
     { "net.pdp2",         AID_RADIO,    AID_RADIO },
     { "net.pdp3",         AID_RADIO,    AID_RADIO },
