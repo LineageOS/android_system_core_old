@@ -58,7 +58,7 @@ struct {
     unsigned int uid;
     unsigned int gid;
 } property_perms[] = {
-    { "net.rmnet0.",      AID_RADIO,    0 },
+    { "net.rmnet",        AID_RADIO,    0 },
     { "net.gprs.",        AID_RADIO,    0 },
     { "net.ppp",          AID_RADIO,    0 },
     { "ril.",             AID_RADIO,    0 },
@@ -159,9 +159,20 @@ out:
 /* (8 header words + 247 toc words) = 1020 bytes */
 /* 1024 bytes header and toc + 247 prop_infos @ 128 bytes = 32640 bytes */
 
+#ifdef BOARD_HAS_EXTRA_SYS_PROPS
+/* This is for boards that have an excessive number of system props set. */
+
+#define PA_COUNT_MAX  494
+#define PA_INFO_START 2048
+#define PA_SIZE       65536
+
+#else
+
 #define PA_COUNT_MAX  247
 #define PA_INFO_START 1024
 #define PA_SIZE       32768
+
+#endif
 
 static workspace pa_workspace;
 static prop_info *pa_info_array;
