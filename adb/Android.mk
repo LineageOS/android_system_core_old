@@ -16,7 +16,7 @@ EXTRA_SRCS :=
 ifeq ($(HOST_OS),linux)
   USB_SRCS := usb_linux.c
   EXTRA_SRCS := get_my_path_linux.c
-  LOCAL_LDLIBS += -lrt -lncurses -lpthread
+  LOCAL_LDLIBS += -lrt -lpthread
 endif
 
 ifeq ($(HOST_OS),darwin)
