@@ -66,6 +66,7 @@ LOCAL_SRC_FILES:= \
 	toolbox.c \
 	$(patsubst %,%.c,$(TOOLS))
 
+LOCAL_STATIC_LIBRARIES := libreboot
 LOCAL_SHARED_LIBRARIES := libcutils libc libusbhost
 
 LOCAL_MODULE:= toolbox
