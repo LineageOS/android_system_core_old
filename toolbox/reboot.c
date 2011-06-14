@@ -1,7 +1,12 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+<<<<<<< HEAD
 #include <cutils/android_reboot.h>
+=======
+#include <sys/reboot.h>
+#include <reboot/reboot.h>
+>>>>>>> 20625dd... add libreboot static library
 #include <unistd.h>
 
 int reboot_main(int argc, char *argv[])
@@ -45,10 +50,10 @@ int reboot_main(int argc, char *argv[])
 
     if(poweroff)
         ret = android_reboot(ANDROID_RB_POWEROFF, flags, 0);
-    else if(argc > optind)
-        ret = android_reboot(ANDROID_RB_RESTART2, flags, argv[optind]);
-    else
-        ret = android_reboot(ANDROID_RB_RESTART, flags, 0);
+    else if(argc > optind) {
+        ret = reboot_wrapper(argv[optind]);
+    } else
+        ret = reboot_wrapper(NULL);
     if(ret < 0) {
         perror("reboot");
         exit(EXIT_FAILURE);
