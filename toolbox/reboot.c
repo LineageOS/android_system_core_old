@@ -44,9 +44,9 @@ int reboot_main(int argc, char *argv[])
     if(poweroff)
         ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_POWER_OFF, NULL);
     else if(argc > optind) {
-#ifdef RECOVERY_PRE_COMMAND
+#ifdef TARGET_RECOVERY_PRE_COMMAND
         if (!strncmp(argv[optind],"recovery",8))
-            system( RECOVERY_PRE_COMMAND );
+            system( TARGET_RECOVERY_PRE_COMMAND );
 #endif
         ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_RESTART2, argv[optind]);
     } else
