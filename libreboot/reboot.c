@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <sys/reboot.h>
 
+#ifdef RECOVERY_SHELL
+#include "../../../bootable/recovery/libcrecovery/common.h"
+#define system __system
+#endif
+
 int reboot_wrapper(const char* reason) {
     int reboot_with_reason = 0;
     int ret;
