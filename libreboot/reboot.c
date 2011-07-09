@@ -8,6 +8,10 @@
 #define system __system
 #endif
 
+#ifndef REBOOT_REASON_DEFAULT
+#define REBOOT_REASON_DEFAULT NULL
+#endif
+
 int reboot_wrapper(const char* reason) {
     int reboot_with_reason = 0;
     int ret;
@@ -26,6 +30,9 @@ int reboot_wrapper(const char* reason) {
 #endif
         }
 #endif
+    }
+    else {
+        reason = REBOOT_REASON_DEFAULT;
     }
 
     if (reboot_with_reason)
