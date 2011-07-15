@@ -1,5 +1,5 @@
 #include <reboot/reboot.h>
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/reboot.h>
 
@@ -14,25 +14,42 @@
 
 int reboot_wrapper(const char* reason) {
     int reboot_with_reason = 0;
+    int need_clear_reason = 0;
     int ret;
 
     if (reason != NULL) {
         // pass the reason to the kernel when we reboot
         reboot_with_reason = 1;
 
-#ifdef RECOVERY_PRE_COMMAND
+    #ifdef RECOVERY_PRE_COMMAND
         if (!strncmp(reason,"recovery",8)) {
             system( RECOVERY_PRE_COMMAND );
 
-#ifdef RECOVERY_PRE_COMMAND_CLEAR_REASON
-            // although we have a reason, ignore it on reboot
-            reboot_with_reason = 0;
-#endif
+            #ifdef RECOVERY_PRE_COMMAND_CLEAR_REASON
+            need_clear_reason = 1;
+            #endif
         }
-#endif
+    #endif
+    #ifdef REBOOT_PRE_COMMAND
+
+        // called for all reboot reasons, could be a script or binary tool.
+        char cmd[256];
+        sprintf(cmd, REBOOT_PRE_COMMAND " %s", reason);
+
+        system(cmd);
+
+        #ifdef REBOOT_PRE_COMMAND_CLEAR_REASON
+        need_clear_reason = 1;
+        #endif
+
+    #endif
     }
-    else {
+    else
         reason = REBOOT_REASON_DEFAULT;
+
+    // although we have a reason, ignore it on reboot
+    if (need_clear_reason) {
+        reboot_with_reason = 0;
     }
 
     if (reboot_with_reason)
