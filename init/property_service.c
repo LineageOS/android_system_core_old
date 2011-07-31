@@ -407,15 +407,21 @@ void handle_property_set_fd()
     }
 
     r = recv(s, &msg, sizeof(msg), 0);
-    close(s);
+    if(msg.cmd != PROP_MSG_SETPROP_SYNC) {
+        close(s);
+    }
     if(r != sizeof(prop_msg)) {
         ERROR("sys_prop: mis-match msg size recieved: %d expected: %d\n",
               r, sizeof(prop_msg));
+        if(msg.cmd == PROP_MSG_SETPROP_SYNC) {
+            close(s);
+        }
         return;
     }
 
     switch(msg.cmd) {
     case PROP_MSG_SETPROP:
+    case PROP_MSG_SETPROP_SYNC:
         msg.name[PROP_NAME_MAX-1] = 0;
         msg.value[PROP_VALUE_MAX-1] = 0;
 
@@ -438,6 +444,11 @@ void handle_property_set_fd()
 
     default:
         break;
+    }
+
+    //close socket until we've fnished setting property
+    if(msg.cmd == PROP_MSG_SETPROP_SYNC) {
+        close(s);
     }
 }
 

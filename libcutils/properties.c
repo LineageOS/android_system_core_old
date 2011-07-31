@@ -31,10 +31,11 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-static int send_prop_msg(prop_msg *msg)
+static int send_prop_msg(prop_msg *msg, int sync)
 {
     int s;
     int r;
+    int dummy;
     
     s = socket_local_client(PROP_SERVICE_NAME, 
                             ANDROID_SOCKET_NAMESPACE_RESERVED,
@@ -52,11 +53,20 @@ static int send_prop_msg(prop_msg *msg)
         r = -1;
     }
 
+    if(sync == 1)
+    {
+        // wait for server side to close
+        if(recv(s, &dummy, sizeof(dummy), 0) == 0) {
+        } else {
+        //    LOGW("unexpected return code %d:%s", errno, strerror(errno));
+        }
+    }
+
     close(s);
     return r;
 }
 
-int property_set(const char *key, const char *value)
+static int property_set_internal(const char *key, const char *value, int sync)
 {
     prop_msg msg;
     unsigned resp;
@@ -67,11 +77,25 @@ int property_set(const char *key, const char *value)
     if(strlen(key) >= PROP_NAME_MAX) return -1;
     if(strlen(value) >= PROP_VALUE_MAX) return -1;
     
-    msg.cmd = PROP_MSG_SETPROP;
+    if(sync) {
+        msg.cmd = PROP_MSG_SETPROP_SYNC;
+    } else {
+        msg.cmd = PROP_MSG_SETPROP;
+    }
     strcpy((char*) msg.name, key);
     strcpy((char*) msg.value, value);
 
-    return send_prop_msg(&msg);
+    return send_prop_msg(&msg, sync);
+}
+
+int property_set(const char *key, const char *value)
+{
+    return property_set_internal(key, value, 0);
+}
+
+int property_set_sync(const char *key, const char *value)
+{
+    return property_set_internal(key, value, 1);
 }
 
 int property_get(const char *key, char *value, const char *default_value)
@@ -82,7 +106,7 @@ int property_get(const char *key, char *value, const char *default_value)
     if(len > 0) {
         return len;
     }
-    
+
     if(default_value) {
         len = strlen(default_value);
         memcpy(value, default_value, len + 1);
@@ -97,7 +121,7 @@ int property_list(void (*propfn)(const char *key, const char *value, void *cooki
     char value[PROP_VALUE_MAX];
     const prop_info *pi;
     unsigned n;
-    
+
     for(n = 0; (pi = __system_property_find_nth(n)); n++) {
         __system_property_read(pi, name, value);
         propfn(name, value, cookie);
@@ -134,7 +158,7 @@ static int connectToServer(const char* fileName)
     int cc;
 
     struct sockaddr_un addr;
-    
+
     sock = socket(AF_UNIX, SOCK_STREAM, 0);
     if (sock < 0) {
         LOGW("UNIX domain socket create failed (errno=%d)\n", errno);
