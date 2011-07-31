@@ -56,7 +56,7 @@ static int send_prop_msg(prop_msg *msg)
     return r;
 }
 
-int property_set(const char *key, const char *value)
+static int property_set_internal(const char *key, const char *value, int sync)
 {
     prop_msg msg;
     unsigned resp;
@@ -67,11 +67,25 @@ int property_set(const char *key, const char *value)
     if(strlen(key) >= PROP_NAME_MAX) return -1;
     if(strlen(value) >= PROP_VALUE_MAX) return -1;
     
-    msg.cmd = PROP_MSG_SETPROP;
+    if(sync) {
+        msg.cmd = PROP_MSG_SETPROP_SYNC;
+    } else {
+        msg.cmd = PROP_MSG_SETPROP;
+    }
     strcpy((char*) msg.name, key);
     strcpy((char*) msg.value, value);
 
-    return send_prop_msg(&msg);
+    return send_prop_msg(&msg, sync);
+}
+
+int property_set(const char *key, const char *value)
+{
+    return property_set_internal(key, value, 0);
+}
+
+int property_set_sync(const char *key, const char *value)
+{
+    return property_set_internal(key, value, 1);
 }
 
 int property_get(const char *key, char *value, const char *default_value)
