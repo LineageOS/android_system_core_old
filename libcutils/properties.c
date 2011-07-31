@@ -74,6 +74,20 @@ int property_set(const char *key, const char *value)
     return send_prop_msg(&msg);
 }
 
+#ifdef MOTO_SYNC_FUNCTIONS
+int property_set_sync(const char *key, const char *value)
+{
+    int tmp = property_set(key, value);
+    char prop_value[PROPERTY_VALUE_MAX];
+    property_get(key, prop_value, "");
+    while(strcmp(prop_value, value) != 0) {
+        usleep(100000);
+        property_get(key, prop_value, "");
+    }
+    return tmp;
+}
+#endif
+
 int property_get(const char *key, char *value, const char *default_value)
 {
     int len;

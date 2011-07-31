@@ -23,6 +23,10 @@ else
 endif
 hostSmpFlag := -DANDROID_SMP=0
 
+ifeq ($(TARGET_MOTO_SYNC_FUNCTIONS),true)
+    targetSmpFlag += -DMOTO_SYNC_FUNCTIONS
+endif
+
 commonSources := \
 	array.c \
 	hashmap.c \
