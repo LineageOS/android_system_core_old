@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAHn///Po\u003d",
+        "filename": "libcutils/properties.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 431
+      },
+      "writtenOn": "2011-08-03T20:30:04Z",
+      "side": 1,
+      "message": "PROP_MSG_SETPROP_SYNC is not defined on init so it won\u0027t work",
+      "revId": "4441b2381b9504e5802d2d2f55063121c06e97b7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
