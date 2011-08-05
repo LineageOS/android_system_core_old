@@ -33,6 +33,24 @@
       "revId": "4441b2381b9504e5802d2d2f55063121c06e97b7",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAHn//+5Q\u003d",
+        "filename": "libcutils/properties.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 431
+      },
+      "writtenOn": "2011-08-05T12:59:48Z",
+      "side": 1,
+      "message": "This patch is missing code from init which changes this function, that\u0027s why it looks broken (for now).",
+      "parentUuid": "AAAAHn//+5Y\u003d",
+      "revId": "4441b2381b9504e5802d2d2f55063121c06e97b7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
