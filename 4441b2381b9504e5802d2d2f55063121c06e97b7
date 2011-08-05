@@ -16,6 +16,23 @@
       "revId": "4441b2381b9504e5802d2d2f55063121c06e97b7",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAHn//+5Y\u003d",
+        "filename": "libcutils/properties.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 836
+      },
+      "writtenOn": "2011-08-05T12:01:47Z",
+      "side": 1,
+      "message": "send_prop_msg takes only 1 argument, and msg.cmd already set to appropriate value, so this should be :\nreturn send_prop_msg(\u0026msg);",
+      "revId": "4441b2381b9504e5802d2d2f55063121c06e97b7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
