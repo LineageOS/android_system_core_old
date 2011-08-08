@@ -12,6 +12,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#pragma GCC visibility push(hidden)
+
 // ---------------------------------------------------------------------------
 
 namespace android {
@@ -134,5 +136,7 @@ bool SharedBuffer::onlyOwner() const {
 }; // namespace android
 
 // ---------------------------------------------------------------------------
+
+#pragma GCC visibility pop
 
 #endif // ANDROID_VECTOR_H
