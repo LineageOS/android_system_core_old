@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAH3///RI\u003d",
+        "filename": "init/property_service.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 68
+      },
+      "writtenOn": "2011-08-29T03:50:34Z",
+      "side": 1,
+      "message": "Minor spacing issue, the tab should be replaced by spaces.",
+      "revId": "713d90a6b09c1c3e926d1362be187e84bff79545",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
