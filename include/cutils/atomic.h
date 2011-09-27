@@ -112,7 +112,7 @@ int android_atomic_acquire_cas(int32_t oldvalue, int32_t newvalue,
         volatile int32_t* addr);
 int android_atomic_release_cas(int32_t oldvalue, int32_t newvalue,
         volatile int32_t* addr);
-#if defined(__ARM_ARCH__) || defined (__ARM_EABI__)
+#ifdef __arm__
 int android_atomic_cmpxchg(int32_t oldvalue, int32_t newvalue,
         volatile int32_t* addr);
 #else
