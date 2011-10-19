@@ -595,7 +595,6 @@ static int set_init_properties_action(int nargs, char **args)
     property_set("ro.baseband", baseband[0] ? baseband : "unknown");
     property_set("ro.carrier", carrier[0] ? carrier : "unknown");
     property_set("ro.bootloader", bootloader[0] ? bootloader : "unknown");
-
     property_set("ro.hardware", hardware);
     snprintf(tmp, PROP_VALUE_MAX, "%d", revision);
     property_set("ro.revision", tmp);
@@ -715,6 +714,11 @@ int main(int argc, char **argv)
         init_parse_config_file(tmp);
      }
 
+    /* Check for a target specific initialization file and read if present */
+    if (access("/init.target.rc", R_OK) == 0) {
+        INFO("Reading target specific config file");
+            init_parse_config_file("/init.target.rc");
+    }
 
     action_for_each_trigger("early-init", action_add_queue_tail);
 
