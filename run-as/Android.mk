@@ -3,6 +3,10 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:= run-as.c package.c
 
+ifeq ($(PRODUCT_BRAND),MOTO)
+    LOCAL_CFLAGS += -DMOTOROLA_UIDS
+endif
+
 LOCAL_MODULE:= run-as
 
 LOCAL_FORCE_STATIC_EXECUTABLE := true
