@@ -340,9 +340,11 @@ static int create_subprocess(const char *cmd, const char *arg0, const char *arg1
 #if ADB_HOST
 #define SHELL_COMMAND "/bin/sh"
 #define ALTERNATE_SHELL_COMMAND ""
+#define BASH_SHELL_COMMAND ""
 #else
 #define SHELL_COMMAND "/system/bin/sh"
 #define ALTERNATE_SHELL_COMMAND "/sbin/sh"
+#define BASH_SHELL_COMMAND "/system/xbin/bash"
 #endif
 
 int service_to_fd(const char *name)
@@ -403,6 +405,9 @@ int service_to_fd(const char *name)
             if (stat(ALTERNATE_SHELL_COMMAND, &filecheck) == 0) {
                 ret = create_subprocess(ALTERNATE_SHELL_COMMAND, "-c", name + 6);
             }
+            else if (stat(BASH_SHELL_COMMAND, &filecheck) == 0) {
+                ret = create_subprocess(BASH_SHELL_COMMAND, "-c", name + 6);
+            }
             if (ret == -1) {
                 ret = create_subprocess(SHELL_COMMAND, "-c", name + 6);
             }
@@ -411,6 +416,9 @@ int service_to_fd(const char *name)
             ret = -1;
             if (stat(ALTERNATE_SHELL_COMMAND, &filecheck) == 0) {
                 ret = create_subprocess(ALTERNATE_SHELL_COMMAND, "-", 0);
+            }
+            else if (stat(BASH_SHELL_COMMAND, &filecheck) == 0) {
+                ret = create_subprocess(BASH_SHELL_COMMAND, "-", 0);
             }
             if (ret == -1) {
                 ret = create_subprocess(SHELL_COMMAND, "-", 0);
