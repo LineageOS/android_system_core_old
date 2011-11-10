@@ -101,7 +101,7 @@ void FrameworkListener::dispatchCommand(SocketClient *cli, char *data) {
         }
 
         *q = *p++;
-        if (!quote && *q == ' ') {
+        if (!quote && *q == ' ' && argc<FrameworkListener::CMD_ARGS_MAX) {
             *q = '\0';
             argv[argc++] = strdup(tmp);
             memset(tmp, 0, sizeof(tmp));
@@ -110,6 +110,9 @@ void FrameworkListener::dispatchCommand(SocketClient *cli, char *data) {
         }
         q++;
     }
+
+    if (argc >= FrameworkListener::CMD_ARGS_MAX)
+        goto out;
 
     argv[argc++] = strdup(tmp);
 #if 0
