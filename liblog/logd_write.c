@@ -150,6 +150,8 @@ int __android_log_write(int prio, const char *tag, const char *msg)
         !strcmp(tag, "KINETO") ||
         !strncmp(tag, "KIPC", 4) ||
         !strncmp(tag, "Kineto", 6) ||
+        !strncmp(tag, "GAN", 3) ||
+        !strcmp(tag, "NAS") ||
         !strncmp(tag, "QCRIL", 5) ||
         !strncmp(tag, "QC-RIL", 6) ||
         !strncmp(tag, "QC-QMI", 6) ||
