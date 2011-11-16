@@ -1,5 +1,6 @@
 /*
  * Copyright 2008, The Android Open Source Project
+ * Copyright (C) 2011, Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -58,6 +59,7 @@ extern int ifc_get_info(const char *name, in_addr_t *addr, int *prefixLength,
 extern int ifc_configure(const char *ifname, in_addr_t address,
                          uint32_t prefixLength, in_addr_t gateway,
                          in_addr_t dns1, in_addr_t dns2);
+extern int ifc_get_mtu(const char *name, int *mtuSz);
 
 extern in_addr_t prefixLengthToIpv4Netmask(int prefix_length);
 
