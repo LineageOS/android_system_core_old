@@ -212,6 +212,9 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
+# Include extra init file
+    import /system/etc/init.local.rc
+
 on boot
 # basic network init
     ifup lo
