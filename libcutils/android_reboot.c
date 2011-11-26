@@ -112,6 +112,13 @@ int android_reboot(int cmd, int flags UNUSED, char *arg)
     sync();
     remount_ro();
 
+#ifdef RECOVERY_PRE_COMMAND
+    if (cmd == ANDROID_RB_RESTART2) {
+        if (!strncmp((char *)arg,"recovery",8))
+            system( RECOVERY_PRE_COMMAND );
+    }
+#endif
+
     switch (cmd) {
         case ANDROID_RB_RESTART:
             ret = reboot(RB_AUTOBOOT);
@@ -122,10 +129,6 @@ int android_reboot(int cmd, int flags UNUSED, char *arg)
             break;
 
         case ANDROID_RB_RESTART2:
-#ifdef RECOVERY_PRE_COMMAND
-            if (!strncmp((char *)arg,"recovery",8))
-                system( RECOVERY_PRE_COMMAND );
-#endif
             ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
                            LINUX_REBOOT_CMD_RESTART2, arg);
             break;
