@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAM3///9U\u003d",
+        "filename": "debuggerd/vfp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2011-11-27T18:53:55Z",
+      "side": 1,
+      "message": "is this really required  ? :p\n\narmv5te is the minimal requirement for android bionic, since beginning... i think the commit title should not include armv5, but instead should explain its for armv6-vfp too",
+      "revId": "f36b7dd7cef79622f55ba7f0b2ea969e9a196edb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
