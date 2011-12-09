@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAANX///Zg\u003d",
+        "filename": "rootdir/init.rc",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1816
+      },
+      "writtenOn": "2011-12-09T11:31:09Z",
+      "side": 1,
+      "message": "This seems to kill market downloads and causes market to FC.  Removing this line and making a new boot.img resolved the issue.",
+      "revId": "02627dcb0ddd4aa03268faac2a4b18c51eff296e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
