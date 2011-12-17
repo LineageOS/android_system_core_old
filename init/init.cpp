@@ -988,6 +988,24 @@ static void InstallRebootSignalHandlers() {
     sigaction(SIGTRAP, &action, nullptr);
 }
 
+static int charging_mode_booting(void) {
+#ifndef BOARD_CHARGING_MODE_BOOTING_LPM
+    return 0;
+#else
+    int f;
+    char cmb;
+    f = open(BOARD_CHARGING_MODE_BOOTING_LPM, O_RDONLY);
+    if (f < 0)
+        return 0;
+
+    if (1 != read(f, (void *)&cmb,1))
+        return 0;
+
+    close(f);
+    return ('1' == cmb);
+#endif
+}
+
 int main(int argc, char** argv) {
     if (!strcmp(basename(argv[0]), "ueventd")) {
         return ueventd_main(argc, argv);
@@ -1171,7 +1189,7 @@ int main(int argc, char** argv) {
 
     // Don't mount filesystems or start core system services in charger mode.
     std::string bootmode = GetProperty("ro.bootmode", "");
-    if (bootmode == "charger") {
+    if (bootmode == "charger" || charging_mode_booting()) {
         am.QueueEventTrigger("charger");
     } else {
         am.QueueEventTrigger("late-init");
