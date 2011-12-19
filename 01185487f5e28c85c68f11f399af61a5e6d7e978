@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAOX///z8\u003d",
+        "filename": "init/builtins.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2011-12-19T12:50:34Z",
+      "side": 1,
+      "message": "system properties starting with \u0027$\u0027 could be implemented later",
+      "revId": "01185487f5e28c85c68f11f399af61a5e6d7e978",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
