@@ -260,6 +260,22 @@ int do_insmod(int nargs, char **args)
     return do_insmod_inner(nargs, args, size);
 }
 
+int do_log(int nargs, char **args)
+{
+    char* options[nargs + 3];
+    int i;
+
+    options[0] = "exec";
+    options[1] = "/system/xbin/logwrapper";
+    options[2] = "/system/xbin/echo";
+    for (i = 1; i < nargs; ++i) {
+        options[i+2] = args[i];
+    }
+    options[nargs+2] = NULL;
+
+    return do_exec(nargs+2, options);
+}
+
 int do_mkdir(int nargs, char **args)
 {
     mode_t mode = 0755;
