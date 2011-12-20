@@ -1,0 +1,10 @@
+Change-Id: I3481299c1d0be36d7c871986360428946b4a4d9e
+Code-Review+2: Steve Kondik <shade@chemlab.org>
+Verified+1: Steve Kondik <shade@chemlab.org>
+Code-Review+1: Tanguy Pruvot <tanguy.pruvot@gmail.com>
+Code-Review+1: Steve Smith <twistedumbrella@gmail.com>
+Submitted-by: Steve Kondik <shade@chemlab.org>
+Submitted-at: Tue, 20 Dec 2011 23:00:55 +0300
+Reviewed-on: http://review.cyanogenmod.com/11062
+Project: CyanogenMod/android_system_core
+Branch: refs/heads/ics
