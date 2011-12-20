@@ -264,6 +264,12 @@ on boot
     setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
 
+# Include custom init.rc
+    import /system/etc/init.local.rc
+
+# Run sysinit
+    exec /system/bin/sysinit
+
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
 
