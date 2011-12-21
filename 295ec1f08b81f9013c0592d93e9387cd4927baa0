@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAOX///aA\u003d",
+        "filename": "toolbox/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2011-12-21T08:19:34Z",
+      "side": 1,
+      "message": "ls.c is removed from sources here if not defined.. it should be readded here",
+      "revId": "295ec1f08b81f9013c0592d93e9387cd4927baa0",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
