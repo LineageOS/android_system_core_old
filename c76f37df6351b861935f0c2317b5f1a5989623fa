@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAOX///cw\u003d",
+        "filename": "toolbox/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2011-12-21T04:27:13Z",
+      "side": 0,
+      "message": "could you keep the ls applet\n\nbusybox output is a bit different, (shrinked user/group names to 8 chars)\n\nIt could be nice to keep both even if that is not symlinked",
+      "revId": "c76f37df6351b861935f0c2317b5f1a5989623fa",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
