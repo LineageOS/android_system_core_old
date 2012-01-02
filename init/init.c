@@ -392,6 +392,11 @@ void handle_control_message(const char *msg, const char *arg)
     }
 }
 
+#ifndef CHARGERMODE_CMDLINE_NAME
+#define CHARGERMODE_CMDLINE_NAME "androidboot.battchg_pause"
+#define CHARGERMODE_CMDLINE_VALUE "true"
+#endif
+
 static void import_kernel_nv(char *name, int in_qemu)
 {
     char *value = strchr(name, '=');
@@ -426,8 +431,8 @@ static void import_kernel_nv(char *name, int in_qemu)
             if (!strcmp(value, "true")) {
                 emmc_boot =1;
             }
-        } else if (!strcmp(name,"androidboot.battchg_pause")) {
-            if (!strcmp(value,"true")) {
+        } else if (!strcmp(name,CHARGERMODE_CMDLINE_NAME)) {
+            if (!strcmp(value, CHARGERMODE_CMDLINE_VALUE)) {
                 battchg_pause = 1;
             }
         }
