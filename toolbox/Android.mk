@@ -21,7 +21,6 @@ TOOLS := \
 	stop \
 	notify \
 	cmp \
-	dmesg \
 	route \
 	hd \
 	dd \
@@ -47,6 +46,7 @@ TOOLS := \
 
 ifndef TINY_TOOLBOX
     TOOLS += \
+        dmesg \
         mkdir \
         ln \
         ls \
