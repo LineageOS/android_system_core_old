@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAPH///Y8\u003d",
+        "filename": "rootdir/init.rc",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-01-13T03:33:01Z",
+      "side": 1,
+      "message": "There is also \"restart adbd\"",
+      "revId": "2eaf82f11b9d1e2fa2f3a2772b0033a16ab3c654",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
