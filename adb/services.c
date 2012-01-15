@@ -111,6 +111,7 @@ void restart_root_service(int fd, void *cookie)
 {
     char buf[100];
     char value[PROPERTY_VALUE_MAX];
+    char build_type[PROPERTY_VALUE_MAX];
 
     if (getuid() == 0) {
         snprintf(buf, sizeof(buf), "adbd is already running as root\n");
@@ -120,6 +121,15 @@ void restart_root_service(int fd, void *cookie)
         property_get("ro.debuggable", value, "");
         if (strcmp(value, "1") != 0) {
             snprintf(buf, sizeof(buf), "adbd cannot run as root in production builds\n");
+            writex(fd, buf, strlen(buf));
+            adb_close(fd);
+            return;
+        }
+
+        property_get("persist.sys.root_access", value, "");
+        property_get("ro.build.type", build_type, "");
+        if (strcmp(build_type, "eng") != 0 && strcmp(value, "1") != 0) {
+            snprintf(buf, sizeof(buf), "root access is disabled by system setting - enable in settings -> development otions\n");
             writex(fd, buf, strlen(buf));
             adb_close(fd);
             return;
