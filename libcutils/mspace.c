@@ -71,13 +71,24 @@ static void *contiguous_mspace_morecore(mstate0 m, ssize_t nb);
  * but we include it to be consistent with the
  * rest of the mspace_*() functions.
  */
-size_t mspace_usable_size(mspace _unused, const void* mem) {
-  if (mem != 0) {
-    const mchunkptr p = mem2chunk(mem);
-    if (cinuse(p))
-      return chunksize(p) - overhead_for(p);
-  }
-  return 0;
+size_t mspace_usable_size(mspace msp, const void* mem) {
+    mstate fm = (mstate)msp;
+    if (!ok_magic(fm)) {
+        USAGE_ERROR_ACTION(fm, fm);
+        return 0;
+    }
+    if (mem != 0) {
+        const mchunkptr p = mem2chunk(mem);
+        if (!PREACTION(fm)) {
+            if (cinuse(p)) {
+                size_t ret = chunksize(p) - overhead_for(p);
+                POSTACTION(fm);
+                return ret;
+            }
+            POSTACTION(fm);
+        }
+    }
+    return 0;
 }
 
 #if USE_CONTIGUOUS_MSPACES
