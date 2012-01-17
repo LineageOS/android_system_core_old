@@ -251,6 +251,7 @@ static struct fs_path_config android_files[] = {
     { 00750, AID_ROOT,      AID_SHELL,     "init*" },
     { 00750, AID_ROOT,      AID_SHELL,     "charger*" },
     { 00644, AID_ROOT,      AID_ROOT,       0 },
+    { 00750, AID_ROOT,      AID_SHELL,     "system/etc/init.d/*" },
 };
 
 static inline void fs_config(const char *path, int dir,
