@@ -125,15 +125,24 @@ int android_reboot(int cmd, int flags, char *arg)
 
     switch (cmd) {
         case ANDROID_RB_RESTART:
-            reason = RB_AUTOBOOT;
+            // reason = RB_AUTOBOOT;
+        	ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+                           LINUX_REBOOT_CMD_RESTART2, "reboot");
+            return ret;
             break;
 
         case ANDROID_RB_POWEROFF:
-            ret = reboot(RB_POWER_OFF);
+            // ret = reboot(RB_POWER_OFF);
+        	ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+                           LINUX_REBOOT_CMD_RESTART2, "shutdown");
             return ret;
+			break;
 
         case ANDROID_RB_RESTART2:
             // REBOOT_MAGIC
+        	ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+                           LINUX_REBOOT_CMD_RESTART2, "reboot");
+			return ret;
             break;
 
         default:
@@ -141,7 +150,9 @@ int android_reboot(int cmd, int flags, char *arg)
     }
 
 #ifdef RECOVERY_PRE_COMMAND_CLEAR_REASON
+#if 0
     reason = RB_AUTOBOOT;
+#endif
 #endif
 
     if (reason != -1)
