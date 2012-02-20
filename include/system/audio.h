@@ -297,8 +297,8 @@ typedef enum {
     AUDIO_DEVICE_OUT_AUX_DIGITAL               = 0x400,
     AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET         = 0x800,
     AUDIO_DEVICE_OUT_DGTL_DOCK_HEADSET         = 0x1000,
-    AUDIO_DEVICE_OUT_FM                        = 0x2000,
 #ifdef QCOM_HARDWARE
+    AUDIO_DEVICE_OUT_FM                        = 0x2000,
     AUDIO_DEVICE_OUT_ANC_HEADSET               = 0x4000,
     AUDIO_DEVICE_OUT_ANC_HEADPHONE             = 0x8000,
     AUDIO_DEVICE_OUT_FM_TX                     = 0x10000,
