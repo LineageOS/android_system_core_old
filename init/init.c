@@ -745,7 +745,7 @@ int main(int argc, char **argv)
     queue_builtin_action(console_init_action, "console_init");
     queue_builtin_action(set_init_properties_action, "set_init_properties");
 
-        /* execute all the boot actions to get us started */
+    /* execute all the boot actions to get us started */
     action_for_each_trigger("init", action_add_queue_tail);
     action_for_each_trigger("early-fs", action_add_queue_tail);
     action_for_each_trigger("fs", action_add_queue_tail);
@@ -764,8 +764,8 @@ int main(int argc, char **argv)
     action_for_each_trigger("early-boot", action_add_queue_tail);
     action_for_each_trigger("boot", action_add_queue_tail);
 
-        /* run all property triggers based on current state of the properties */
-    queue_builtin_action(queue_property_triggers_action, "queue_propety_triggers");
+    /* run all property triggers based on current state of the properties */
+    queue_builtin_action(queue_property_triggers_action, "queue_property_triggers");
 
 
 #if BOOTCHART
