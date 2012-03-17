@@ -68,6 +68,8 @@
 #define LOGI(x...) do { KLOG_INFO("charger", x); } while (0)
 #define LOGV(x...) do { KLOG_DEBUG("charger", x); } while (0)
 
+#include "minui/graphics.c"
+
 struct key_state {
     bool pending;
     bool down;
@@ -985,17 +987,4 @@ int main(int argc, char **argv)
     event_loop(charger);
 
     return 0;
-}
-void gr_font_size(int *x, int *y)
-{
-    *x = gr_font->cwidth;
-    *y = gr_font->cheight;
-}
-void gr_fb_blank(bool blank)
-{
-    int ret;
-
-    ret = ioctl(gr_fb_fd, FBIOBLANK, blank ? FB_BLANK_POWERDOWN : FB_BLANK_UNBLANK);
-    if (ret < 0)
-        perror("ioctl(): blank");
 }
