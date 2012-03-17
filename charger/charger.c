@@ -68,6 +68,8 @@
 #define LOGI(x...) do { KLOG_INFO("charger", x); } while (0)
 #define LOGV(x...) do { KLOG_DEBUG("charger", x); } while (0)
 
+#include "minui/graphics.c"
+
 struct key_state {
     bool pending;
     bool down;
