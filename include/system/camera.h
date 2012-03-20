@@ -153,6 +153,21 @@ enum {
     CAMERA_CMD_HISTOGRAM_ON     = 8,
     CAMERA_CMD_HISTOGRAM_OFF     = 9,
     CAMERA_CMD_HISTOGRAM_SEND_DATA  = 10,
+#ifdef OMAP_ENHANCEMENT
+    /**
+     * Camera Preview deinitialization.
+     * This is a TI enhancement for supporting tunneling during VTC.
+     * This command causes the camera component to move from loaded to idle state.
+     */
+    CAMERA_CMD_PREVIEW_INITIALIZATION = 256,
+
+    /**
+     * Camera Preview initialization.
+     * This is a TI enhancement for supporting tunneling during VTC.
+     * This command causes the camera component to move from executing to idle state.
+     */
+    CAMERA_CMD_PREVIEW_DEINITIALIZATION = 257,
+#endif
 
 };
 
