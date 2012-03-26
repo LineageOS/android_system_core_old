@@ -238,6 +238,7 @@ enum {
     NATIVE_WINDOW_API_DISCONNECT            = 14,   /* private */
 #ifdef OMAP_ENHANCEMENT
     NATIVE_WINDOW_SET_BUFFERS_LAYOUT        = 15,
+    NATIVE_WINDOW_UPDATE_AND_GET_CURRENT    = 255,
 #endif
 };
 
