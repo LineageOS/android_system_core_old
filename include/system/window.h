@@ -239,6 +239,7 @@ enum {
 #ifdef OMAP_ENHANCEMENT
     NATIVE_WINDOW_SET_BUFFERS_LAYOUT        = 15,
     NATIVE_WINDOW_UPDATE_AND_GET_CURRENT    = 255,
+    NATIVE_WINDOW_SET_BUFFERS_METADATA      = 256,
 #endif
 };
 
@@ -618,6 +619,23 @@ static inline int native_window_set_buffers_timestamp(
     return window->perform(window, NATIVE_WINDOW_SET_BUFFERS_TIMESTAMP,
             timestamp);
 }
+
+#ifdef OMAP_ENHANCEMENT
+/*
+ * native_window_set_buffers_metadata(..., camera_frame_metadata *data)
+ * frames queued after this call will be associated with this set of
+ * metadata.
+ * TODO(XXX): reusing camera_frame_metadata for now. will switch to a
+ * a generic struct later.
+ */
+static inline int native_window_set_buffers_metadata(
+        struct ANativeWindow* window,
+        const char *data)
+{
+    return window->perform(window, NATIVE_WINDOW_SET_BUFFERS_METADATA,
+            data);
+}
+#endif
 
 /*
  * native_window_set_scaling_mode(..., int mode)
