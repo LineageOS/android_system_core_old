@@ -11,7 +11,6 @@ TOOLS := \
 	ifconfig \
 	setconsole \
 	rmdir \
-	reboot \
 	getevent \
 	sendevent \
 	date \
@@ -64,6 +63,7 @@ LOCAL_SRC_FILES:= \
 	toolbox.c \
 	$(patsubst %,%.c,$(TOOLS))
 
+TOOLS += reboot
 LOCAL_STATIC_LIBRARIES := libreboot
 LOCAL_SHARED_LIBRARIES := libcutils libc
 
