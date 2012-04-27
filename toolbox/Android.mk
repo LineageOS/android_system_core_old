@@ -11,7 +11,6 @@ TOOLS := \
 	ifconfig \
 	setconsole \
 	rmdir \
-	reboot \
 	getevent \
 	sendevent \
 	date \
@@ -63,6 +62,14 @@ endif
 LOCAL_SRC_FILES:= \
 	toolbox.c \
 	$(patsubst %,%.c,$(TOOLS))
+
+TOOLS += reboot
+
+ifeq ($(BOARD_USES_BOOTMENU),true)
+	LOCAL_SRC_FILES += ../../../external/bootmenu/libreboot/reboot.c
+else
+	LOCAL_SRC_FILES += reboot.c
+endif
 
 LOCAL_STATIC_LIBRARIES := libreboot
 LOCAL_SHARED_LIBRARIES := libcutils libc
