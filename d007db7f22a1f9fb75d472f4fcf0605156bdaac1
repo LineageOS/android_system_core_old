@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAASn//960\u003d",
+        "filename": "toolbox/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-04-28T02:38:23Z",
+      "side": 1,
+      "message": "also this code is not required here...",
+      "revId": "d007db7f22a1f9fb75d472f4fcf0605156bdaac1",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
