@@ -25,6 +25,9 @@
 
 #include <cutils/android_reboot.h>
 
+/* function prototype, either provided below or from custom logic addition */
+int reboot_wrapper(const char *reason);
+
 /* Check to see if /proc/mounts contains any writeable filesystems
  * backed by a block device.
  * Return true if none found, else return false.
@@ -101,11 +104,22 @@ static void remount_ro(void)
     return;
 }
 
+#ifndef CUSTOM_REBOOT_LOGIC
+int reboot_wrapper(const char *reason)
+{
+    if (reason == NULL) {
+        return reboot(RB_AUTOBOOT);
+    }
+
+    return __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
+            LINUX_REBOOT_CMD_RESTART2, arg);
+}
+#endif
 
 int android_reboot(int cmd, int flags, char *arg)
 {
     int ret = 0;
-    int reason = -1;
+    const char *reason = NULL;
 
 #ifdef RECOVERY_PRE_COMMAND
     if (cmd == (int) ANDROID_RB_RESTART2) {
@@ -125,7 +139,6 @@ int android_reboot(int cmd, int flags, char *arg)
 
     switch (cmd) {
         case ANDROID_RB_RESTART:
-            reason = RB_AUTOBOOT;
             break;
 
         case ANDROID_RB_POWEROFF:
@@ -133,22 +146,16 @@ int android_reboot(int cmd, int flags, char *arg)
             return ret;
 
         case ANDROID_RB_RESTART2:
-            // REBOOT_MAGIC
+#ifndef RECOVERY_PRE_COMMAND_CLEAR_REASON
+            reason = arg;
+#endif
             break;
 
         default:
             return -1;
     }
 
-#ifdef RECOVERY_PRE_COMMAND_CLEAR_REASON
-    reason = RB_AUTOBOOT;
-#endif
-
-    if (reason != -1)
-        ret = reboot(reason);
-    else
-        ret = __reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2,
-                           LINUX_REBOOT_CMD_RESTART2, arg);
+    ret = reboot_wrapper(reason);
 
     return ret;
 }
