@@ -138,6 +138,14 @@ void dump_stack_and_code(int tfd, int pid, mapinfo *map,
         sp_depth = 0;
     }
 
+    /* Make sure to not dump large amounts of memory even
+     * if SP is completely bogus
+     */
+#define MAX_STACK_DUMP_SIZE (32 * 1024)
+    if ((end - p) > MAX_STACK_DUMP_SIZE) {
+        end = p + MAX_STACK_DUMP_SIZE;
+    }
+
     while (p <= end) {
          char *prompt;
          char level[16];
