@@ -49,6 +49,12 @@ extern int unwind_backtrace_with_ptrace(int tfd, pid_t pid, mapinfo *map,
                                         int *frame0_pc_sane,
                                         bool at_fault);
 
+/*
+ * We don't want to dump the whole memory if SP is bogus,
+ * so limit the maximum amount of memory we're going to dump.
+ */
+#define MAX_STACK_DUMP_SIZE (32 * 1024)
+
 void dump_stack_and_code(int tfd, int pid, mapinfo *map,
                          int unwind_depth, unsigned int sp_list[],
                          bool at_fault)
@@ -136,6 +142,10 @@ void dump_stack_and_code(int tfd, int pid, mapinfo *map,
     }
     else {
         sp_depth = 0;
+    }
+
+    if ((end - p) > MAX_STACK_DUMP_SIZE) {
+        end = p + MAX_STACK_DUMP_SIZE;
     }
 
     while (p <= end) {
