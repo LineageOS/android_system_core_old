@@ -240,6 +240,19 @@ typedef struct camera_face {
  * The metadata of the frame data.
  */
 typedef struct camera_frame_metadata {
+
+#ifdef OMAP_ENHANCEMENT
+    /**
+     * Exposure time in microseconds
+     */
+    int32_t exposure_time;
+
+    /**
+     * Analog gain (EV * 100)
+     */
+    int32_t analog_gain;
+#endif
+
     /**
      * The number of detected faces in the frame.
      */
