@@ -77,6 +77,12 @@
 #define AID_NET_BW_ACCT   3007  /* change bandwidth statistics accounting */
 #define AID_QCOM_ONCRPC   3008  /* can read/write /dev/oncrpc files */
 
+/* These are mock group ids for the above */
+#define AID_MOCK_INET     8003
+
+/* Allowed to read and write mock permissions */
+#define AID_MOCK          8999
+
 #if defined(MOTOROLA_UIDS)
 #define AID_MOT_OSH       5000  /* OSH */
 #define AID_MOT_ACCY      9000  /* access to accessory */
@@ -138,10 +144,12 @@ static const struct android_id_info android_ids[] = {
     { "mtp",       AID_MTP, },
     { "gps",       AID_GPS, },
     { "inet",      AID_INET, },
+    { "mock_inet", AID_MOCK_INET, },
     { "net_raw",   AID_NET_RAW, },
     { "net_admin", AID_NET_ADMIN, },
     { "net_bw_stats", AID_NET_BW_STATS, },
     { "net_bw_acct", AID_NET_BW_ACCT, },
+    { "mock",      AID_MOCK, },
     { "qcom_oncrpc", AID_QCOM_ONCRPC, },
 #if defined(MOTOROLA_UIDS)
     { "mot_osh",   AID_MOT_OSH, },
@@ -197,6 +205,7 @@ static struct fs_path_config android_dirs[] = {
     { 00755, AID_ROOT,   AID_SHELL,  "system/vendor" },
     { 00755, AID_ROOT,   AID_SHELL,  "system/xbin" },
     { 00755, AID_ROOT,   AID_ROOT,   "system/etc/ppp" },
+    { 00770, AID_ROOT,   AID_MOCK,   "system/etc/mock" },
     { 00777, AID_ROOT,   AID_ROOT,   "sdcard" },
     { 00755, AID_ROOT,   AID_ROOT,   0 },
 };
@@ -224,6 +233,7 @@ static struct fs_path_config android_files[] = {
     { 00444, AID_RADIO,     AID_AUDIO,     "system/etc/AudioPara4.csv" },
     { 00555, AID_ROOT,      AID_ROOT,      "system/etc/ppp/*" },
     { 00555, AID_ROOT,      AID_ROOT,      "system/etc/rc.*" },
+    { 00660, AID_ROOT,      AID_MOCK,      "system/etc/mock/*" },
     { 00755, AID_ROOT,      AID_ROOT,      "system/addon.d/*" },
     { 00644, AID_SYSTEM,    AID_SYSTEM,    "data/app/*" },
     { 00644, AID_MEDIA_RW,  AID_MEDIA_RW,  "data/media/*" },
