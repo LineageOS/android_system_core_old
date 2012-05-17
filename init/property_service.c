@@ -91,6 +91,7 @@ struct {
     { "log.",             AID_SHELL,    0 },
     { "service.adb.root", AID_SHELL,    0 },
     { "service.adb.tcp.port", AID_SHELL,    0 },
+    { "persist.mac_enforcing_mode", AID_SYSTEM, 0 },
     { "persist.sys.",     AID_SYSTEM,   0 },
     { "persist.service.", AID_SYSTEM,   0 },
     { "persist.service.", AID_RADIO,    0 },
