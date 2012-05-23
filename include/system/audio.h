@@ -66,6 +66,9 @@ typedef enum {
     AUDIO_SOURCE_CAMCORDER           = 5,
     AUDIO_SOURCE_VOICE_RECOGNITION   = 6,
     AUDIO_SOURCE_VOICE_COMMUNICATION = 7,
+#ifdef OMAP_ENHANCEMENT
+    AUDIO_SOURCE_FM_RADIO_RX         = 8,
+#endif
 #ifdef QCOM_HARDWARE
     AUDIO_SOURCE_FM_RX               = 8,
     AUDIO_SOURCE_FM_RX_A2DP          = 9,
@@ -298,6 +301,9 @@ typedef enum {
     AUDIO_DEVICE_OUT_AUX_DIGITAL               = 0x400,
     AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET         = 0x800,
     AUDIO_DEVICE_OUT_DGTL_DOCK_HEADSET         = 0x1000,
+#ifdef OMAP_ENHANCEMENT
+    AUDIO_DEVICE_OUT_FM_RADIO_TX               = 0x2000,
+#endif
     AUDIO_DEVICE_OUT_FM                        = 0x2000,
 #if defined(QCOM_HARDWARE) && !defined(USES_AUDIO_LEGACY)
     AUDIO_DEVICE_OUT_ANC_HEADSET               = 0x4000,
@@ -322,6 +328,9 @@ typedef enum {
                                  AUDIO_DEVICE_OUT_AUX_DIGITAL |
                                  AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET |
                                  AUDIO_DEVICE_OUT_DGTL_DOCK_HEADSET |
+#ifdef OMAP_ENHANCEMENT
+                                 AUDIO_DEVICE_OUT_FM_RADIO_TX |
+#endif
 #if defined(QCOM_HARDWARE) && !defined(USES_AUDIO_LEGACY)
                                  AUDIO_DEVICE_OUT_FM |
                                  AUDIO_DEVICE_OUT_ANC_HEADSET |
@@ -360,6 +369,9 @@ typedef enum {
     AUDIO_DEVICE_IN_AUX_DIGITAL           = 0x200000,
     AUDIO_DEVICE_IN_VOICE_CALL            = 0x400000,
     AUDIO_DEVICE_IN_BACK_MIC              = 0x800000,
+#ifdef OMAP_ENHANCEMENT
+    AUDIO_DEVICE_IN_FM_RADIO_RX           = 0x2000000,
+#endif
 #endif
     AUDIO_DEVICE_IN_DEFAULT               = 0x80000000,
 
@@ -371,6 +383,9 @@ typedef enum {
                                AUDIO_DEVICE_IN_AUX_DIGITAL |
                                AUDIO_DEVICE_IN_VOICE_CALL |
                                AUDIO_DEVICE_IN_BACK_MIC |
+#ifdef OMAP_ENHANCEMENT
+                               AUDIO_DEVICE_IN_FM_RADIO_RX |
+#endif
 #if defined(QCOM_HARDWARE) && !defined(USES_AUDIO_LEGACY)
                                AUDIO_DEVICE_IN_ANC_HEADSET |
                                AUDIO_DEVICE_IN_FM_RX |
