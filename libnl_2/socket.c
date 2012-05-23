@@ -98,6 +98,35 @@ struct nl_sock *nl_socket_alloc_cb(struct nl_cb *cb)
 	return sk;
 }
 
+/* Callback Handler */
+struct nl_cb *nl_socket_get_cb(struct nl_sock *sk)
+{
+	return nl_cb_get(sk->s_cb);
+}
+
+void nl_socket_set_cb(struct nl_sock *sk, struct nl_cb *cb)
+{
+	nl_cb_put(sk->s_cb);
+	sk->s_cb = nl_cb_get(cb);
+}
+
+/**
+ * Modify the callback handler associated to the socket
+ * @arg sk        Netlink socket.
+ * @arg type      which type callback to set
+ * @arg kind      kind of callback
+ * @arg func      callback function
+ * @arg arg       argument to be passwd to callback function
+ *
+ * @see nl_cb_set
+ */
+int nl_socket_modify_cb(struct nl_sock *sk, enum nl_cb_type type,
+			enum nl_cb_kind kind, nl_recvmsg_msg_cb_t func,
+			void *arg)
+{
+	return nl_cb_set(sk->s_cb, type, kind, func, arg);
+}
+
 /* Free a netlink socket. */
 void nl_socket_free(struct nl_sock *sk)
 {
