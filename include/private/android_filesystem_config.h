@@ -62,6 +62,10 @@
 #define AID_DRMRPC        1026  /* group for drm rpc */
 #define AID_NFC           1027  /* nfc subsystem */
 
+#ifdef OMAP_ENHANCEMENT
+#define AID_FMRADIO       1028  /* FM subsystem */
+#endif
+
 #define AID_SHELL         2000  /* adb and debug shell user */
 #define AID_CACHE         2001  /* cache access */
 #define AID_DIAG          2002  /* access to diagnostic resources */
@@ -125,6 +129,9 @@ static const struct android_id_info android_ids[] = {
     { "available", AID_AVAILABLE, },
     { "nfc",       AID_NFC, },
     { "drmrpc",    AID_DRMRPC, },
+#ifdef OMAP_ENHANCEMENT
+    { "fmradio",   AID_FMRADIO, },
+#endif
     { "shell",     AID_SHELL, },
     { "cache",     AID_CACHE, },
     { "diag",      AID_DIAG, },
