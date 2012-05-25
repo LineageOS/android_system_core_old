@@ -42,7 +42,7 @@ int usage() {
     printf("usage: unpackbootimg\n");
     printf("\t-i|--input boot.img\n");
     printf("\t[ -o|--output output_directory]\n");
-    printf("\t[ -p|--pagesize <size-in-hexadecimal> ]\n");
+    printf("\t[ -p|--pagesize <size-in-decimal> ]\n");
     return 0;
 }
 
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     fread(&header, sizeof(header), 1, f);
     printf("BOARD_KERNEL_CMDLINE %s\n", header.cmdline);
     printf("BOARD_KERNEL_BASE %08x\n", header.kernel_addr - 0x00008000);
-    printf("BOARD_PAGE_SIZE %08x\n", header.page_size);
+    printf("BOARD_PAGE_SIZE %4u\n", header.page_size);
     
     if (pagesize == 0) {
         pagesize = header.page_size;
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-pagesize");
     char pagesizetmp[200];
-    sprintf(pagesizetmp, "%08x", header.page_size);
+    sprintf(pagesizetmp, "%4u", header.page_size);
     write_string_to_file(tmp, pagesizetmp);
     
     total_read += sizeof(header);
