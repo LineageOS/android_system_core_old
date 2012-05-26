@@ -113,6 +113,7 @@ int load_565rle_image(char *fn)
     if (vt_set_mode(1)) 
         return -1;
 
+#ifndef NO_INITLOGO
     fd = open(fn, O_RDONLY);
     if (fd < 0) {
         ERROR("cannot open '%s'\n", fn);
@@ -149,6 +150,7 @@ int load_565rle_image(char *fn)
     fb_update(&fb);
     fb_close(&fb);
     close(fd);
+#endif
     unlink(fn);
     return 0;
 
