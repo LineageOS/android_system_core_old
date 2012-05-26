@@ -582,6 +582,7 @@ static int console_init_action(int nargs, char **args)
         have_console = 1;
     close(fd);
 
+#ifndef NO_INITLOGO
     if( load_565rle_image(INIT_IMAGE_FILE) ) {
         fd = open("/dev/tty0", O_WRONLY);
         if (fd >= 0) {
@@ -605,6 +606,7 @@ static int console_init_action(int nargs, char **args)
             close(fd);
         }
     }
+#endif
     return 0;
 }
 
