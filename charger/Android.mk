@@ -19,6 +19,10 @@ LOCAL_C_INCLUDES := bootable/recovery
 LOCAL_STATIC_LIBRARIES := libminui libpixelflinger_static libpng
 LOCAL_STATIC_LIBRARIES += libz libstdc++ libcutils libc
 
+ifeq ($(BOARD_HAVE_SEC_BATTERY_CHARGER),true)
+LOCAL_CFLAGS += -DSEC_BATTERY
+endif
+
 include $(BUILD_EXECUTABLE)
 
 define _add-charger-image

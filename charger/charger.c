@@ -131,6 +131,7 @@ struct uevent {
     const char *ps_name;
     const char *ps_type;
     const char *ps_online;
+    const char *ps_status;
 };
 
 static struct frame batt_anim_frames[] = {
@@ -359,6 +360,7 @@ static void parse_uevent(const char *msg, struct uevent *uevent)
     uevent->ps_name = "";
     uevent->ps_online = "";
     uevent->ps_type = "";
+    uevent->ps_status = "";
 
     /* currently ignoring SEQNUM */
     while (*msg) {
@@ -383,6 +385,9 @@ static void parse_uevent(const char *msg, struct uevent *uevent)
         } else if (!strncmp(msg, "POWER_SUPPLY_TYPE=", 18)) {
             msg += 18;
             uevent->ps_type = msg;
+        } else if (!strncmp(msg, "POWER_SUPPLY_STATUS=", 20)) {
+            msg += 20;
+            uevent->ps_status = msg;
         }
 
         /* advance to after the next \0 */
@@ -390,9 +395,9 @@ static void parse_uevent(const char *msg, struct uevent *uevent)
             ;
     }
 
-    LOGV("event { '%s', '%s', '%s', '%s', '%s', '%s' }\n",
+    LOGV("event { '%s', '%s', '%s', '%s', '%s', '%s', '%s' }\n",
          uevent->action, uevent->path, uevent->subsystem,
-         uevent->ps_name, uevent->ps_type, uevent->ps_online);
+         uevent->ps_name, uevent->ps_type, uevent->ps_online, uevent->ps_status);
 }
 
 static void process_ps_uevent(struct charger *charger, struct uevent *uevent)
@@ -424,7 +429,11 @@ static void process_ps_uevent(struct charger *charger, struct uevent *uevent)
     if (!strncmp(ps_type, "Battery", 7))
         battery = true;
 
+#ifndef SEC_BATTERY
     online = atoi(uevent->ps_online);
+#else
+    online = strncmp("Charging", uevent->ps_status, 7) == 0 ? 1 : 0;
+#endif
     supply = find_supply(charger, uevent->ps_name);
     if (supply) {
         was_online = supply->online;
@@ -442,7 +451,10 @@ static void process_ps_uevent(struct charger *charger, struct uevent *uevent)
             }
             /* only pick up the first battery for now */
             if (battery && !charger->battery)
-                charger->battery = supply;
+#ifdef SEC_BATTERY
+                if (!strncmp("battery", uevent->ps_name, 11))
+#endif
+                    charger->battery = supply;
         } else {
             LOGE("supply '%s' already exists..\n", uevent->ps_name);
         }
