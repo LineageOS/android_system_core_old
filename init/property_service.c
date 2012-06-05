@@ -76,6 +76,7 @@ struct {
     { "sys.",             AID_SYSTEM,   0 },
     { "service.",         AID_SYSTEM,   0 },
     { "service.",         AID_RADIO,    0 },
+    { "wifi.",            AID_WIFI,     0 },
     { "wlan.",            AID_SYSTEM,   0 },
     { "dhcp.",            AID_SYSTEM,   0 },
     { "dhcp.",            AID_DHCP,     0 },
