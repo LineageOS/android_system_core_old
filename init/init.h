@@ -70,7 +70,11 @@ struct svcenvinfo {
 #define SVC_CONSOLE     0x10  /* requires console */
 #define SVC_CRITICAL    0x20  /* will reboot into recovery if keeps crashing */
 
+#ifdef USE_MOTOROLA_CODE
+#define NR_SVC_SUPP_GIDS 22    /* twenty-two supplementary groups */
+#else
 #define NR_SVC_SUPP_GIDS 12    /* twelve supplementary groups */
+#endif
 
 #define COMMAND_RETRY_TIMEOUT 5
 
@@ -122,6 +126,9 @@ void service_for_each_flags(unsigned matchflags,
                             void (*func)(struct service *svc));
 void service_stop(struct service *svc);
 void service_start(struct service *svc, const char *dynamic_args);
+#ifdef USE_MOTOROLA_CODE
+void device_changed(const char *name, int is_add);
+#endif
 void property_changed(const char *name, const char *value);
 
 #define INIT_IMAGE_FILE	"/initlogo.rle"

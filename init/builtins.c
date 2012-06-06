@@ -350,6 +350,26 @@ int do_mount(int nargs, char **args)
         }
 
         return 0;
+#if defined(USE_MOTOROLA_CODE)
+    } else if (!strncmp(source, "mmc@", 4)) {
+        sprintf(tmp, "/dev/block/%s", source + 4);
+
+        if (wait) {
+            wait_for_file(tmp, COMMAND_RETRY_TIMEOUT);
+            /*
+             * Seeing system doesn't guarantee we see userdata
+             * For now, we don't wait in the mount script, so
+             *   need to make sure userdata show up here
+             */
+            wait_for_file("/dev/block/userdata", COMMAND_RETRY_TIMEOUT);
+        }
+        if (mount(tmp, target, system, flags, options) < 0) {
+            ERROR("mount device (%s) to point (%s) failed", tmp, target);
+            return -1;
+        }
+
+        return 0;
+#endif
     } else if (!strncmp(source, "loop@", 5)) {
         int mode, loop, fd;
         struct loop_info info;
