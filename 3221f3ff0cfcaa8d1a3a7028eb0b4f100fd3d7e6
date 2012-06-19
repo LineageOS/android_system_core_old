@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH//9hM\u003d",
+        "filename": "init/devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "hmmm this should be rewritten properly",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//9hU\u003d",
+        "filename": "init/init.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "could you regroup the moto blocs... here at end",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//9hQ\u003d",
+        "filename": "init/init.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "same here, the else is not required... just put the bloc with the memsize",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//9hI\u003d",
+        "filename": "init/init_parser.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "this is useless",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//9hE\u003d",
+        "filename": "init/init_parser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "just use void everwhere",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//9hA\u003d",
+        "filename": "init/property_service.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-19T04:35:44Z",
+      "side": 1,
+      "message": "please regroup those",
+      "revId": "3221f3ff0cfcaa8d1a3a7028eb0b4f100fd3d7e6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
