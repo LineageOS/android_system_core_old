@@ -34,6 +34,24 @@
       "revId": "ef589cf0b47c569d40152890b1b981c5db83370a",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//72E\u003d",
+        "filename": "toolbox/dmesg.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1778
+      },
+      "writtenOn": "2012-06-27T13:21:41Z",
+      "side": 1,
+      "message": "bionic changes now submitted:\nhttps://android-review.googlesource.com/38590 and\nhttp://review.cyanogenmod.com/18299",
+      "parentUuid": "AAAAUH//72Q\u003d",
+      "revId": "ef589cf0b47c569d40152890b1b981c5db83370a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
