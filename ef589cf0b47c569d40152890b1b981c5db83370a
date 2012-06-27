@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAUH//72s\u003d",
+        "filename": "toolbox/dmesg.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1039
+      },
+      "writtenOn": "2012-06-27T10:45:00Z",
+      "side": 1,
+      "message": "http://androidxref.com/source/xref/bionic/libc/include/sys/klog.h#39\n\nare you sure its the WRITE command ? if yes, please use the constant",
+      "revId": "ef589cf0b47c569d40152890b1b981c5db83370a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
