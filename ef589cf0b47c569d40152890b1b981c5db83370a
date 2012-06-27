@@ -16,6 +16,24 @@
       "revId": "ef589cf0b47c569d40152890b1b981c5db83370a",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAUH//72Q\u003d",
+        "filename": "toolbox/dmesg.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1778
+      },
+      "writtenOn": "2012-06-27T12:30:00Z",
+      "side": 1,
+      "message": "see http://linux.die.net/man/3/klogctl\n\nGood point. There is no WRITE command. That constant is invalid (or misnamed). That\u0027s why I did not use it. Note that klogctl is just a wrapper for the syslog syscall (see link above for reference).\n\nI\u0027m working on submitting a patch to correct the constant in the bionic klog header.",
+      "parentUuid": "AAAAUH//72s\u003d",
+      "revId": "ef589cf0b47c569d40152890b1b981c5db83370a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
