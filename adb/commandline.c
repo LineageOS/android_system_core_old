@@ -644,6 +644,10 @@ static int logcat(transport_type transport, char* serial, int argc, char **argv)
         strncat(buf, " -v long", sizeof(buf)-1);
     }
 
+    if (!strcmp(argv[0],"lolcat")) {
+        strncat(buf, " -C", sizeof(buf)-1);
+    }
+
     argc -= 1;
     argv += 1;
     while(argc-- > 0) {
