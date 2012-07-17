@@ -397,7 +397,10 @@ typedef enum {
                                         // controls related to voice calls.
     AUDIO_OUTPUT_FLAG_FAST = 0x4,       // output supports "fast tracks",
                                         // defined elsewhere
-    AUDIO_OUTPUT_FLAG_DEEP_BUFFER = 0x8 // use deep audio buffers
+    AUDIO_OUTPUT_FLAG_DEEP_BUFFER = 0x8,// use deep audio buffers
+//Qualcomm Flags
+    AUDIO_OUTPUT_FLAG_LPA = 0x1000,     // use LPA
+    AUDIO_OUTPUT_FLAG_TUNNEL = 0x2000   // use Tunnel
 } audio_output_flags_t;
 
 static inline bool audio_is_output_device(audio_devices_t device)
