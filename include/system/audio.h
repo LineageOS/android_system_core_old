@@ -354,6 +354,8 @@ typedef enum {
     AUDIO_DEVICE_OUT_FM_TX                     = 0x10000,
 #endif
 #ifdef QCOM_HARDWARE
+    AUDIO_DEVICE_OUT_ANC_HEADSET               = 0x20000,
+    AUDIO_DEVICE_OUT_ANC_HEADPHONE             = 0x40000,
     AUDIO_DEVICE_OUT_PROXY                     = 0x80000,
     AUDIO_DEVICE_OUT_DEFAULT                   = AUDIO_DEVICE_OUT_SPEAKER,
 #else
@@ -379,6 +381,8 @@ typedef enum {
                                  AUDIO_DEVICE_OUT_FM_TX |
 #endif
 #ifdef QCOM_HARDWARE
+                                 AUDIO_DEVICE_OUT_ANC_HEADSET |
+                                 AUDIO_DEVICE_OUT_ANC_HEADPHONE |
                                  AUDIO_DEVICE_OUT_PROXY |
 #endif
                                  AUDIO_DEVICE_OUT_DEFAULT),
@@ -401,6 +405,7 @@ typedef enum {
     AUDIO_DEVICE_IN_AUX_DIGITAL           = 0x2000000,
     AUDIO_DEVICE_IN_VOICE_CALL            = 0x4000000,
     AUDIO_DEVICE_IN_BACK_MIC              = 0x8000000,
+    AUDIO_DEVICE_IN_ANC_HEADSET           = 0x10000000,
 #ifdef QCOM_FM_ENABLED
     AUDIO_DEVICE_IN_FM_RX                 = 0x20000000,
     AUDIO_DEVICE_IN_FM_RX_A2DP            = 0x40000000,
@@ -432,6 +437,7 @@ typedef enum {
                                AUDIO_DEVICE_IN_FM_RX_A2DP |
 #endif
 #ifdef QCOM_HARDWARE
+                               AUDIO_DEVICE_IN_ANC_HEADSET |
                                AUDIO_DEVICE_IN_PROXY |
 #endif
                                AUDIO_DEVICE_IN_DEFAULT),
