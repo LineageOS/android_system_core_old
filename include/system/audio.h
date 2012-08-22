@@ -331,7 +331,10 @@ typedef enum {
 #ifdef QCOM_FM_ENABLED
     AUDIO_DEVICE_OUT_FM                        = 0x8000,
     AUDIO_DEVICE_OUT_FM_TX                     = 0x10000,
-    AUDIO_DEVICE_OUT_DEFAULT                   = 0x80000,
+#endif
+#ifdef QCOM_HARDWARE
+    AUDIO_DEVICE_OUT_PROXY                     = 0x80000,
+    AUDIO_DEVICE_OUT_DEFAULT                   = AUDIO_DEVICE_OUT_SPEAKER,
 #else
     AUDIO_DEVICE_OUT_DEFAULT                   = 0x8000,
 #endif
@@ -353,6 +356,9 @@ typedef enum {
 #ifdef QCOM_FM_ENABLED
                                  AUDIO_DEVICE_OUT_FM |
                                  AUDIO_DEVICE_OUT_FM_TX |
+#endif
+#ifdef QCOM_HARDWARE
+                                 AUDIO_DEVICE_OUT_PROXY |
 #endif
                                  AUDIO_DEVICE_OUT_DEFAULT),
     AUDIO_DEVICE_OUT_ALL_A2DP = (AUDIO_DEVICE_OUT_BLUETOOTH_A2DP |
@@ -378,6 +384,8 @@ typedef enum {
     AUDIO_DEVICE_IN_FM_RX                 = 0x20000000,
     AUDIO_DEVICE_IN_FM_RX_A2DP            = 0x40000000,
 #endif
+    AUDIO_DEVICE_IN_PROXY                 = 0x80000000,
+    AUDIO_DEVICE_IN_DEFAULT               = AUDIO_DEVICE_IN_BUILTIN_MIC,
 #else
     AUDIO_DEVICE_IN_COMMUNICATION         = 0x10000,
     AUDIO_DEVICE_IN_AMBIENT               = 0x20000,
@@ -387,8 +395,8 @@ typedef enum {
     AUDIO_DEVICE_IN_AUX_DIGITAL           = 0x200000,
     AUDIO_DEVICE_IN_VOICE_CALL            = 0x400000,
     AUDIO_DEVICE_IN_BACK_MIC              = 0x800000,
-#endif
     AUDIO_DEVICE_IN_DEFAULT               = 0x80000000,
+#endif
 
     AUDIO_DEVICE_IN_ALL     = (AUDIO_DEVICE_IN_COMMUNICATION |
                                AUDIO_DEVICE_IN_AMBIENT |
@@ -401,6 +409,9 @@ typedef enum {
 #ifdef QCOM_FM_ENABLED
                                AUDIO_DEVICE_IN_FM_RX |
                                AUDIO_DEVICE_IN_FM_RX_A2DP |
+#endif
+#ifdef QCOM_HARDWARE
+                               AUDIO_DEVICE_IN_PROXY |
 #endif
                                AUDIO_DEVICE_IN_DEFAULT),
     AUDIO_DEVICE_IN_ALL_SCO = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET,
