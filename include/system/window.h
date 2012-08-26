@@ -254,6 +254,9 @@ enum {
     NATIVE_WINDOW_SET_BUFFERS_USER_DIMENSIONS = 15, /* private */
     NATIVE_WINDOW_SET_POST_TRANSFORM_CROP   = 16,   /* private */
     NATIVE_WINDOW_SET_BUFFERS_SIZE          = 17,   /* private */
+#ifdef QCOM_HARDWARE
+    NATIVE_WINDOW_SET_MIN_UNDEQUEUED_BUFFER_COUNT = 18, /* private */
+#endif
 };
 
 /* parameter for NATIVE_WINDOW_[API_][DIS]CONNECT */
@@ -722,6 +725,18 @@ static inline int native_window_api_disconnect(
     return window->perform(window, NATIVE_WINDOW_API_DISCONNECT, api);
 }
 
+#ifdef QCOM_HARDWARE
+/*
+ * native_window_set_min_undequeued_buffer_count(..., count)
+ * Sets the minimum number of undequeued buffers associated with this native window.
+ */
+static inline int native_window_set_min_undequeued_buffer_count(
+        struct ANativeWindow* window,
+        size_t bufferCount)
+{
+    return window->perform(window, NATIVE_WINDOW_SET_MIN_UNDEQUEUED_BUFFER_COUNT, bufferCount);
+}
+#endif
 
 __END_DECLS
 
