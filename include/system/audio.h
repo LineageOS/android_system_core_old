@@ -333,6 +333,7 @@ typedef enum {
     AUDIO_DEVICE_OUT_FM_TX                     = 0x10000,
 #endif
 #ifdef QCOM_HARDWARE
+    AUDIO_DEVICE_OUT_DIRECTOUTPUT              = 0x20000,
     AUDIO_DEVICE_OUT_PROXY                     = 0x80000,
     AUDIO_DEVICE_OUT_DEFAULT                   = AUDIO_DEVICE_OUT_SPEAKER,
 #else
@@ -358,6 +359,7 @@ typedef enum {
                                  AUDIO_DEVICE_OUT_FM_TX |
 #endif
 #ifdef QCOM_HARDWARE
+                                 AUDIO_DEVICE_OUT_DIRECTOUTPUT |
                                  AUDIO_DEVICE_OUT_PROXY |
 #endif
                                  AUDIO_DEVICE_OUT_DEFAULT),
