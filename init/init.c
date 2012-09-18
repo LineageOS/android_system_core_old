@@ -95,7 +95,7 @@ static unsigned battchg_pause = 0;
 int add_environment(const char *key, const char *val)
 {
     int n;
- 
+
     for (n = 0; n < 31; n++) {
         if (!ENV[n]) {
             size_t len = strlen(key) + strlen(val) + 2;
@@ -159,7 +159,7 @@ void service_start(struct service *svc, const char *dynamic_args)
          */
     svc->flags &= (~(SVC_DISABLED|SVC_RESTARTING));
     svc->time_started = 0;
-    
+
         /* running processes require no additional work -- if
          * they're in the process of exiting, we've ensured
          * that they will immediately restart on exit, unless
@@ -360,7 +360,7 @@ static void msg_start(const char *name)
 
         svc = service_find_by_name(tmp);
     }
-    
+
     if (svc) {
         service_start(svc, args);
     } else {
@@ -710,7 +710,7 @@ int main(int argc, char **argv)
          */
     open_devnull_stdio();
     log_init();
-    
+
     INFO("reading config file\n");
     init_parse_config_file("/init.rc");
 
@@ -765,7 +765,7 @@ int main(int argc, char **argv)
     action_for_each_trigger("boot", action_add_queue_tail);
 
         /* run all property triggers based on current state of the properties */
-    queue_builtin_action(queue_property_triggers_action, "queue_propety_triggers");
+    queue_builtin_action(queue_property_triggers_action, "queue_property_triggers");
 
 
 #if BOOTCHART
