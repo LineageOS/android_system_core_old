@@ -147,6 +147,10 @@ on post-fs
     mkdir /cache/lost+found 0770 root root
 
 on post-fs-data
+    # Import custom storage configuration
+    chmod 0644 /data/system/storage.rc
+    export_rc /data/system/storage.rc
+
     # We chown/chmod /data again so because mount is run as root + defaults
     chown system system /data
     chmod 0771 /data
