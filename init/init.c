@@ -116,7 +116,9 @@ int add_environment(const char *key, const char *val)
     int n;
 
     for (n = 0; n < 31; n++) {
-        if (!ENV[n]) {
+        if (!ENV[n] || strncmp(ENV[n], key, strlen(key)) == 0) {
+            if (ENV[n])
+                free(ENV[n]);
             size_t len = strlen(key) + strlen(val) + 2;
             char *entry = malloc(len);
             snprintf(entry, len, "%s=%s", key, val);
