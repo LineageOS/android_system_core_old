@@ -114,9 +114,14 @@ static unsigned charging_mode = 0;
 int add_environment(const char *key, const char *val)
 {
     int n;
+    size_t lens = strlen(key) + 2;
+    char *check = malloc(lens);
+    snprintf(check, lens, "%s=", key);
 
     for (n = 0; n < 31; n++) {
-        if (!ENV[n]) {
+        if (!ENV[n] || strncmp(ENV[n], check, strlen(check)) == 0) {
+            if (ENV[n])
+                free(ENV[n]);
             size_t len = strlen(key) + strlen(val) + 2;
             char *entry = malloc(len);
             snprintf(entry, len, "%s=%s", key, val);
