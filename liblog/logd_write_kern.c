@@ -87,6 +87,34 @@ int __android_log_dev_available(void)
     return (g_log_status == kLogAvailable);
 }
 
+#ifdef HTCLOG
+
+#define UNUSED(x) (void)(x)
+
+signed int __htclog_read_masks(char *buf, signed int len)
+{
+    UNUSED(buf);
+    UNUSED(len);
+    return 0;
+}
+
+int __htclog_init_mask(const char *a1, unsigned int a2, int a3)
+{
+    UNUSED(a1);
+    UNUSED(a2);
+    UNUSED(a3);
+    return 0;
+}
+
+int __htclog_print_private(int a1, const char *a2, const char *fmt, ...)
+{
+    UNUSED(a1);
+    UNUSED(a2);
+    UNUSED(fmt);
+    return 0;
+}
+#endif
+
 static int __write_to_log_null(log_id_t log_fd __unused, struct iovec *vec __unused,
                                size_t nr __unused)
 {
