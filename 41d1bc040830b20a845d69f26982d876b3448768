@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAY3//+Zw\u003d",
+        "filename": "rootdir/init.rc",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 2793
+      },
+      "writtenOn": "2012-10-12T17:40:23Z",
+      "side": 0,
+      "message": "Also, any reason for removing HSPAP?",
+      "revId": "41d1bc040830b20a845d69f26982d876b3448768",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
