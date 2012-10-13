@@ -526,24 +526,27 @@ static void handle_generic_device_event(struct uevent *uevent)
     if (!name)
         return;
 
+    /* Mount two cdc-wdm devices at /dev/cdc-wdmX */
+    if (strstr(uevent->path, "cdc-wdm"))
+         base = "/dev/";
     if (!strncmp(uevent->subsystem, "usb", 3)) {
-         if (!strcmp(uevent->subsystem, "usb")) {
-             /* This imitates the file system that would be created
-              * if we were using devfs instead.
-              * Minors are broken up into groups of 128, starting at "001"
-              */
-             int bus_id = uevent->minor / 128 + 1;
-             int device_id = uevent->minor % 128 + 1;
-             /* build directories */
-             mkdir("/dev/bus", 0755);
-             mkdir("/dev/bus/usb", 0755);
-             snprintf(devpath, sizeof(devpath), "/dev/bus/usb/%03d", bus_id);
-             mkdir(devpath, 0755);
-             snprintf(devpath, sizeof(devpath), "/dev/bus/usb/%03d/%03d", bus_id, device_id);
-         } else {
-             /* ignore other USB events */
-             return;
-         }
+        if (!strcmp(uevent->subsystem, "usb")) {
+            /* This imitates the file system that would be created
+             * if we were using devfs instead.
+             * Minors are broken up into groups of 128, starting at "001"
+             */
+            int bus_id = uevent->minor / 128 + 1;
+            int device_id = uevent->minor % 128 + 1;
+            /* build directories */
+            mkdir("/dev/bus", 0755);
+            mkdir("/dev/bus/usb", 0755);
+            snprintf(devpath, sizeof(devpath), "/dev/bus/usb/%03d", bus_id);
+            mkdir(devpath, 0755);
+            snprintf(devpath, sizeof(devpath), "/dev/bus/usb/%03d/%03d", bus_id, device_id);
+        } else {
+            /* ignore other USB events */
+            return;
+        }
      } else if (!strncmp(uevent->subsystem, "graphics", 8)) {
          base = "/dev/graphics/";
          mkdir(base, 0755);
