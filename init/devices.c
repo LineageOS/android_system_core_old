@@ -526,6 +526,9 @@ static void handle_generic_device_event(struct uevent *uevent)
     if (!name)
         return;
 
+    /* Mount two cdc-wdm devices at /dev/cdc-wdmX */
+    if (strstr(uevent->path, "cdc-wdm"))
+         base = "/dev/";
     if (!strncmp(uevent->subsystem, "usb", 3)) {
          if (!strcmp(uevent->subsystem, "usb")) {
              /* This imitates the file system that would be created
