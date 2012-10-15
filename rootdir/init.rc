@@ -222,9 +222,6 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     #setprop vold.post_fs_data_done 1
 
-# Include extra init file
-    import /system/etc/init.local.rc
-
 on boot
 # basic network init
     ifup lo
@@ -520,6 +517,13 @@ service mdnsd /system/bin/mdnsd
     group inet net_raw
     socket mdnsd stream 0660 mdnsr inet
     disabled
+    oneshot
+
+# Compcache - handle at boot
+service compcache /system/bin/handle_compcache
+    class main
+    user root
+    group root
     oneshot
 
 # adb over network
