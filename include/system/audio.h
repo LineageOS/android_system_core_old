@@ -380,6 +380,18 @@ typedef enum {
     AUDIO_DEVICE_IN_ALL_SCO = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET,
 } audio_devices_t;
 
+#ifdef STE_AUDIO
+#define AUDIO_INPUT_CLIENT_ID_BASE AUDIO_INPUT_CLIENT_ID1
+
+typedef enum {
+        AUDIO_INPUT_CLIENT_ID1 = 0x1,
+        AUDIO_INPUT_CLIENT_ID2 = 0x2,
+        AUDIO_INPUT_CLIENT_ID3 = 0x3,
+        AUDIO_INPUT_CLIENT_ID4 = 0x4,
+        AUDIO_INPUT_CLIENT_PLAYBACK = 0x80000000,
+        AUDIO_INPUT_CLIENT_RECORD = 0x80000001
+} audio_input_clients;
+#endif
 static inline bool audio_is_output_device(audio_devices_t device)
 {
     if ((popcount(device) == 1) && ((device & ~AUDIO_DEVICE_OUT_ALL) == 0))
