@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAa3//+rk\u003d",
+        "filename": "include/private/android_filesystem_config.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1576
+      },
+      "writtenOn": "2012-11-07T04:00:46Z",
+      "side": 1,
+      "message": "tabs rather than spaces.",
+      "revId": "5729a1a6f7e8e63a70cb5636fc608bf6f982a712",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
