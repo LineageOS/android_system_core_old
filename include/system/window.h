@@ -311,6 +311,9 @@ enum {
     NATIVE_WINDOW_SET_SIDEBAND_STREAM       = 18,
     NATIVE_WINDOW_SET_BUFFERS_DATASPACE     = 19,
     NATIVE_WINDOW_SET_SURFACE_DAMAGE        = 20,   /* private */
+#ifdef QCOM_BSP_LEGACY
+    NATIVE_WINDOW_SET_BUFFERS_SIZE          = 21,   /* private */
+#endif
 };
 
 /* parameter for NATIVE_WINDOW_[API_][DIS]CONNECT */
