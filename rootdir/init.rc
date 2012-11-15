@@ -199,7 +199,7 @@ on post-fs-data
     chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
 
 # Include extra init file
-    import /system/etc/init.local.rc
+    import /init.local.rc
 
 on boot
 # basic network init
