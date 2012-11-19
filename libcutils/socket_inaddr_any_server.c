@@ -35,17 +35,14 @@
 /* open listen() port on any interface */
 int socket_inaddr_any_server(int port, int type)
 {
-    union {
-        struct sockaddr_in in;
-        struct sockaddr generic;
-    } addr;
+    struct sockaddr_in addr;
     size_t alen;
     int s, n;
 
     memset(&addr, 0, sizeof(addr));
-    addr.in.sin_family = AF_INET;
-    addr.in.sin_port = htons(port);
-    addr.in.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     s = socket(AF_INET, type, 0);
     if(s < 0) return -1;
@@ -53,7 +50,7 @@ int socket_inaddr_any_server(int port, int type)
     n = 1;
     setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &n, sizeof(n));
 
-    if(bind(s, &addr.generic, sizeof(addr.in)) < 0) {
+    if(bind(s, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
         close(s);
         return -1;
     }

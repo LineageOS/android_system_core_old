@@ -248,11 +248,7 @@ int ifc_set_addr(const char *name, in_addr_t addr)
 int ifc_act_on_address(int action, const char *name, const char *address,
                        int prefixlen) {
     int ifindex, s, len, ret;
-    union {
-        struct sockaddr_storage ss;
-        struct sockaddr_in sin;
-        struct sockaddr_in6 sin6;
-    } sa;
+    struct sockaddr_storage ss;
     void *addr;
     size_t addrlen;
     struct {
@@ -264,13 +260,11 @@ int ifc_act_on_address(int action, const char *name, const char *address,
                      NLMSG_ALIGN(INET6_ADDRLEN)];
     } req;
     struct rtattr *rta;
+    struct nlmsghdr *nh;
     struct nlmsgerr *err;
-    union {
-        struct nlmsghdr nh;
-        char buf[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
-                 NLMSG_ALIGN(sizeof(struct nlmsgerr)) +
-                 NLMSG_ALIGN(sizeof(struct nlmsghdr))];
-    } buf;
+    char buf[NLMSG_ALIGN(sizeof(struct nlmsghdr)) +
+             NLMSG_ALIGN(sizeof(struct nlmsgerr)) +
+             NLMSG_ALIGN(sizeof(struct nlmsghdr))];
 
     // Get interface ID.
     ifindex = if_nametoindex(name);
@@ -279,17 +273,19 @@ int ifc_act_on_address(int action, const char *name, const char *address,
     }
 
     // Convert string representation to sockaddr_storage.
-    ret = string_to_ip(address, &sa.ss);
+    ret = string_to_ip(address, &ss);
     if (ret) {
         return ret;
     }
 
     // Determine address type and length.
-    if (sa.ss.ss_family == AF_INET) {
-        addr = &sa.sin.sin_addr;
+    if (ss.ss_family == AF_INET) {
+        struct sockaddr_in *sin = (struct sockaddr_in *) &ss;
+        addr = &sin->sin_addr;
         addrlen = INET_ADDRLEN;
-    } else if (sa.ss.ss_family == AF_INET6) {
-        addr = &sa.sin6.sin6_addr;
+    } else if (ss.ss_family == AF_INET6) {
+        struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) &ss;
+        addr = &sin6->sin6_addr;
         addrlen = INET6_ADDRLEN;
     } else {
         return -EAFNOSUPPORT;
@@ -305,7 +301,7 @@ int ifc_act_on_address(int action, const char *name, const char *address,
     req.n.nlmsg_pid = getpid();
 
     // Interface address message header.
-    req.r.ifa_family = sa.ss.ss_family;
+    req.r.ifa_family = ss.ss_family;
     req.r.ifa_prefixlen = prefixlen;
     req.r.ifa_index = ifindex;
 
@@ -322,17 +318,18 @@ int ifc_act_on_address(int action, const char *name, const char *address,
         return -errno;
     }
 
-    len = recv(s, buf.buf, sizeof(buf.buf), 0);
+    len = recv(s, buf, sizeof(buf), 0);
     close(s);
     if (len < 0) {
         return -errno;
     }
 
     // Parse the acknowledgement to find the return code.
-    if (!NLMSG_OK(&buf.nh, (unsigned) len) || buf.nh.nlmsg_type != NLMSG_ERROR) {
+    nh = (struct nlmsghdr *) buf;
+    if (!NLMSG_OK(nh, (unsigned) len) || nh->nlmsg_type != NLMSG_ERROR) {
         return -EINVAL;
     }
-    err = NLMSG_DATA(&buf.nh);
+    err = NLMSG_DATA(nh);
 
     // Return code is negative errno.
     return err->error;
@@ -466,10 +463,7 @@ int ifc_get_addr(const char *name, in_addr_t *addr)
         if (ret < 0) {
             *addr = 0;
         } else {
-            struct sockaddr_in in;
-            memcpy(&in, &ifr.ifr_addr, sizeof(ifr.ifr_addr));
-            memcpy(&addr, &in.sin_addr.s_addr, sizeof(struct sockaddr_in));
-            //*addr = ((struct sockaddr_in*) &ifr.ifr_addr)->sin_addr.s_addr;
+            *addr = ((struct sockaddr_in*) &ifr.ifr_addr)->sin_addr.s_addr;
         }
     }
     return ret;
@@ -484,9 +478,7 @@ int ifc_get_info(const char *name, in_addr_t *addr, int *prefixLength, unsigned 
         if(ioctl(ifc_ctl_sock, SIOCGIFADDR, &ifr) < 0) {
             *addr = 0;
         } else {
-            struct sockaddr_in in;
-            memcpy(&in, &ifr.ifr_addr, sizeof(in));
-            *addr = in.sin_addr.s_addr;
+            *addr = ((struct sockaddr_in*) &ifr.ifr_addr)->sin_addr.s_addr;
         }
     }
 
@@ -494,10 +486,8 @@ int ifc_get_info(const char *name, in_addr_t *addr, int *prefixLength, unsigned 
         if(ioctl(ifc_ctl_sock, SIOCGIFNETMASK, &ifr) < 0) {
             *prefixLength = 0;
         } else {
-            struct sockaddr_in in;
-            memcpy(&in, &ifr.ifr_addr, sizeof(in));
             *prefixLength = ipv4NetmaskToPrefixLength((int)
-                    in.sin_addr.s_addr);
+                    ((struct sockaddr_in*) &ifr.ifr_addr)->sin_addr.s_addr);
         }
     }
 

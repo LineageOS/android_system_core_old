@@ -52,15 +52,12 @@ int socket_local_server(const char *name, int namespaceId, int type)
  */
 int socket_local_server_bind(int s, const char *name, int namespaceId)
 {
-    union {
-        struct sockaddr_un un;
-        struct sockaddr generic;
-    } addr;
+    struct sockaddr_un addr;
     socklen_t alen;
     int n;
     int err;
 
-    err = socket_make_sockaddr_un(name, namespaceId, &addr.un, &alen);
+    err = socket_make_sockaddr_un(name, namespaceId, &addr, &alen);
 
     if (err < 0) {
         return -1;
@@ -74,13 +71,13 @@ int socket_local_server_bind(int s, const char *name, int namespaceId)
         || namespaceId == ANDROID_SOCKET_NAMESPACE_FILESYSTEM) {
 #endif
         /*ignore ENOENT*/
-        unlink(addr.un.sun_path);
+        unlink(addr.sun_path);
     }
 
     n = 1;
     setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &n, sizeof(n));
 
-    if(bind(s, &addr.generic, alen) < 0) {
+    if(bind(s, (struct sockaddr *) &addr, alen) < 0) {
         return -1;
     }
 

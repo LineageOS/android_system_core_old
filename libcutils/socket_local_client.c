@@ -124,21 +124,18 @@ error:
 int socket_local_client_connect(int fd, const char *name, int namespaceId, 
         int type)
 {
-    union {
-        struct sockaddr_un un;
-        struct sockaddr generic;
-    } addr;
+    struct sockaddr_un addr;
     socklen_t alen;
     size_t namelen;
     int err;
 
-    err = socket_make_sockaddr_un(name, namespaceId, &addr.un, &alen);
+    err = socket_make_sockaddr_un(name, namespaceId, &addr, &alen);
 
     if (err < 0) {
         goto error;
     }
 
-    if(connect(fd, &addr.generic, alen) < 0) {
+    if(connect(fd, (struct sockaddr *) &addr, alen) < 0) {
         goto error;
     }
 
