@@ -78,47 +78,61 @@ static int write_file(const char *path, const char *value)
     }
 }
 
+static int _open(const char *path)
+{
+    int fd;
+
+    fd = open(path, O_RDONLY | O_NOFOLLOW);
+    if (fd < 0)
+        fd = open(path, O_WRONLY | O_NOFOLLOW);
+
+    return fd;
+}
 
 static int _chown(const char *path, unsigned int uid, unsigned int gid)
 {
+    int fd;
     int ret;
 
-    struct stat p_statbuf;
+    fd = _open(path);
+    if (fd < 0) {
+        return -1;
+    }
 
-    ret = lstat(path, &p_statbuf);
+    ret = fchown(fd, uid, gid);
     if (ret < 0) {
+        int errno_copy = errno;
+        close(fd);
+        errno = errno_copy;
         return -1;
     }
 
-    if (S_ISLNK(p_statbuf.st_mode) == 1) {
-        errno = EINVAL;
-        return -1;
-    }
+    close(fd);
 
-    ret = chown(path, uid, gid);
-
-    return ret;
+    return 0;
 }
 
 static int _chmod(const char *path, mode_t mode)
 {
+    int fd;
     int ret;
 
-    struct stat p_statbuf;
+    fd = _open(path);
+    if (fd < 0) {
+        return -1;
+    }
 
-    ret = lstat(path, &p_statbuf);
+    ret = fchmod(fd, mode);
     if (ret < 0) {
+        int errno_copy = errno;
+        close(fd);
+        errno = errno_copy;
         return -1;
     }
 
-    if (S_ISLNK(p_statbuf.st_mode) == 1) {
-        errno = EINVAL;
-        return -1;
-    }
+    close(fd);
 
-    ret = chmod(path, mode);
-
-    return ret;
+    return 0;
 }
 
 static int insmod(const char *filename, char *options)
