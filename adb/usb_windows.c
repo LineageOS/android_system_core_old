@@ -255,7 +255,7 @@ usb_handle* do_usb_open(const wchar_t* interface_name) {
 }
 
 int usb_write(usb_handle* handle, const void* data, int len) {
-  unsigned long time_out = 500 + len * 8;
+  unsigned long time_out = 5000;
   unsigned long written = 0;
   int ret;
 
@@ -300,7 +300,7 @@ int usb_write(usb_handle* handle, const void* data, int len) {
 }
 
 int usb_read(usb_handle *handle, void* data, int len) {
-  unsigned long time_out = 500 + len * 8;
+  unsigned long time_out = 0;
   unsigned long read = 0;
   int ret;
 
@@ -322,7 +322,7 @@ int usb_read(usb_handle *handle, void* data, int len) {
 
         if (len == 0)
           return 0;
-      } else if (saved_errno != ERROR_SEM_TIMEOUT) {
+      } else {
         // assume ERROR_INVALID_HANDLE indicates we are disconnected
         if (saved_errno == ERROR_INVALID_HANDLE)
           usb_kick(handle);
@@ -490,7 +490,7 @@ void find_devices() {
                                 true)) {
             // Lets make sure that we don't duplicate this device
             if (register_new_device(handle)) {
-              register_usb_transport(handle, serial_number, 1);
+              register_usb_transport(handle, serial_number, NULL, 1);
             } else {
               D("register_new_device failed for %s\n", interf_name);
               usb_cleanup_handle(handle);

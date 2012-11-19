@@ -76,9 +76,8 @@ in_addr_t prefixLengthToIpv4Netmask(int prefix_length)
 
 int ipv4NetmaskToPrefixLength(in_addr_t mask)
 {
-    mask = ntohl(mask);
     int prefixLength = 0;
-    uint32_t m = (uint32_t)mask;
+    uint32_t m = (uint32_t)ntohl(mask);
     while (m & 0x80000000) {
         prefixLength++;
         m = m << 1;
@@ -610,10 +609,6 @@ int ifc_disable(const char *ifname)
     ifc_close();
     return result;
 }
-
-#define RESET_IPV4_ADDRESSES 0x01
-#define RESET_IPV6_ADDRESSES 0x02
-#define RESET_ALL_ADDRESSES  (RESET_IPV4_ADDRESSES | RESET_IPV6_ADDRESSES)
 
 int ifc_reset_connections(const char *ifname, const int reset_mask)
 {

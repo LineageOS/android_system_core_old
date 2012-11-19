@@ -50,7 +50,7 @@ commonSources := \
 	threads.c \
 	sched_policy.c \
 	iosched_policy.c \
-	str_parms.c
+	str_parms.c \
 
 commonHostSources := \
         ashmem-host.c
@@ -75,9 +75,10 @@ ifeq ($(WINDOWS_HOST_ONLY),1)
 else
     commonSources += \
         abort_socket.c \
-        mspace.c \
+        fs.c \
         selector.c \
         tztime.c \
+        multiuser.c \
         zygote.c
 
     commonHostSources += \
@@ -129,16 +130,12 @@ LOCAL_SRC_FILES := $(commonSources) \
 ifeq ($(TARGET_ARCH),arm)
 LOCAL_SRC_FILES += arch-arm/memset32.S
 else  # !arm
-ifeq ($(TARGET_ARCH),sh)
-LOCAL_SRC_FILES += memory.c atomic-android-sh.c
-else  # !sh
 ifeq ($(TARGET_ARCH_VARIANT),x86-atom)
 LOCAL_CFLAGS += -DHAVE_MEMSET16 -DHAVE_MEMSET32
 LOCAL_SRC_FILES += arch-x86/android_memset16.S arch-x86/android_memset32.S memory.c
 else # !x86-atom
 LOCAL_SRC_FILES += memory.c
 endif # !x86-atom
-endif # !sh
 endif # !arm
 
 ifneq ($(TARGET_RECOVERY_PRE_COMMAND),)

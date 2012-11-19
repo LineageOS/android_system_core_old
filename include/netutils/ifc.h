@@ -35,6 +35,9 @@ extern int ifc_down(const char *name);
 extern int ifc_enable(const char *ifname);
 extern int ifc_disable(const char *ifname);
 
+#define RESET_IPV4_ADDRESSES 0x01
+#define RESET_IPV6_ADDRESSES 0x02
+#define RESET_ALL_ADDRESSES  (RESET_IPV4_ADDRESSES | RESET_IPV6_ADDRESSES)
 extern int ifc_reset_connections(const char *ifname, const int reset_mask);
 
 extern int ifc_get_addr(const char *name, in_addr_t *addr);
@@ -68,6 +71,8 @@ extern int ifc_configure(const char *ifname, in_addr_t address,
 extern int ifc_get_mtu(const char *name, int *mtuSz);
 extern in_addr_t prefixLengthToIpv4Netmask(int prefix_length);
 extern int ipv4NetmaskToPrefixLength(in_addr_t mask);
+
+extern in_addr_t prefixLengthToIpv4Netmask(int prefix_length);
 
 __END_DECLS
 

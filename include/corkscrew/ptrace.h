@@ -24,6 +24,7 @@
 
 #include <sys/types.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,6 +63,19 @@ typedef struct pt_regs_x86 {
     uint32_t esp;
     uint32_t xss;
 } pt_regs_x86_t;
+#endif
+
+#if __mips__
+/* ptrace() GET_REGS context. */
+typedef struct pt_regs_mips {
+    uint64_t regs[32];
+    uint64_t lo;
+    uint64_t hi;
+    uint64_t cp0_epc;
+    uint64_t cp0_badvaddr;
+    uint64_t cp0_status;
+    uint64_t cp0_cause;
+} pt_regs_mips_t;
 #endif
 
 /*

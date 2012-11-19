@@ -76,8 +76,9 @@
 #define AID_NET_ADMIN     3005  /* can configure interfaces and routing tables. */
 #define AID_NET_BW_STATS  3006  /* read bandwidth statistics */
 #define AID_NET_BW_ACCT   3007  /* change bandwidth statistics accounting */
-#define AID_QCOM_ONCRPC   3008  /* can read/write /dev/oncrpc files */
-#define AID_QCOM_DIAG     3009  /* can read/write /dev/diag */
+#define AID_NET_BT_STACK  3008  /* bluetooth: access config files */
+#define AID_QCOM_ONCRPC   3009  /* can read/write /dev/oncrpc files */
+#define AID_QCOM_DIAG     3010  /* can read/write /dev/diag */
 
 #if defined(MOTOROLA_UIDS)
 #define AID_MOT_OSH       5000  /* OSH */
@@ -104,6 +105,9 @@
 #define AID_ISOLATED_END   99999 /* end of uids for fully isolated sandboxed processes */
 
 #define AID_USER        100000  /* offset for uid ranges for each user */
+
+#define AID_SHARED_GID_START 50000 /* start of gids for apps in each user to share */
+#define AID_SHARED_GID_END   59999 /* start of gids for apps in each user to share */
 
 #if !defined(EXCLUDE_FS_CONFIG_STRUCTURES)
 struct android_id_info {
@@ -137,6 +141,7 @@ static const struct android_id_info android_ids[] = {
     { "diag",      AID_DIAG, },
     { "net_bt_admin", AID_NET_BT_ADMIN, },
     { "net_bt",    AID_NET_BT, },
+    { "net_bt_stack",    AID_NET_BT_STACK, },
     { "sdcard_r",  AID_SDCARD_R, },
     { "sdcard_rw", AID_SDCARD_RW, },
     { "media_rw",  AID_MEDIA_RW, },
@@ -224,12 +229,6 @@ static struct fs_path_config android_files[] = {
     { 00550, AID_ROOT,      AID_SHELL,     "system/etc/init.testmenu" },
     { 00550, AID_DHCP,      AID_SHELL,     "system/etc/dhcpcd/dhcpcd-run-hooks" },
     { 00440, AID_BLUETOOTH, AID_BLUETOOTH, "system/etc/dbus.conf" },
-    { 00440, AID_BLUETOOTH, AID_BLUETOOTH, "system/etc/bluetooth/main.conf" },
-    { 00440, AID_BLUETOOTH, AID_BLUETOOTH, "system/etc/bluetooth/input.conf" },
-    { 00440, AID_BLUETOOTH, AID_BLUETOOTH, "system/etc/bluetooth/audio.conf" },
-    { 00440, AID_BLUETOOTH, AID_BLUETOOTH, "system/etc/bluetooth/network.conf" },
-    { 00444, AID_NET_BT,    AID_NET_BT,    "system/etc/bluetooth/blacklist.conf" },
-    { 00640, AID_SYSTEM,    AID_SYSTEM,    "system/etc/bluetooth/auto_pairing.conf" },
     { 00444, AID_RADIO,     AID_AUDIO,     "system/etc/AudioPara4.csv" },
     { 00555, AID_ROOT,      AID_ROOT,      "system/etc/ppp/*" },
     { 00555, AID_ROOT,      AID_ROOT,      "system/etc/rc.*" },

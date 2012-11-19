@@ -33,6 +33,7 @@
 #ifdef HAVE_SELINUX
 #include <selinux/selinux.h>
 #include <selinux/label.h>
+#include <selinux/android.h>
 #endif
 
 #include <private/android_filesystem_config.h>
@@ -50,9 +51,10 @@
 #define SYSFS_PREFIX    "/sys"
 #define FIRMWARE_DIR1   "/etc/firmware"
 #define FIRMWARE_DIR2   "/vendor/firmware"
+#define FIRMWARE_DIR3   "/firmware/image"
 
 #ifdef HAVE_SELINUX
-static struct selabel_handle *sehandle;
+extern struct selabel_handle *sehandle;
 #endif
 
 static int device_fd = -1;
@@ -219,32 +221,6 @@ static void make_device(const char *path,
     }
 #endif
 }
-
-
-static int make_dir(const char *path, mode_t mode)
-{
-    int rc;
-
-#ifdef HAVE_SELINUX
-    char *secontext = NULL;
-
-    if (sehandle) {
-        selabel_lookup(sehandle, &secontext, path, mode);
-        setfscreatecon(secontext);
-    }
-#endif
-
-    rc = mkdir(path, mode);
-
-#ifdef HAVE_SELINUX
-    if (secontext) {
-        freecon(secontext);
-        setfscreatecon(NULL);
-    }
-#endif
-    return rc;
-}
-
 
 static void add_platform_device(const char *name)
 {
@@ -624,6 +600,9 @@ static void handle_generic_device_event(struct uevent *uevent)
      } else if (!strncmp(uevent->subsystem, "graphics", 8)) {
          base = "/dev/graphics/";
          make_dir(base, 0755);
+     } else if (!strncmp(uevent->subsystem, "drm", 3)) {
+         base = "/dev/dri/";
+         make_dir(base, 0755);
      } else if (!strncmp(uevent->subsystem, "oncrpc", 6)) {
          base = "/dev/oncrpc/";
          make_dir(base, 0755);
@@ -660,7 +639,7 @@ static void handle_generic_device_event(struct uevent *uevent)
 
 static void handle_device_event(struct uevent *uevent)
 {
-    if (!strcmp(uevent->action,"add"))
+    if (!strcmp(uevent->action,"add") || !strcmp(uevent->action, "change"))
         fixup_sys_perms(uevent->path);
 
     if (!strncmp(uevent->subsystem, "block", 5)) {
@@ -725,7 +704,7 @@ static int is_booting(void)
 
 static void process_firmware_event(struct uevent *uevent)
 {
-    char *root, *loading, *data, *file1 = NULL, *file2 = NULL;
+    char *root, *loading, *data, *file1 = NULL, *file2 = NULL, *file3 = NULL;
     int l, loading_fd, data_fd, fw_fd;
     int booting = is_booting();
 
@@ -752,6 +731,10 @@ static void process_firmware_event(struct uevent *uevent)
     if (l == -1)
         goto data_free_out;
 
+    l = asprintf(&file3, FIRMWARE_DIR3"/%s", uevent->firmware);
+    if (l == -1)
+        goto data_free_out;
+
     loading_fd = open(loading, O_WRONLY);
     if(loading_fd < 0)
         goto file_free_out;
@@ -765,17 +748,20 @@ try_loading_again:
     if(fw_fd < 0) {
         fw_fd = open(file2, O_RDONLY);
         if (fw_fd < 0) {
-            if (booting) {
-                    /* If we're not fully booted, we may be missing
-                     * filesystems needed for firmware, wait and retry.
-                     */
-                usleep(100000);
-                booting = is_booting();
-                goto try_loading_again;
+            fw_fd = open(file3, O_RDONLY);
+            if (fw_fd < 0) {
+                if (booting) {
+                        /* If we're not fully booted, we may be missing
+                         * filesystems needed for firmware, wait and retry.
+                         */
+                    usleep(100000);
+                    booting = is_booting();
+                    goto try_loading_again;
+                }
+                INFO("firmware: could not open '%s' %d\n", uevent->firmware, errno);
+                write(loading_fd, "-1", 2);
+                goto data_close_out;
             }
-            INFO("firmware: could not open '%s' %d\n", uevent->firmware, errno);
-            write(loading_fd, "-1", 2);
-            goto data_close_out;
         }
     }
 
@@ -897,12 +883,10 @@ void device_init(void)
     struct stat info;
     int fd;
 #ifdef HAVE_SELINUX
-    struct selinux_opt seopts[] = {
-        { SELABEL_OPT_PATH, "/file_contexts" }
-    };
-
-    if (is_selinux_enabled() > 0)
-        sehandle = selabel_open(SELABEL_CTX_FILE, seopts, 1);
+    sehandle = NULL;
+    if (is_selinux_enabled() > 0) {
+        sehandle = selinux_android_file_context_handle();
+    }
 #endif
     /* is 64K enough? udev uses 16MB! */
     device_fd = uevent_open_socket(64*1024, true);

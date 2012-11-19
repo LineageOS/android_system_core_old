@@ -1,6 +1,6 @@
 # Copyright 2005 The Android Open Source Project
 
-ifneq ($(filter arm x86,$(TARGET_ARCH)),)
+ifneq ($(filter arm mips x86,$(TARGET_ARCH)),)
 
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
@@ -24,6 +24,12 @@ LOCAL_CFLAGS += -DWITH_VFP_D32
 endif # ARCH_ARM_HAVE_VFP_D32
 
 LOCAL_SHARED_LIBRARIES := libcutils libc libcorkscrew
+
+ifeq ($(HAVE_SELINUX),true)
+LOCAL_SHARED_LIBRARIES += libselinux
+LOCAL_C_INCLUDES += external/libselinux/include
+LOCAL_CFLAGS += -DHAVE_SELINUX
+endif
 
 include $(BUILD_EXECUTABLE)
 

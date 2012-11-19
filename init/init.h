@@ -142,6 +142,8 @@ int load_565rle_image( char *file_name );
 
 #ifdef HAVE_SELINUX
 extern struct selabel_handle *sehandle;
+extern struct selabel_handle *sehandle_prop;
+extern int selinux_reload_policy(void);
 #endif
 
 #endif	/* _INIT_INIT_H */

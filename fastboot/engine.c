@@ -28,7 +28,6 @@
 
 #include "fastboot.h"
 #include "make_ext4fs.h"
-#include "ext4_utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,6 +76,7 @@ char *mkmsg(const char *fmt, ...)
 #define OP_QUERY      3
 #define OP_NOTICE     4
 #define OP_FORMAT     5
+#define OP_DOWNLOAD_SPARSE 6
 
 typedef struct Action Action;
 
@@ -111,6 +111,20 @@ struct image_data {
 void generate_ext4_image(struct image_data *image);
 void cleanup_image(struct image_data *image);
 
+int fb_getvar(struct usb_handle *usb, char *response, const char *fmt, ...)
+{
+    char cmd[CMD_SIZE] = "getvar:";
+    int getvar_len = strlen(cmd);
+    va_list args;
+
+    response[FB_RESPONSE_SZ] = '\0';
+    va_start(args, fmt);
+    vsnprintf(cmd + getvar_len, sizeof(cmd) - getvar_len, fmt, args);
+    va_end(args);
+    cmd[CMD_SIZE - 1] = '\0';
+    return fb_command_response(usb, cmd, response);
+}
+
 struct generator {
     char *fs_type;
 
@@ -129,6 +143,39 @@ struct generator {
 } generators[] = {
     { "ext4", generate_ext4_image, cleanup_image }
 };
+
+/* Return true if this partition is supported by the fastboot format command.
+ * It is also used to determine if we should first erase a partition before
+ * flashing it with an ext4 filesystem.  See needs_erase()
+ *
+ * Not all devices report the filesystem type, so don't report any errors,
+ * just return false.
+ */
+int fb_format_supported(usb_handle *usb, const char *partition)
+{
+    char response[FB_RESPONSE_SZ+1];
+    struct generator *generator = NULL;
+    int status;
+    unsigned int i;
+
+    status = fb_getvar(usb, response, "partition-type:%s", partition);
+    if (status) {
+        return 0;
+    }
+
+    for (i = 0; i < ARRAY_SIZE(generators); i++) {
+        if (!strncmp(generators[i].fs_type, response, FB_RESPONSE_SZ)) {
+            generator = &generators[i];
+            break;
+        }
+    }
+
+    if (generator) {
+        return 1;
+    }
+
+    return 0;
+}
 
 static int cb_default(Action *a, int status, char *resp)
 {
@@ -278,9 +325,7 @@ int fb_format(Action *a, usb_handle *usb, int skip_if_not_supported)
     unsigned i;
     char cmd[CMD_SIZE];
 
-    response[FB_RESPONSE_SZ] = '\0';
-    snprintf(cmd, sizeof(cmd), "getvar:partition-type:%s", partition);
-    status = fb_command_response(usb, cmd, response);
+    status = fb_getvar(usb, response, "partition-type:%s", partition);
     if (status) {
         if (skip_if_not_supported) {
             fprintf(stderr,
@@ -312,9 +357,7 @@ int fb_format(Action *a, usb_handle *usb, int skip_if_not_supported)
         return -1;
     }
 
-    response[FB_RESPONSE_SZ] = '\0';
-    snprintf(cmd, sizeof(cmd), "getvar:partition-size:%s", partition);
-    status = fb_command_response(usb, cmd, response);
+    status = fb_getvar(usb, response, "partition-size:%s", partition);
     if (status) {
         if (skip_if_not_supported) {
             fprintf(stderr,
@@ -367,6 +410,19 @@ void fb_queue_flash(const char *ptn, void *data, unsigned sz)
     a->data = data;
     a->size = sz;
     a->msg = mkmsg("sending '%s' (%d KB)", ptn, sz / 1024);
+
+    a = queue_action(OP_COMMAND, "flash:%s", ptn);
+    a->msg = mkmsg("writing '%s'", ptn);
+}
+
+void fb_queue_flash_sparse(const char *ptn, struct sparse_file *s, unsigned sz)
+{
+    Action *a;
+
+    a = queue_action(OP_DOWNLOAD_SPARSE, "");
+    a->data = s;
+    a->size = 0;
+    a->msg = mkmsg("sending sparse '%s' (%d KB)", ptn, sz / 1024);
 
     a = queue_action(OP_COMMAND, "flash:%s", ptn);
     a->msg = mkmsg("writing '%s'", ptn);
@@ -542,6 +598,8 @@ int fb_execute_queue(usb_handle *usb)
     int status = 0;
 
     a = action_list;
+    if (!a)
+        return status;
     resp[FB_RESPONSE_SZ] = 0;
 
     double start = -1;
@@ -570,6 +628,10 @@ int fb_execute_queue(usb_handle *usb)
             status = fb_format(a, usb, (int)a->data);
             status = a->func(a, status, status ? fb_get_error() : "");
             if (status) break;
+        } else if (a->op == OP_DOWNLOAD_SPARSE) {
+            status = fb_download_data_sparse(usb, a->data);
+            status = a->func(a, status, status ? fb_get_error() : "");
+            if (status) break;
         } else {
             die("bogus action");
         }
@@ -577,4 +639,9 @@ int fb_execute_queue(usb_handle *usb)
 
     fprintf(stderr,"finished. total time: %.3fs\n", (now() - start));
     return status;
+}
+
+int fb_queue_is_empty(void)
+{
+    return (action_list == NULL);
 }

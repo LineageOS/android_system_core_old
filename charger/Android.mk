@@ -8,6 +8,10 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	charger.c
 
+ifeq ($(strip $(BOARD_CHARGER_DISABLE_INIT_BLANK)),true)
+LOCAL_CFLAGS := -DCHARGER_DISABLE_INIT_BLANK
+endif
+
 LOCAL_MODULE := charger
 LOCAL_MODULE_TAGS := optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
@@ -17,7 +21,7 @@ LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_UNSTRIPPED)
 LOCAL_C_INCLUDES := bootable/recovery
 
 LOCAL_STATIC_LIBRARIES := libminui libpixelflinger_static libpng
-LOCAL_STATIC_LIBRARIES += libz libstdc++ libcutils libc
+LOCAL_STATIC_LIBRARIES += libz libstdc++ libcutils libm libc
 
 ifneq ($(BOARD_BATTERY_DEVICE_NAME),)
 LOCAL_CFLAGS += -DBATTERY_DEVICE_NAME=\"$(BOARD_BATTERY_DEVICE_NAME)\"

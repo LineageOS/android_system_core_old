@@ -38,6 +38,7 @@
 
 #define OS_PATH_SEPARATOR '\\'
 #define OS_PATH_SEPARATOR_STR "\\"
+#define ENV_PATH_SEPARATOR_STR ";"
 
 typedef CRITICAL_SECTION          adb_mutex_t;
 
@@ -254,6 +255,8 @@ static __inline__  int  adb_is_absolute_host_path( const char*  path )
     return isalpha(path[0]) && path[1] == ':' && path[2] == '\\';
 }
 
+extern char*  adb_strtok_r(char *str, const char *delim, char **saveptr);
+
 #else /* !_WIN32 a.k.a. Unix */
 
 #include "fdevent.h"
@@ -275,6 +278,7 @@ static __inline__  int  adb_is_absolute_host_path( const char*  path )
 
 #define OS_PATH_SEPARATOR '/'
 #define OS_PATH_SEPARATOR_STR "/"
+#define ENV_PATH_SEPARATOR_STR ":"
 
 typedef  pthread_mutex_t          adb_mutex_t;
 
@@ -489,6 +493,13 @@ static __inline__  int  adb_is_absolute_host_path( const char*  path )
 {
     return path[0] == '/';
 }
+
+static __inline__ char*  adb_strtok_r(char *str, const char *delim, char **saveptr)
+{
+    return strtok_r(str, delim, saveptr);
+}
+#undef   strtok_r
+#define  strtok_r  ___xxx_strtok_r
 
 #endif /* !_WIN32 */
 

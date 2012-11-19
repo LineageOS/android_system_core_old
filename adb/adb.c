@@ -21,17 +21,22 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <stddef.h>
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
 
 #include "sysdeps.h"
 #include "adb.h"
+#include "adb_auth.h"
+
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
 #if !ADB_HOST
 #include <private/android_filesystem_config.h>
 #include <linux/capability.h>
 #include <linux/prctl.h>
+#include <sys/mount.h>
 #else
 #include "usb_vendors.h"
 #endif
@@ -42,7 +47,11 @@ ADB_MUTEX_DEFINE( D_lock );
 
 int HOST = 0;
 
+static int auth_enabled = 0;
+
+#if !ADB_HOST
 static const char *adb_device_banner = "device";
+#endif
 
 void fatal(const char *fmt, ...)
 {
@@ -94,6 +103,7 @@ void  adb_trace_init(void)
         { "transport", TRACE_TRANSPORT },
         { "jdwp", TRACE_JDWP },
         { "services", TRACE_SERVICES },
+        { "auth", TRACE_AUTH },
         { NULL, 0 }
     };
 
@@ -197,19 +207,21 @@ void put_apacket(apacket *p)
     free(p);
 }
 
-void handle_online(void)
+void handle_online(atransport *t)
 {
     D("adb: online\n");
+    t->online = 1;
 }
 
 void handle_offline(atransport *t)
 {
     D("adb: offline\n");
     //Close the associated usb
+    t->online = 0;
     run_transport_disconnects(t);
 }
 
-#if TRACE_PACKETS
+#if DEBUG_PACKETS
 #define DUMPMAX 32
 void print_packet(const char *label, apacket *p)
 {
@@ -224,6 +236,7 @@ void print_packet(const char *label, apacket *p)
     case A_OKAY: tag = "OKAY"; break;
     case A_CLSE: tag = "CLSE"; break;
     case A_WRTE: tag = "WRTE"; break;
+    case A_AUTH: tag = "AUTH"; break;
     default: tag = "????"; break;
     }
 
@@ -245,7 +258,7 @@ void print_packet(const char *label, apacket *p)
         }
         x++;
     }
-    fprintf(stderr, tag);
+    fputs(tag, stderr);
 }
 #endif
 
@@ -269,6 +282,36 @@ static void send_close(unsigned local, unsigned remote, atransport *t)
     send_packet(p, t);
 }
 
+static size_t fill_connect_data(char *buf, size_t bufsize)
+{
+#if ADB_HOST
+    return snprintf(buf, bufsize, "host::") + 1;
+#else
+    static const char *cnxn_props[] = {
+        "ro.product.name",
+        "ro.product.model",
+        "ro.product.device",
+    };
+    static const int num_cnxn_props = ARRAY_SIZE(cnxn_props);
+    int i;
+    size_t remaining = bufsize;
+    size_t len;
+
+    len = snprintf(buf, remaining, "%s::", adb_device_banner);
+    remaining -= len;
+    buf += len;
+    for (i = 0; i < num_cnxn_props; i++) {
+        char value[PROPERTY_VALUE_MAX];
+        property_get(cnxn_props[i], value, "");
+        len = snprintf(buf, remaining, "%s=%s;", cnxn_props[i], value);
+        remaining -= len;
+        buf += len;
+    }
+
+    return bufsize - remaining + 1;
+#endif
+}
+
 static void send_connect(atransport *t)
 {
     D("Calling send_connect \n");
@@ -276,15 +319,73 @@ static void send_connect(atransport *t)
     cp->msg.command = A_CNXN;
     cp->msg.arg0 = A_VERSION;
     cp->msg.arg1 = MAX_PAYLOAD;
-    snprintf((char*) cp->data, sizeof cp->data, "%s::",
-            HOST ? "host" : adb_device_banner);
-    cp->msg.data_length = strlen((char*) cp->data) + 1;
+    cp->msg.data_length = fill_connect_data((char *)cp->data,
+                                            sizeof(cp->data));
     send_packet(cp, t);
-#if ADB_HOST
-        /* XXX why sleep here? */
-    // allow the device some time to respond to the connect message
-    adb_sleep_ms(1000);
-#endif
+}
+
+static void send_auth_request(atransport *t)
+{
+    D("Calling send_auth_request\n");
+    apacket *p;
+    int ret;
+
+    ret = adb_auth_generate_token(t->token, sizeof(t->token));
+    if (ret != sizeof(t->token)) {
+        D("Error generating token ret=%d\n", ret);
+        return;
+    }
+
+    p = get_apacket();
+    memcpy(p->data, t->token, ret);
+    p->msg.command = A_AUTH;
+    p->msg.arg0 = ADB_AUTH_TOKEN;
+    p->msg.data_length = ret;
+    send_packet(p, t);
+}
+
+static void send_auth_response(uint8_t *token, size_t token_size, atransport *t)
+{
+    D("Calling send_auth_response\n");
+    apacket *p = get_apacket();
+    int ret;
+
+    ret = adb_auth_sign(t->key, token, token_size, p->data);
+    if (!ret) {
+        D("Error signing the token\n");
+        put_apacket(p);
+        return;
+    }
+
+    p->msg.command = A_AUTH;
+    p->msg.arg0 = ADB_AUTH_SIGNATURE;
+    p->msg.data_length = ret;
+    send_packet(p, t);
+}
+
+static void send_auth_publickey(atransport *t)
+{
+    D("Calling send_auth_publickey\n");
+    apacket *p = get_apacket();
+    int ret;
+
+    ret = adb_auth_get_userkey(p->data, sizeof(p->data));
+    if (!ret) {
+        D("Failed to get user public key\n");
+        put_apacket(p);
+        return;
+    }
+
+    p->msg.command = A_AUTH;
+    p->msg.arg0 = ADB_AUTH_RSAPUBLICKEY;
+    p->msg.data_length = ret;
+    send_packet(p, t);
+}
+
+void adb_auth_verified(atransport *t)
+{
+    handle_online(t);
+    send_connect(t);
 }
 
 static char *connection_state_name(atransport *t)
@@ -305,29 +406,56 @@ static char *connection_state_name(atransport *t)
     }
 }
 
+/* qual_overwrite is used to overwrite a qualifier string.  dst is a
+ * pointer to a char pointer.  It is assumed that if *dst is non-NULL, it
+ * was malloc'ed and needs to freed.  *dst will be set to a dup of src.
+ */
+static void qual_overwrite(char **dst, const char *src)
+{
+    if (!dst)
+        return;
+
+    free(*dst);
+    *dst = NULL;
+
+    if (!src || !*src)
+        return;
+
+    *dst = strdup(src);
+}
+
 void parse_banner(char *banner, atransport *t)
 {
-    char *type, *product, *end;
+    static const char *prop_seps = ";";
+    static const char key_val_sep = '=';
+    char *cp;
+    char *type;
 
     D("parse_banner: %s\n", banner);
     type = banner;
-    product = strchr(type, ':');
-    if(product) {
-        *product++ = 0;
-    } else {
-        product = "";
-    }
-
-        /* remove trailing ':' */
-    end = strchr(product, ':');
-    if(end) *end = 0;
-
-        /* save product name in device structure */
-    if (t->product == NULL) {
-        t->product = strdup(product);
-    } else if (strcmp(product, t->product) != 0) {
-        free(t->product);
-        t->product = strdup(product);
+    cp = strchr(type, ':');
+    if (cp) {
+        *cp++ = 0;
+        /* Nothing is done with second field. */
+        cp = strchr(cp, ':');
+        if (cp) {
+            char *save;
+            char *key;
+            key = adb_strtok_r(cp + 1, prop_seps, &save);
+            while (key) {
+                cp = strchr(key, key_val_sep);
+                if (cp) {
+                    *cp++ = '\0';
+                    if (!strcmp(key, "ro.product.name"))
+                        qual_overwrite(&t->product, cp);
+                    else if (!strcmp(key, "ro.product.model"))
+                        qual_overwrite(&t->model, cp);
+                    else if (!strcmp(key, "ro.product.device"))
+                        qual_overwrite(&t->device, cp);
+                }
+                key = adb_strtok_r(NULL, prop_seps, &save);
+            }
+        }
     }
 
     if(!strcmp(type, "bootloader")){
@@ -389,13 +517,42 @@ void handle_packet(apacket *p, atransport *t)
             t->connection_state = CS_OFFLINE;
             handle_offline(t);
         }
+
         parse_banner((char*) p->data, t);
-        handle_online();
-        if(!HOST) send_connect(t);
+
+        if (HOST || !auth_enabled) {
+            handle_online(t);
+            if(!HOST) send_connect(t);
+        } else {
+            send_auth_request(t);
+        }
+        break;
+
+    case A_AUTH:
+        if (p->msg.arg0 == ADB_AUTH_TOKEN) {
+            t->key = adb_auth_nextkey(t->key);
+            if (t->key) {
+                send_auth_response(p->data, p->msg.data_length, t);
+            } else {
+                /* No more private keys to try, send the public key */
+                send_auth_publickey(t);
+            }
+        } else if (p->msg.arg0 == ADB_AUTH_SIGNATURE) {
+            if (adb_auth_verify(t->token, p->data, p->msg.data_length)) {
+                adb_auth_verified(t);
+                t->failed_auth_attempts = 0;
+            } else {
+                if (t->failed_auth_attempts++ > 10)
+                    adb_sleep_ms(1000);
+                send_auth_request(t);
+            }
+        } else if (p->msg.arg0 == ADB_AUTH_RSAPUBLICKEY) {
+            adb_auth_confirm_key(p->data, p->msg.data_length, t);
+        }
         break;
 
     case A_OPEN: /* OPEN(local-id, 0, "destination") */
-        if(t->connection_state != CS_OFFLINE) {
+        if (t->online) {
             char *name = (char*) p->data;
             name[p->msg.data_length > 0 ? p->msg.data_length - 1 : 0] = 0;
             s = create_local_service_socket(name);
@@ -411,7 +568,7 @@ void handle_packet(apacket *p, atransport *t)
         break;
 
     case A_OKAY: /* READY(local-id, remote-id, "") */
-        if(t->connection_state != CS_OFFLINE) {
+        if (t->online) {
             if((s = find_local_socket(p->msg.arg1))) {
                 if(s->peer == 0) {
                     s->peer = create_remote_socket(p->msg.arg0, t);
@@ -423,7 +580,7 @@ void handle_packet(apacket *p, atransport *t)
         break;
 
     case A_CLSE: /* CLOSE(local-id, remote-id, "") */
-        if(t->connection_state != CS_OFFLINE) {
+        if (t->online) {
             if((s = find_local_socket(p->msg.arg1))) {
                 s->close(s);
             }
@@ -431,7 +588,7 @@ void handle_packet(apacket *p, atransport *t)
         break;
 
     case A_WRTE:
-        if(t->connection_state != CS_OFFLINE) {
+        if (t->online) {
             if((s = find_local_socket(p->msg.arg1))) {
                 unsigned rid = p->msg.arg0;
                 p->len = p->msg.data_length;
@@ -947,12 +1104,12 @@ int adb_main(int is_daemon, int server_port)
 
     init_transport_registration();
 
-
 #if ADB_HOST
     HOST = 1;
     usb_vendors_init();
     usb_init();
     local_init(DEFAULT_ADB_LOCAL_TRANSPORT_PORT);
+    adb_auth_init();
 
     char local_name[30];
     build_local_name(local_name, sizeof(local_name), server_port);
@@ -960,6 +1117,20 @@ int adb_main(int is_daemon, int server_port)
         exit(1);
     }
 #else
+    property_get("ro.adb.secure", value, "0");
+    auth_enabled = !strcmp(value, "1");
+    if (auth_enabled)
+        adb_auth_init();
+
+    // Our external storage path may be different than apps, since
+    // we aren't able to bind mount after dropping root.
+    const char* adb_external_storage = getenv("ADB_EXTERNAL_STORAGE");
+    if (NULL != adb_external_storage) {
+        setenv("EXTERNAL_STORAGE", adb_external_storage, 1);
+    } else {
+        D("Warning: ADB_EXTERNAL_STORAGE is not set.  Leaving EXTERNAL_STORAGE"
+          " unchanged.\n");
+    }
 
     /* don't listen on a port (default 5037) if running in secure mode */
     /* don't run as root if we are running in secure mode */
@@ -1014,24 +1185,29 @@ int adb_main(int is_daemon, int server_port)
         }
     }
 
-        /* for the device, start the usb transport if the
-        ** android usb device exists and the "service.adb.tcp.port" and
-        ** "persist.adb.tcp.port" properties are not set.
-        ** Otherwise start the network transport.
-        */
-    property_get("service.adb.tcp.port", value, "");
-    if (!value[0])
-        property_get("persist.adb.tcp.port", value, "");
-    if (sscanf(value, "%d", &port) == 1 && port > 0) {
-        // listen on TCP port specified by service.adb.tcp.port property
-        local_init(port);
-    } else if (access("/dev/android_adb", F_OK) == 0) {
+    int usb = 0;
+    if (access(USB_ADB_PATH, F_OK) == 0 || access(USB_FFS_ADB_EP0, F_OK) == 0) {
         // listen on USB
         usb_init();
-    } else {
+        usb = 1;
+    }
+
+    // If one of these properties is set, also listen on that port
+    // If one of the properties isn't set and we couldn't listen on usb,
+    // listen on the default port.
+    property_get("service.adb.tcp.port", value, "");
+    if (!value[0]) {
+        property_get("persist.adb.tcp.port", value, "");
+    }
+    if (sscanf(value, "%d", &port) == 1 && port > 0) {
+        printf("using port=%d\n", port);
+        // listen on TCP port specified by service.adb.tcp.port property
+        local_init(port);
+    } else if (!usb) {
         // listen on default port
         local_init(DEFAULT_ADB_LOCAL_TRANSPORT_PORT);
     }
+
     D("adb_main(): pre init_jdwp()\n");
     init_jdwp();
     D("adb_main(): post init_jdwp()\n");
@@ -1067,7 +1243,7 @@ void connect_device(char* host, char* buffer, int buffer_size)
 
     strncpy(hostbuf, host, sizeof(hostbuf) - 1);
     if (portstr) {
-        if (portstr - host >= sizeof(hostbuf)) {
+        if (portstr - host >= (ptrdiff_t)sizeof(hostbuf)) {
             snprintf(buffer, buffer_size, "bad host name %s", host);
             return;
         }
@@ -1201,16 +1377,19 @@ int handle_host_request(char *service, transport_type ttype, char* serial, int r
     }
 
     // return a list of all connected devices
-    if (!strcmp(service, "devices")) {
+    if (!strncmp(service, "devices", 7)) {
         char buffer[4096];
-        memset(buf, 0, sizeof(buf));
-        memset(buffer, 0, sizeof(buffer));
-        D("Getting device list \n");
-        list_transports(buffer, sizeof(buffer));
-        snprintf(buf, sizeof(buf), "OKAY%04x%s",(unsigned)strlen(buffer),buffer);
-        D("Wrote device list \n");
-        writex(reply_fd, buf, strlen(buf));
-        return 0;
+        int use_long = !strcmp(service+7, "-l");
+        if (use_long || service[7] == 0) {
+            memset(buf, 0, sizeof(buf));
+            memset(buffer, 0, sizeof(buffer));
+            D("Getting device list \n");
+            list_transports(buffer, sizeof(buffer), use_long);
+            snprintf(buf, sizeof(buf), "OKAY%04x%s",(unsigned)strlen(buffer),buffer);
+            D("Wrote device list \n");
+            writex(reply_fd, buf, strlen(buf));
+            return 0;
+        }
     }
 
     // add a new TCP transport, device or emulator
@@ -1271,6 +1450,16 @@ int handle_host_request(char *service, transport_type ttype, char* serial, int r
          transport = acquire_one_transport(CS_ANY, ttype, serial, NULL);
        if (transport && transport->serial) {
             out = transport->serial;
+        }
+        snprintf(buf, sizeof buf, "OKAY%04x%s",(unsigned)strlen(out),out);
+        writex(reply_fd, buf, strlen(buf));
+        return 0;
+    }
+    if(!strncmp(service,"get-devpath",strlen("get-devpath"))) {
+        char *out = "unknown";
+         transport = acquire_one_transport(CS_ANY, ttype, serial, NULL);
+       if (transport && transport->devpath) {
+            out = transport->devpath;
         }
         snprintf(buf, sizeof buf, "OKAY%04x%s",(unsigned)strlen(out),out);
         writex(reply_fd, buf, strlen(buf));

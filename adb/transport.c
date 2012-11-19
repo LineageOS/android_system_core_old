@@ -370,7 +370,7 @@ static int list_transports_msg(char*  buffer, size_t  bufferlen)
     char  head[5];
     int   len;
 
-    len = list_transports(buffer+4, bufferlen-4);
+    len = list_transports(buffer+4, bufferlen-4, 0);
     snprintf(head, sizeof(head), "%04x", len);
     memcpy(buffer, head, 4);
     len += 4;
@@ -601,6 +601,12 @@ static void transport_registration_func(int _fd, unsigned ev, void *data)
             free(t->product);
         if (t->serial)
             free(t->serial);
+        if (t->model)
+            free(t->model);
+        if (t->device)
+            free(t->device);
+        if (t->devpath)
+            free(t->devpath);
 
         memset(t,0xee,sizeof(atransport));
         free(t);
@@ -737,6 +743,45 @@ void remove_transport_disconnect(atransport*  t, adisconnect*  dis)
     dis->next = dis->prev = dis;
 }
 
+static int qual_char_is_invalid(char ch)
+{
+    if ('A' <= ch && ch <= 'Z')
+        return 0;
+    if ('a' <= ch && ch <= 'z')
+        return 0;
+    if ('0' <= ch && ch <= '9')
+        return 0;
+    return 1;
+}
+
+static int qual_match(const char *to_test,
+                      const char *prefix, const char *qual, int sanitize_qual)
+{
+    if (!to_test || !*to_test)
+        /* Return true if both the qual and to_test are null strings. */
+        return !qual || !*qual;
+
+    if (!qual)
+        return 0;
+
+    if (prefix) {
+        while (*prefix) {
+            if (*prefix++ != *to_test++)
+                return 0;
+        }
+    }
+
+    while (*qual) {
+        char ch = *qual++;
+        if (sanitize_qual && qual_char_is_invalid(ch))
+            ch = '_';
+        if (ch != *to_test++)
+            return 0;
+    }
+
+    /* Everything matched so far.  Return true if *to_test is a NUL. */
+    return !*to_test;
+}
 
 atransport *acquire_one_transport(int state, transport_type ttype, const char* serial, char** error_out)
 {
@@ -758,9 +803,19 @@ retry:
 
         /* check for matching serial number */
         if (serial) {
-            if (t->serial && !strcmp(serial, t->serial)) {
+            if ((t->serial && !strcmp(serial, t->serial)) ||
+                (t->devpath && !strcmp(serial, t->devpath)) ||
+                qual_match(serial, "product:", t->product, 0) ||
+                qual_match(serial, "model:", t->model, 1) ||
+                qual_match(serial, "device:", t->device, 0)) {
+                if (result) {
+                    if (error_out)
+                        *error_out = "more than one device";
+                    ambiguous = 1;
+                    result = NULL;
+                    break;
+                }
                 result = t;
-                break;
             }
         } else {
             if (ttype == kTransportUsb && t->type == kTransportUsb) {
@@ -837,7 +892,58 @@ static const char *statename(atransport *t)
     }
 }
 
-int list_transports(char *buf, size_t  bufsize)
+static void add_qual(char **buf, size_t *buf_size,
+                     const char *prefix, const char *qual, int sanitize_qual)
+{
+    size_t len;
+    int prefix_len;
+
+    if (!buf || !*buf || !buf_size || !*buf_size || !qual || !*qual)
+        return;
+
+    len = snprintf(*buf, *buf_size, "%s%n%s", prefix, &prefix_len, qual);
+
+    if (sanitize_qual) {
+        char *cp;
+        for (cp = *buf + prefix_len; cp < *buf + len; cp++) {
+            if (qual_char_is_invalid(*cp))
+                *cp = '_';
+        }
+    }
+
+    *buf_size -= len;
+    *buf += len;
+}
+
+static size_t format_transport(atransport *t, char *buf, size_t bufsize,
+                               int long_listing)
+{
+    const char* serial = t->serial;
+    if (!serial || !serial[0])
+        serial = "????????????";
+
+    if (!long_listing) {
+        return snprintf(buf, bufsize, "%s\t%s\n", serial, statename(t));
+    } else {
+        size_t len, remaining = bufsize;
+
+        len = snprintf(buf, remaining, "%-22s %s", serial, statename(t));
+        remaining -= len;
+        buf += len;
+
+        add_qual(&buf, &remaining, " ", t->devpath, 0);
+        add_qual(&buf, &remaining, " product:", t->product, 0);
+        add_qual(&buf, &remaining, " model:", t->model, 1);
+        add_qual(&buf, &remaining, " device:", t->device, 0);
+
+        len = snprintf(buf, remaining, "\n");
+        remaining -= len;
+
+        return bufsize - remaining;
+    }
+}
+
+int list_transports(char *buf, size_t  bufsize, int long_listing)
 {
     char*       p   = buf;
     char*       end = buf + bufsize;
@@ -847,11 +953,7 @@ int list_transports(char *buf, size_t  bufsize)
         /* XXX OVERRUN PROBLEMS XXX */
     adb_mutex_lock(&transport_lock);
     for(t = transport_list.next; t != &transport_list; t = t->next) {
-        const char* serial = t->serial;
-        if (!serial || !serial[0])
-            serial = "????????????";
-        len = snprintf(p, end - p, "%s\t%s\n", serial, statename(t));
-
+        len = format_transport(t, p, end - p, long_listing);
         if (p + len >= end) {
             /* discard last line if buffer is too short */
             break;
@@ -956,7 +1058,7 @@ void unregister_all_tcp_transports()
 
 #endif
 
-void register_usb_transport(usb_handle *usb, const char *serial, unsigned writeable)
+void register_usb_transport(usb_handle *usb, const char *serial, const char *devpath, unsigned writeable)
 {
     atransport *t = calloc(1, sizeof(atransport));
     D("transport: %p init'ing for usb_handle %p (sn='%s')\n", t, usb,
@@ -964,6 +1066,9 @@ void register_usb_transport(usb_handle *usb, const char *serial, unsigned writea
     init_usb_transport(t, usb, (writeable ? CS_OFFLINE : CS_NOPERM));
     if(serial) {
         t->serial = strdup(serial);
+    }
+    if(devpath) {
+        t->devpath = strdup(devpath);
     }
     register_transport(t);
 }

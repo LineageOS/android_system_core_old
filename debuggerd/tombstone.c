@@ -35,6 +35,10 @@
 #include <corkscrew/demangle.h>
 #include <corkscrew/backtrace.h>
 
+#ifdef HAVE_SELINUX
+#include <selinux/android.h>
+#endif
+
 #include "machine.h"
 #include "tombstone.h"
 #include "utility.h"
@@ -72,7 +76,9 @@ static const char *get_signame(int sig)
     case SIGFPE:     return "SIGFPE";
     case SIGSEGV:    return "SIGSEGV";
     case SIGPIPE:    return "SIGPIPE";
+#ifdef SIGSTKFLT
     case SIGSTKFLT:  return "SIGSTKFLT";
+#endif
     case SIGSTOP:    return "SIGSTOP";
     default:         return "?";
     }
@@ -120,6 +126,15 @@ static const char *get_sigcode(int signo, int code)
         break;
     }
     return "?";
+}
+
+static void dump_revision_info(log_t* log)
+{
+    char revision[PROPERTY_VALUE_MAX];
+
+    property_get("ro.revision", revision, "unknown");
+
+    _LOG(log, false, "Revision: '%s'\n", revision);
 }
 
 static void dump_build_info(log_t* log)
@@ -336,13 +351,11 @@ static void dump_nearby_maps(const ptrace_context_t* context, log_t* log, pid_t 
      * Search for a match, or for a hole where the match would be.  The list
      * is backward from the file content, so it starts at high addresses.
      */
-    bool found = false;
     map_info_t* map = context->map_info_list;
     map_info_t *next = NULL;
     map_info_t *prev = NULL;
     while (map != NULL) {
         if (addr >= map->start && addr < map->end) {
-            found = true;
             next = map->next;
             break;
         } else if (addr >= map->end) {
@@ -595,6 +608,7 @@ static bool dump_crash(log_t* log, pid_t pid, pid_t tid, int signal,
     _LOG(log, false,
             "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
     dump_build_info(log);
+    dump_revision_info(log);
     dump_thread_info(log, pid, tid, true);
     if(signal) {
         dump_fault_addr(log, tid, signal);
@@ -681,6 +695,13 @@ char* engrave_tombstone(pid_t pid, pid_t tid, int signal,
         int* total_sleep_time_usec) {
     mkdir(TOMBSTONE_DIR, 0755);
     chown(TOMBSTONE_DIR, AID_SYSTEM, AID_SYSTEM);
+
+#ifdef HAVE_SELINUX
+    if (selinux_android_restorecon(TOMBSTONE_DIR) == -1) {
+        *detach_failed = false;
+        return NULL;
+    }
+#endif
 
     int fd;
     char* path = find_and_open_tombstone(&fd);
