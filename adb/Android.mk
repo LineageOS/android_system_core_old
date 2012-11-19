@@ -128,6 +128,8 @@ ifeq ($(BOARD_ALWAYS_INSECURE),true)
 	LOCAL_CFLAGS += -DBOARD_ALWAYS_INSECURE
 endif
 
+LOCAL_C_INCLUDES += external/openssl/include
+
 LOCAL_MODULE := adbd
 
 LOCAL_FORCE_STATIC_EXECUTABLE := true
@@ -172,6 +174,8 @@ LOCAL_CFLAGS := \
 	-Wno-unused-parameter \
 	-D_XOPEN_SOURCE \
 	-D_GNU_SOURCE
+
+LOCAL_C_INCLUDES += external/openssl/include
 
 LOCAL_MODULE := adb
 
