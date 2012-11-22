@@ -149,6 +149,8 @@ int main(int argc, char **argv)
             second_offset = strtoul(val, 0, 16);
         } else if(!strcmp(arg, "--tags_offset")) {
             tags_offset = strtoul(val, 0, 16);
+        } else if(!strcmp(arg, "--ramdiskaddr")) {
+            hdr.ramdisk_addr = strtoul(val, 0, 16); 
         } else if(!strcmp(arg, "--board")) {
             board = val;
         } else if(!strcmp(arg,"--pagesize")) {
