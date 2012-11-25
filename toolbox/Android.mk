@@ -39,6 +39,7 @@ OUR_TOOLS := \
     newfs_msdos \
     ps \
     prlimit \
+    restart \
     sendevent \
     start \
     stop \
