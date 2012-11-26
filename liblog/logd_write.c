@@ -87,6 +87,12 @@ int __htclog_print_private(int a1, const char *a2, const char *fmt, ...)
 }
 #endif
 
+#ifdef MOTOROLA_LOG
+signed int __android_log_loggable(void) {
+    return 1;
+}
+#endif
+
 static int __write_to_log_null(log_id_t log_fd, struct iovec *vec, size_t nr)
 {
     return -1;
