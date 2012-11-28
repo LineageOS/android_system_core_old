@@ -905,6 +905,16 @@ int do_setsebool(int nargs, char **args) {
         return ret;
     }
 
+=======
+    }
+
+    if (security_set_boolean_list(1, &b, 0) < 0) {
+        ret = -errno;
+        ERROR("setsebool: could not set %s to %s\n", name, value);
+        return ret;
+    }
+#endif
+>>>>>>> Change setsebool syntax to be consistent with other init built-ins.
     return 0;
 }
 
