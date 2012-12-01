@@ -72,7 +72,13 @@ struct selabel_handle *sehandle_prop;
 
 static int property_triggers_enabled = 0;
 
+#ifndef BOARD_CHARGING_CMDLINE_NAME
+#define BOARD_CHARGING_CMDLINE_NAME "androidboot.battchg_pause"
+#define BOARD_CHARGING_CMDLINE_VALUE "true"
+#endif
+
 static char qemu[32];
+static char battchg_pause[32];
 
 int have_console;
 std::string console_name = "/dev/console";
@@ -324,6 +330,8 @@ static void import_kernel_nv(const std::string& key, const std::string& value, b
 
     if (key == "qemu") {
         strlcpy(qemu, value.c_str(), sizeof(qemu));
+    } else if (key == BOARD_CHANGING_CMDLINE_NAME) {
+        strlcpy(battchg_pause, value.c_str(), sizeof(battchg_pause));
     } else if (android::base::StartsWith(key, "androidboot.")) {
         property_set(android::base::StringPrintf("ro.boot.%s", key.c_str() + 12).c_str(),
                      value.c_str());
@@ -658,7 +666,8 @@ int main(int argc, char** argv) {
 
     // Don't mount filesystems or start core system services in charger mode.
     std::string bootmode = property_get("ro.bootmode");
-    if (bootmode == "charger" || charging_mode_booting()) {
+    if (bootmode == "charger" || charging_mode_booting() ||
+            strcmp(battchg_pause, BOARD_CHARGING_CMDLINE_VALUE) == 0) {
         am.QueueEventTrigger("charger");
     } else if (strncmp(bootmode.c_str(), "ffbm", 4) == 0) {
         NOTICE("Booting into ffbm mode\n");
