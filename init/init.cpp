@@ -69,7 +69,13 @@ struct selabel_handle *sehandle_prop;
 
 static int property_triggers_enabled = 0;
 
+#ifndef BOARD_CHARGING_CMDLINE_NAME
+#define BOARD_CHARGING_CMDLINE_NAME "androidboot.battchg_pause"
+#define BOARD_CHARGING_CMDLINE_VALUE "true"
+#endif
+
 static char qemu[32];
+static char battchg_pause[32];
 
 static struct action *cur_action = NULL;
 static struct command *cur_command = NULL;
@@ -782,6 +788,8 @@ static void import_kernel_nv(char *name, bool for_emulator)
 
     if (!strcmp(name,"qemu")) {
         strlcpy(qemu, value, sizeof(qemu));
+    } else if (!strcmp(name,BOARD_CHARGING_CMDLINE_NAME)) {
+        strlcpy(battchg_pause, value, sizeof(battchg_pause));
     } else if (!strncmp(name, "androidboot.", 12) && name_len > 12) {
         const char *boot_prop_name = name + 12;
         char prop[PROP_NAME_MAX];
@@ -1117,7 +1125,8 @@ int main(int argc, char** argv) {
 
     // Don't mount filesystems or start core system services in charger mode.
     char bootmode[PROP_VALUE_MAX];
-    if ((property_get("ro.bootmode", bootmode) > 0 && strcmp(bootmode, "charger") == 0)
+    if ((property_get("ro.bootmode", bootmode) > 0 && strcmp(bootmode, "charger") == 0 &&
+         strcmp(battchg_pause, BOARD_CHARGING_CMDLINE_VALUE) == 0)
                || charging_mode_booting()) {
         action_for_each_trigger("charger", action_add_queue_tail);
     } else if (strncmp(bootmode, "ffbm", 4) == 0) {
