@@ -83,7 +83,13 @@ struct selabel_handle *sehandle_prop;
 
 static int property_triggers_enabled = 0;
 
+#ifndef BOARD_CHARGING_CMDLINE_NAME
+#define BOARD_CHARGING_CMDLINE_NAME "androidboot.battchg_pause"
+#define BOARD_CHARGING_CMDLINE_VALUE "true"
+#endif
+
 static char qemu[32];
+static char battchg_pause[32];
 
 std::string default_console = "/dev/console";
 static time_t process_needs_restart_at;
@@ -481,6 +487,8 @@ static void import_kernel_nv(const std::string& key, const std::string& value, b
 
     if (key == "qemu") {
         strlcpy(qemu, value.c_str(), sizeof(qemu));
+    } else if (key == BOARD_CHARGING_CMDLINE_NAME) {
+        strlcpy(battchg_pause, value.c_str(), sizeof(battchg_pause));
     } else if (android::base::StartsWith(key, "androidboot.")) {
         property_set("ro.boot." + key.substr(12), value);
     }
@@ -1189,7 +1197,8 @@ int main(int argc, char** argv) {
 
     // Don't mount filesystems or start core system services in charger mode.
     std::string bootmode = GetProperty("ro.bootmode", "");
-    if (bootmode == "charger" || charging_mode_booting()) {
+    if (bootmode == "charger" || charging_mode_booting() ||
+            strcmp(battchg_pause, BOARD_CHARGING_CMDLINE_VALUE) == 0) {
         am.QueueEventTrigger("charger");
     } else {
         am.QueueEventTrigger("late-init");
