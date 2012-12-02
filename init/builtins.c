@@ -43,6 +43,7 @@
 #include <private/android_filesystem_config.h>
 
 void add_environment(const char *name, const char *value);
+const char * const * get_environment();
 
 extern int init_module(void *, unsigned long, const char *);
 
@@ -191,8 +192,10 @@ int do_exec(int nargs, char **args)
         int fd, sz;
         get_property_workspace(&fd, &sz);
         sprintf(tmp, "%d,%d", dup(fd), sz);
-        setenv("ANDROID_PROPERTY_WORKSPACE", tmp, 1);
-        execve(par[0],par,environ);
+        add_environment("ANDROID_PROPERTY_WORKSPACE", tmp);
+        if (execve(par[0], par, (char **) get_environment()) < 0) {
+            exit(errno);
+        }
         exit(0);
     }
     else

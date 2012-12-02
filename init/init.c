@@ -109,6 +109,11 @@ int add_environment(const char *key, const char *val)
     return 1;
 }
 
+const char * const * get_environment()
+{
+    return ENV;
+}
+
 static void zap_stdio(void)
 {
     int fd;
