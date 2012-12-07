@@ -196,12 +196,6 @@ enum {
      * count is non-positive or too big to be realized.
      */
     CAMERA_CMD_SET_VIDEO_BUFFER_COUNT = 10,
-
-#ifdef QCOM_HARDWARE
-    CAMERA_CMD_HISTOGRAM_ON     = 10,
-    CAMERA_CMD_HISTOGRAM_OFF     = 11,
-    CAMERA_CMD_HISTOGRAM_SEND_DATA  = 12,
-#endif
 #endif
 
 };
