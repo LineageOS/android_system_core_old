@@ -185,7 +185,8 @@ enum {
      * can silently finish itself or show a dialog.
      */
     CAMERA_CMD_PING = 9,
- 
+#endif
+
     /**
      * Configure the number of video buffers used for recording. The intended
      * video buffer count for recording is passed as arg1, which must be
@@ -196,8 +197,6 @@ enum {
      * count is non-positive or too big to be realized.
      */
     CAMERA_CMD_SET_VIDEO_BUFFER_COUNT = 10,
-#endif
-
 };
 
 /** camera fatal errors */
