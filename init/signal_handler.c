@@ -63,7 +63,7 @@ static int wait_for_one_process(int block)
 
     NOTICE("process '%s', pid %d exited\n", svc->name, pid);
 
-    if (!(svc->flags & SVC_ONESHOT) || (svc->flags & SVC_RESTART)) {
+    if (!(svc->flags & SVC_ONESHOT)) {
         kill(-pid, SIGKILL);
         NOTICE("process '%s' killing any children in process group\n", svc->name);
     }
@@ -78,9 +78,8 @@ static int wait_for_one_process(int block)
     svc->pid = 0;
     svc->flags &= (~SVC_RUNNING);
 
-        /* oneshot processes go into the disabled state on exit,
-         * except when manually restarted. */
-    if ((svc->flags & SVC_ONESHOT) && !(svc->flags & SVC_RESTART)) {
+        /* oneshot processes go into the disabled state on exit */
+    if (svc->flags & SVC_ONESHOT) {
         svc->flags |= SVC_DISABLED;
     }
 
@@ -91,7 +90,7 @@ static int wait_for_one_process(int block)
     }
 
     now = gettime();
-    if ((svc->flags & SVC_CRITICAL) && !(svc->flags & SVC_RESTART)) {
+    if (svc->flags & SVC_CRITICAL) {
         if (svc->time_crashed + CRITICAL_CRASH_WINDOW >= now) {
             if (++svc->nr_crashed > CRITICAL_CRASH_THRESHOLD) {
                 ERROR("critical process '%s' exited %d times in %d minutes; "
@@ -106,7 +105,6 @@ static int wait_for_one_process(int block)
         }
     }
 
-    svc->flags &= (~SVC_RESTART);
     svc->flags |= SVC_RESTARTING;
 
     /* Execute all onrestart commands for this service. */
