@@ -49,6 +49,7 @@ endif
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := charger_res_images
+LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 LOCAL_MODULE_TAGS := optional
 LOCAL_REQUIRED_MODULES := $(_img_modules)
 include $(BUILD_PHONY_PACKAGE)
