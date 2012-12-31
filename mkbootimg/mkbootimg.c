@@ -144,8 +144,13 @@ int main(int argc, char **argv)
             unsigned base = strtoul(val, 0, 16);
             hdr.kernel_addr =  base + 0x00008000;
             hdr.ramdisk_addr = base + 0x01000000;
+#ifdef RK30XX
+            hdr.second_addr =  base + 0x00B00000;
+            hdr.tags_addr =    base - 0x00378000;
+#else
             hdr.second_addr =  base + 0x00F00000;
             hdr.tags_addr =    base + 0x00000100;
+#endif
         } else if(!strcmp(arg, "--ramdiskaddr")) {
             hdr.ramdisk_addr = strtoul(val, 0, 16);
         } else if(!strcmp(arg, "--board")) {
@@ -228,6 +233,10 @@ int main(int argc, char **argv)
     SHA_update(&ctx, &hdr.ramdisk_size, sizeof(hdr.ramdisk_size));
     SHA_update(&ctx, second_data, hdr.second_size);
     SHA_update(&ctx, &hdr.second_size, sizeof(hdr.second_size));
+#ifdef RK30XX
+    /* tags_addr, page_size, unused[2], name[], and cmdline[] */
+    SHA_update(&ctx, &hdr.tags_addr, 4 + 4 + 4 + 4 + 16 + 512);
+#endif
     sha = SHA_final(&ctx);
     memcpy(hdr.id, sha,
            SHA_DIGEST_SIZE > sizeof(hdr.id) ? sizeof(hdr.id) : SHA_DIGEST_SIZE);
