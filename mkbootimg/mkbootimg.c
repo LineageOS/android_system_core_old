@@ -119,8 +119,13 @@ int main(int argc, char **argv)
         /* default load addresses */
     hdr.kernel_addr =  0x10008000;
     hdr.ramdisk_addr = 0x11000000;
+#ifdef RK30XX
+    hdr.second_addr = 0x60F00000;
+    hdr.tags_addr = 0x60088000;
+#else
     hdr.second_addr =  0x10F00000;
     hdr.tags_addr =    0x10000100;
+#endif
 
     while(argc > 0){
         char *arg = argv[0];
@@ -233,6 +238,10 @@ int main(int argc, char **argv)
     SHA_update(&ctx, &hdr.ramdisk_size, sizeof(hdr.ramdisk_size));
     SHA_update(&ctx, second_data, hdr.second_size);
     SHA_update(&ctx, &hdr.second_size, sizeof(hdr.second_size));
+#ifdef RK30XX
+    /* tags_addr, page_size, unused[2], name[], and cmdline[] */
+    SHA_update(&ctx, &hdr.tags_addr, 4 + 4 + 4 + 4 + 16 + 512);
+#endif
     sha = SHA_final(&ctx);
     memcpy(hdr.id, sha,
            SHA_DIGEST_SIZE > sizeof(hdr.id) ? sizeof(hdr.id) : SHA_DIGEST_SIZE);
