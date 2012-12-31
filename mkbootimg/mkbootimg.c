@@ -144,8 +144,13 @@ int main(int argc, char **argv)
             unsigned base = strtoul(val, 0, 16);
             hdr.kernel_addr =  base + 0x00008000;
             hdr.ramdisk_addr = base + 0x01000000;
+#ifdef RK30XX
+            hdr.second_addr =  base + 0x00B00000;
+            hdr.tags_addr =    base - 0x00378000;
+#else
             hdr.second_addr =  base + 0x00F00000;
             hdr.tags_addr =    base + 0x00000100;
+#endif
         } else if(!strcmp(arg, "--ramdiskaddr")) {
             hdr.ramdisk_addr = strtoul(val, 0, 16);
         } else if(!strcmp(arg, "--board")) {

@@ -1,11 +1,15 @@
 
 LOCAL_PATH:= $(call my-dir)
-include $(CLEAR_VARS)
 
+include $(CLEAR_VARS)
 LOCAL_SRC_FILES := mkbootimg.c
 LOCAL_STATIC_LIBRARIES := libmincrypt
-
 LOCAL_MODULE := mkbootimg
+
+# Rockchip RK30XX
+ifeq ($(TARGET_BOARD_PLATFORM),rk30xx)
+  LOCAL_CFLAGS += -DRK30XX
+endif
 
 include $(BUILD_HOST_EXECUTABLE)
 
@@ -25,6 +29,12 @@ LOCAL_MODULE_CLASS := UTILITY_EXECUTABLES
 LOCAL_UNSTRIPPED_PATH := $(PRODUCT_OUT)/symbols/utilities
 LOCAL_MODULE_PATH := $(PRODUCT_OUT)/utilities
 LOCAL_FORCE_STATIC_EXECUTABLE := true
+
+# Rockchip RK30XX
+ifeq ($(TARGET_BOARD_PLATFORM),rk30xx)
+  LOCAL_CFLAGS += -DRK30XX
+endif
+
 include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
