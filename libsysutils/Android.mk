@@ -14,6 +14,10 @@ LOCAL_SRC_FILES:=                             \
                   src/ServiceManager.cpp      \
                   EventLogTags.logtags
 
+ifeq ($(BOARD_DISABLE_UNEXPECTED_NETLINK_MESSAGES),true)
+  LOCAL_CFLAGS += -DDISABLE_UNEXPECTED_NETLINK_MESSAGES
+endif
+
 LOCAL_MODULE:= libsysutils
 
 LOCAL_C_INCLUDES := $(KERNEL_HEADERS) 

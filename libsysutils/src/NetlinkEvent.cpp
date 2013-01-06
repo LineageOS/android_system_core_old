@@ -127,8 +127,10 @@ bool NetlinkEvent::parseBinaryNetlinkMessage(char *buffer, int size) {
             mSubsystem = strdup("qlog");
             mAction = NlActionChange;
 
+#ifndef DISABLE_UNEXPECTED_NETLINK_MESSAGES
         } else {
                 SLOGD("Unexpected netlink message. type=0x%x\n", nh->nlmsg_type);
+#endif
         }
         nh = NLMSG_NEXT(nh, size);
     }
