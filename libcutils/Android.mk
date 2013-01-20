@@ -116,8 +116,14 @@ libcutils_c_includes := bionic/libc/private
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libcutils
+
+ifneq ($(BOARD_CUSTOM_REBOOT),)
+  LOCAL_SRC_FILES := $(BOARD_CUSTOM_REBOOT)
+else
+  LOCAL_SRC_FILES := android_reboot.c
+endif
+
 LOCAL_SRC_FILES := $(commonSources) \
-        android_reboot.c \
         ashmem-dev.c \
         debugger.c \
         klog.c \
