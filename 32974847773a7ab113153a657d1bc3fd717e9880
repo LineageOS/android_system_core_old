@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAcn//7bY\u003d",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 3720
+      },
+      "writtenOn": "2013-01-20T19:40:52Z",
+      "side": 1,
+      "message": "This needs to be a :\u003d.",
+      "revId": "32974847773a7ab113153a657d1bc3fd717e9880",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAcn//7bU\u003d",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 3720
+      },
+      "writtenOn": "2013-01-20T19:40:52Z",
+      "side": 1,
+      "message": "This needs to be a +\u003d.",
+      "revId": "32974847773a7ab113153a657d1bc3fd717e9880",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAcn//7bQ\u003d",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 3720
+      },
+      "writtenOn": "2013-01-20T19:40:52Z",
+      "side": 1,
+      "message": "This also needs to be a +\u003d.",
+      "revId": "32974847773a7ab113153a657d1bc3fd717e9880",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
