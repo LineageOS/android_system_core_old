@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAcn//7cE\u003d",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 3720
+      },
+      "writtenOn": "2013-01-20T18:50:49Z",
+      "side": 1,
+      "message": "This needs to be a +\u003d, not a :\u003d, else it\u0027ll overwrite the value set above for android_reboot.c.",
+      "revId": "7fa3d3e8edad00da29b9ab4365aee82a3fa2dc49",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
