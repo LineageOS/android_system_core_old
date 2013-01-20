@@ -116,8 +116,8 @@ libcutils_c_includes := bionic/libc/private
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libcutils
-LOCAL_SRC_FILES := $(commonSources) \
-        android_reboot.c \
+
+LOCAL_SRC_FILES += $(commonSources) \
         ashmem-dev.c \
         debugger.c \
         klog.c \
@@ -125,6 +125,12 @@ LOCAL_SRC_FILES := $(commonSources) \
         partition_utils.c \
         qtaguid.c \
         uevent.c
+
+ifneq ($(BOARD_CUSTOM_REBOOT),)
+  LOCAL_SRC_FILES := $(BOARD_CUSTOM_REBOOT)
+else
+  LOCAL_SRC_FILES := android_reboot.c
+endif
 
 ifeq ($(TARGET_ARCH),arm)
 LOCAL_SRC_FILES += arch-arm/memset32.S
