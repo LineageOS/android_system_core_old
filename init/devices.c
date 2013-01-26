@@ -43,6 +43,10 @@
 
 #include <cutils/list.h>
 #include <cutils/uevent.h>
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+#include <cutils/partition_utils.h>
+#include <sys/poll.h>
+#endif
 
 #include "devices.h"
 #include "util.h"
@@ -70,6 +74,17 @@ struct uevent {
     int major;
     int minor;
 };
+
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+#define MAX_MMC_PARTITIONS 32
+#define NAME_LEN 32
+#define ALIAS_LEN 32
+#define PATH_LEN 64
+#define BUF_SIZE MAX_MMC_PARTITIONS*128
+
+static void add_mmc_alias(char *dev_name, char *dev_alias);
+static void get_partition_alias_name(char *devname, char *alias);
+#endif
 
 struct perms_ {
     char *name;
@@ -474,6 +489,9 @@ static void handle_device(const char *action, const char *devpath,
 
     if(!strcmp(action, "add")) {
         make_device(devpath, path, block, major, minor);
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+	device_changed(devpath, 1);
+#endif
         if (links) {
             for (i = 0; links[i]; i++)
                 make_link(devpath, links[i]);
@@ -481,6 +499,9 @@ static void handle_device(const char *action, const char *devpath,
     }
 
     if(!strcmp(action, "remove")) {
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+	device_changed(devpath, 0);
+#endif
         if (links) {
             for (i = 0; links[i]; i++)
                 remove_link(devpath, links[i]);
@@ -545,6 +566,21 @@ static void handle_block_device_event(struct uevent *uevent)
 
     handle_device(uevent->action, devpath, uevent->path, 1,
             uevent->major, uevent->minor, links);
+
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+    /* make Moto specific /dev/block/alias link */
+    if(!strcmp(uevent->action, "add")) {
+        if(!strncmp(uevent->subsystem, "block", 5)) {
+            char dev_alias[ALIAS_LEN]={'\0'};
+            char *basename;
+
+            basename = strrchr(devpath, '/') + 1;
+            get_partition_alias_name(basename, dev_alias);
+            if (strlen(dev_alias))
+                add_mmc_alias(basename, dev_alias);
+        }
+    }
+#endif
 }
 
 static void handle_generic_device_event(struct uevent *uevent)
@@ -914,3 +950,80 @@ int get_device_fd()
 {
     return device_fd;
 }
+
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+static void add_mmc_alias(char *dev_name, char *dev_alias)
+{
+    int ret = 0;
+    struct stat buf;
+    char dev_path[PATH_LEN]={'\0'};
+    char dev_link[PATH_LEN]={'\0'};
+    unsigned uid = 0;
+    unsigned gid = 0;
+    mode_t mode = 0;
+
+    if (dev_alias[0] == '\0')
+        return;
+
+    sprintf(dev_path, "/dev/block/%s", dev_name);
+
+    ret = stat(dev_link, &buf);
+    if (!ret)
+        ERROR("The name exist, will not create mmc alias link!\n");
+
+    sprintf(dev_link, "/dev/block/%s", dev_alias);
+
+    mode = get_device_perm(dev_link, &uid, &gid);
+
+    if (!symlink(dev_path, dev_link)) {
+        if (uid != 0 || gid != 0 || mode != 0600) {
+            chown(dev_link, uid, gid);
+            chmod(dev_link, mode | S_IFBLK);
+        }
+    } else if (errno != EEXIST) {
+        ERROR("Create mmc alias link %s->%s error (%s)!\n",
+            dev_path, dev_link, strerror(errno));
+    }
+}
+
+static void get_partition_alias_name(char *devname, char *alias)
+{
+    int fd;
+    char buf[BUF_SIZE];
+    char *data_ptr;
+    char *data_end;
+    ssize_t data_size;
+
+    if (!alias)
+        return;
+
+    fd = open("/proc/partitions", O_RDONLY);
+    if (fd < 0)
+        return;
+
+    buf[sizeof(buf) - 1] = '\0';
+    data_size = read(fd, buf, sizeof(buf) - 1);
+    data_ptr = buf;
+    data_end = buf + data_size;
+    *data_end = '\0';
+    while (data_ptr < data_end) {
+        int dev_major, dev_minor;
+        unsigned long long blocks_num;
+        char dev_name[NAME_LEN]={'\0'};
+        char dev_alias[ALIAS_LEN]={'\0'};
+
+        int r = sscanf(data_ptr, "%4d  %7d %10llu %31s%*['\t']%31[^'\n']\n",
+                   &dev_major, &dev_minor, &blocks_num, dev_name, dev_alias);
+
+        if (r == 5 && !strncmp(dev_name, devname, NAME_LEN)) {
+            strncpy(alias, dev_alias, ALIAS_LEN);
+            break;
+        }
+
+        /* Advance cursor to next line */
+        while (data_ptr < data_end && *data_ptr != '\n') data_ptr++;
+        while (data_ptr < data_end && *data_ptr == '\n') data_ptr++;
+    }
+    close(fd);
+}
+#endif

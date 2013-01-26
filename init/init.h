@@ -133,6 +133,9 @@ void service_stop(struct service *svc);
 void service_reset(struct service *svc);
 void service_start(struct service *svc, const char *dynamic_args);
 void property_changed(const char *name, const char *value);
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+void device_changed(const char *name, int is_add);
+#endif
 
 #define INIT_IMAGE_FILE	"/initlogo.rle"
 
