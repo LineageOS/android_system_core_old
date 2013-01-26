@@ -172,12 +172,29 @@ out:
     return -1;
 }
 
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+/* PA_COUNT_MAX formula:
+ * PA_COUNT_MAX * 128 + PA_COUNT_MAX * 4 + 32 + 4 <= Allocation memory
+ * Where:
+ *     Allocate memory = 17 * 4096 = 69632 bytes
+ * PA_COUNT_MAX = 527
+ */
+#define PA_COUNT_MAX   527
+/* PA_INFO_START = 8 header words(32 bytes)
+ *               + 527 toc words(2108 bytes)
+ *               + 4 bytes
+ *               = 2144 bytes
+ */
+#define PA_INFO_START  2144
+#define PA_SIZE        69632
+#else
 /* (8 header words + 372 toc words) = 1520 bytes */
 /* 1536 bytes header and toc + 372 prop_infos @ 128 bytes = 49152 bytes */
 
 #define PA_COUNT_MAX  372
 #define PA_INFO_START 1536
 #define PA_SIZE       49152
+#endif
 
 static workspace pa_workspace;
 static prop_info *pa_info_array;

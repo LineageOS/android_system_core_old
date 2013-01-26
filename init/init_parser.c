@@ -570,6 +570,48 @@ void action_for_each_trigger(const char *trigger,
         }
     }
 }
+#ifdef BOARD_USE_MOTOROLA_DEV_ALIAS
+void queue_device_triggers(const char *name, int is_add)
+{
+    struct listnode *node;
+    struct action *act;
+    const char *trigger_names[] = { "device-removed-", "device-added-" };
+
+    list_for_each(node, &action_list) {
+        act = node_to_item(node, struct action, alist);
+        if (!strncmp(act->name, trigger_names[is_add],
+                     strlen(trigger_names[is_add]))) {
+            const char *devname = act->name + strlen(trigger_names[is_add]);
+
+            if (!strcmp(devname, name)) {
+                action_add_queue_tail(act);
+            }
+        }
+    }
+}
+
+void queue_all_device_triggers(void)
+{
+    struct listnode *node;
+    struct action *act;
+    const char *added = "device-added-";
+    struct stat devstat;
+
+    list_for_each(node, &action_list) {
+        act = node_to_item(node, struct action, alist);
+        if (!strncmp(act->name, added, strlen(added))) {
+            const char *devpath = act->name + strlen(added);
+            if (!stat(devpath, &devstat)) {
+                if (!((devstat.st_mode & S_IFMT) == S_IFREG ||
+                      (devstat.st_mode & S_IFMT) == S_IFDIR)) {
+                    ERROR("queuing %s\n", act->name);
+                    action_add_queue_tail(act);
+                }
+            }
+        }
+    }
+}
+#endif
 
 void queue_property_triggers(const char *name, const char *value)
 {
