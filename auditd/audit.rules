@@ -1,0 +1,4 @@
+-w /dev/block -pwa -F success=1 -F uid!=system
+-w /system -pwa -F success=1
+-w /data/security -pwa -F success=1 -F uid!=system
+-w /data/misc/audit -pwa -F success=1 -F uid!=audit
