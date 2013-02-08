@@ -72,6 +72,7 @@
 #define AID_CLAT          1029  /* clat part of nat464 */
 #define AID_LOOP_RADIO    1030  /* loop radio devices */
 #define AID_MEDIA_DRM     1031  /* MediaDrm plugins */
+#define AID_AUDIT         1032  /* audit daemon */
 
 #define AID_SHELL         2000  /* adb and debug shell user */
 #define AID_CACHE         2001  /* cache access */
@@ -187,6 +188,7 @@ static const struct android_id_info android_ids[] = {
     { "nobody",    AID_NOBODY, },
     { "clat",      AID_CLAT, },
     { "mediadrm",  AID_MEDIA_DRM, },
+    { "audit",      AID_AUDIT, },
 };
 
 #define android_id_count \
