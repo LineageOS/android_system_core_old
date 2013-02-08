@@ -96,6 +96,8 @@
 #define AID_DNS_TETHER    1052  /* DNS resolution daemon (tether: dnsmasq) */
 /* Changes to this file must be made in AOSP, *not* in internal branches. */
 
+#define AID_AUDIT         1049  /* audit daemon */
+
 #define AID_SHELL         2000  /* adb and debug shell user */
 #define AID_CACHE         2001  /* cache access */
 #define AID_DIAG          2002  /* access to diagnostic resources */
@@ -217,6 +219,8 @@ static const struct android_id_info android_ids[] = {
     { "nvram",         AID_NVRAM, },
     { "dns",           AID_DNS, },
     { "dns_tether",    AID_DNS_TETHER, },
+
+    { "audit",         AID_AUDIT, },
 
     { "shell",         AID_SHELL, },
     { "cache",         AID_CACHE, },

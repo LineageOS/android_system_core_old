@@ -354,6 +354,7 @@ on post-fs-data
 
     # create basic filesystem structure
     mkdir /data/misc 01771 system misc
+    mkdir /data/misc/audit 02750 audit system
     mkdir /data/misc/bluedroid 02770 bluetooth net_bt_stack
     # Fix the access permissions and group ownership for 'bt_config.conf'
     chmod 0660 /data/misc/bluedroid/bt_config.conf
@@ -657,6 +658,10 @@ service console /system/bin/sh
     user shell
     group shell log readproc
     seclabel u:r:shell:s0
+
+service auditd /system/bin/auditd -k
+    seclabel u:r:logd:s0
+    class main
 
 on property:ro.debuggable=1
     # Give writes to anyone for the trace folder on debug builds.
