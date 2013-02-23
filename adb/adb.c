@@ -1085,6 +1085,10 @@ static int should_drop_privileges() {
 }
 #endif /* !ADB_HOST */
 
+#if !ADB_HOST
+int recovery_mode = 0;
+#endif
+
 int adb_main(int is_daemon, int server_port)
 {
 #if !ADB_HOST
@@ -1118,7 +1122,7 @@ int adb_main(int is_daemon, int server_port)
     }
 #else
     property_get("ro.adb.secure", value, "0");
-    auth_enabled = !strcmp(value, "1");
+    auth_enabled = recovery_mode ? 0 : !strcmp(value, "1");
     if (auth_enabled)
         adb_auth_init();
 
@@ -1528,10 +1532,6 @@ int handle_host_request(char *service, transport_type ttype, char* serial, int r
     }
     return -1;
 }
-
-#if !ADB_HOST
-int recovery_mode = 0;
-#endif
 
 int main(int argc, char **argv)
 {
