@@ -371,7 +371,7 @@ static void format_host_command(char* buffer, size_t  buflen, const char* comman
     }
 }
 
-int adb_download_buffer(const char *service, const void* data, int sz,
+int adb_download_buffer(const char *service, const char *fn, const void* data, int sz,
                         unsigned progress)
 {
     char buf[4096];
@@ -407,7 +407,7 @@ int adb_download_buffer(const char *service, const void* data, int sz,
         sz -= xfer;
         ptr += xfer;
         if(progress) {
-            printf("sending: '%s' %4d%%    \r", service, (int)(100LL - ((100LL * sz) / (total))));
+            printf("sending: '%s' %4d%%    \r", fn, (int)(100LL - ((100LL * sz) / (total))));
             fflush(stdout);
         }
     }
@@ -439,11 +439,11 @@ int adb_download(const char *service, const char *fn, unsigned progress)
 
     data = load_file(fn, &sz);
     if(data == 0) {
-        fprintf(stderr,"* cannot read '%s' *\n", service);
+        fprintf(stderr,"* cannot read '%s' *\n", fn);
         return -1;
     }
 
-    int status = adb_download_buffer(service, data, sz, progress);
+    int status = adb_download_buffer(service, fn, data, sz, progress);
     free(data);
     return status;
 }
