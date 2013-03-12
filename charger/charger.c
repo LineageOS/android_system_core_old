@@ -1005,6 +1005,9 @@ int main(int argc, char **argv)
     int64_t now = curr_time_ms() - 1;
     int fd;
     int i;
+#ifdef CHARGER_PROCESS_BOOT_REASON
+    int boot_reason = 0;
+#endif
 
     list_init(&charger->supplies);
 
@@ -1012,6 +1015,17 @@ int main(int argc, char **argv)
     klog_set_level(CHARGER_KLOG_LEVEL);
 
     dump_last_kmsg();
+
+#ifdef CHARGER_PROCESS_BOOT_REASON
+    LOGI("--------------- CHECKING BOOT REASON ---------------\n");
+    // Check boot_reason before starting charger. See: Documentation/arm/msm/boot.txt
+    // 1 means power button long press. Fixes "The device always starts in charger mode"
+    if ((0 == read_file_int("/proc/sys/kernel/boot_reason", &boot_reason)) &&
+        (0 != boot_reason) && (255 != boot_reason) && (1 == (boot_reason & 1))) {
+            android_reboot(ANDROID_RB_RESTART2, 0, "charge_reset"); // Reboot charge_reset
+            return 0; // Don't start charger app and charging animations...
+    }
+#endif
 
     LOGI("--------------- STARTING CHARGER MODE ---------------\n");
 
