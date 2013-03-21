@@ -1,0 +1,7 @@
+on boot
+
+# This starts the network needed to get adb working in the emulator
+service goldfish-setup /sbin/init.recovery.goldfish.sh
+    user root
+    group root
+    oneshot
