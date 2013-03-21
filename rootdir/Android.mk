@@ -71,6 +71,15 @@ $(file) : $(LOCAL_PATH)/etc/ueventd.goldfish.rc | $(ACP)
 ALL_PREBUILT += $(file)
 $(INSTALLED_RAMDISK_TARGET): $(file)
 
+ifneq (,$(filter full full_x86 full_mips cm_goldfish,$(TARGET_PRODUCT)))
+
+# We need the below two files for adbd in recovery in emulator
+PRODUCT_COPY_FILES += \
+	$(LOCAL_PATH)/init.recovery.goldfish.rc:$(TARGET_RECOVERY_ROOT_OUT)/init.recovery.goldfish.rc \
+	$(LOCAL_PATH)/init.recovery.goldfish.sh:$(TARGET_RECOVERY_ROOT_OUT)/sbin/init.recovery.goldfish.sh
+
+endif
+
 # create some directories (some are mount points)
 DIRS := $(addprefix $(TARGET_ROOT_OUT)/, \
 		sbin \
