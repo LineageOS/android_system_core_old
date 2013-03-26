@@ -48,14 +48,14 @@
  * This function always zero-terminate the destination buffer unless
  * 'dstlen' is 0, even in case of overflow.
  */
-static void
+static const char*
 string_copy(char* dst, size_t dstlen, const char* src, size_t srclen)
 {
     const char* srcend = src + srclen;
     const char* dstend = dst + dstlen;
 
     if (dstlen == 0)
-        return;
+        return src;
 
     dstend--; /* make room for terminating zero */
 
@@ -63,6 +63,7 @@ string_copy(char* dst, size_t dstlen, const char* src, size_t srclen)
         *dst++ = *src++;
 
     *dst = '\0'; /* zero-terminate result */
+    return src;
 }
 
 /* Open 'filename' and map it into our address-space.
@@ -485,7 +486,7 @@ get_package_info(const char* pkgName, PackageInfo *info)
         if (q == p)
             goto BAD_FORMAT;
 
-        string_copy(info->dataDir, sizeof info->dataDir, p, q - p);
+        p = string_copy(info->dataDir, sizeof info->dataDir, p, q - p);
 
         /* skip spaces */
         if (parse_spaces(&p, end) < 0)
