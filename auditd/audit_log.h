@@ -34,58 +34,45 @@ typedef struct audit_log audit_log;
  *  The threshold, in bytes, the log file should grow to
  *  until rotation.
  * @return
- *  A valid handle to the audit_log.
+ *  A valid handle to the audit_log or NULL on failure.
  */
 extern audit_log *audit_log_open(const char *logfile, const char *rotatefile, size_t threshold);
 
 /**
- * Appends an audit reposnse to the audit log, and rotates the log if threshold is
- * passed. Note, it always finishes a message even if it is past threshold. Also
- * always appends a newline to the end of the message.
+ * Writes a formatted message to the audit log
  * @param l
- *  The audit log to use
- * @param reply
- *  The response to write
+ *  The log to write too
+ * @param fmt
+ *  The fmt specifier as passed to fprintf/printf family of functions
  * @return
- *  0 on success
+ *  0 on success or -errno on error
+ *
  */
-extern int audit_log_write(audit_log *l, const struct audit_reply *reply);
-
-/**
- * Appends a string to the audit log, appending a newline, and rotating
- * the logs if needed.
- * @param l
- *  The audit log to append too.
- * @param str
- *  The string to append to the log.
- * @return
- *  0 on success
- */
-extern int audit_log_write_str(audit_log *l, const char *str);
+extern int audit_log_write(audit_log *l, const char *fmt, ...);
 
 /**
  * Forces a rotation of the audit log.
  * @param l
  *  The log file to use
  * @return
- *  0 on success
+ *  0 on success, -errno on failure.
  */
 extern int audit_log_rotate(audit_log *l);
 
 /**
  * Closes the audit log file.
  * @param l
- *  The log file to close, NULL's the pointer.
+ *  The log file to close.
  */
 extern void audit_log_close(audit_log *l);
 
 /**
- * Searches once through kmesg for type=1400
+ * Searches once through kmsg for type=1400
  * kernel messages and logs them to the audit log
  * @param l
- * 	The log to append too
+ *  The log to append too
  * @return
- *  0 on success
+ *  0 on success, -errno on failure.
  */
 extern int audit_log_put_kmsg(audit_log *l);
 
