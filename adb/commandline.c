@@ -1193,7 +1193,8 @@ top:
 
     if(!strncmp(argv[0], "wait-for-", strlen("wait-for-"))) {
         char* service = argv[0];
-        if (!strncmp(service, "wait-for-device", strlen("wait-for-device"))) {
+        if (!strncmp(service, "wait-for-device", strlen("wait-for-device"))
+                && !strncmp(service, "wait-for-sideload", strlen("wait-for-sideload"))) {
             if (ttype == kTransportUsb) {
                 service = "wait-for-usb";
             } else if (ttype == kTransportLocal) {
