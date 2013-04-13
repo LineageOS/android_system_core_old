@@ -469,6 +469,8 @@ int connection_state(atransport *t);
 #define CS_NOPERM     5 /* Insufficient permissions to communicate with the device */
 #define CS_SIDELOAD   6
 
+#define CS_ONLINE    10 /* recovery or device */
+
 extern int HOST;
 extern int SHELL_EXIT_NOTIFY_FD;
 
