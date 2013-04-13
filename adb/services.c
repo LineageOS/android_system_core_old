@@ -661,6 +661,9 @@ asocket*  host_service_to_socket(const char*  name, const char *serial)
         } else if (!strncmp(name, "any", strlen("any"))) {
             sinfo->transport = kTransportAny;
             sinfo->state = CS_DEVICE;
+        } else if (!strncmp(name, "sideload", strlen("sideload"))) {
+            sinfo->transport = kTransportAny;
+            sinfo->state = CS_SIDELOAD;
         } else {
             free(sinfo);
             return NULL;
