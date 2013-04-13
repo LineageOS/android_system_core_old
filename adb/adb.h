@@ -390,6 +390,8 @@ int connection_state(atransport *t);
 #define CS_SIDELOAD   6
 #define CS_UNAUTHORIZED 7
 
+#define CS_ONLINE    10 /* recovery or device */
+
 extern int HOST;
 extern int SHELL_EXIT_NOTIFY_FD;
 

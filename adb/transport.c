@@ -871,8 +871,11 @@ retry:
                 *error_out = "device offline";
             result = NULL;
         }
+
          /* check for required connection state */
-        if (result && state != CS_ANY && result->connection_state != state) {
+        if (result && state != CS_ANY && ((state != CS_ONLINE && result->connection_state != state)
+                    || (state == CS_ONLINE && !(result->connection_state == CS_DEVICE
+                    || result->connection_state == CS_RECOVERY)))) {
             if (error_out)
                 *error_out = "invalid device state";
             result = NULL;
