@@ -210,12 +210,14 @@ void put_apacket(apacket *p)
 void handle_online(atransport *t)
 {
     D("adb: online\n");
+    property_set("service.adb.online", "1");
     t->online = 1;
 }
 
 void handle_offline(atransport *t)
 {
     D("adb: offline\n");
+    property_set("service.adb.online", "0");
     //Close the associated usb
     t->online = 0;
     run_transport_disconnects(t);
@@ -821,6 +823,7 @@ static BOOL WINAPI ctrlc_handler(DWORD type)
 
 static void adb_cleanup(void)
 {
+    property_set("service.adb.online", "0");
     usb_cleanup();
 }
 
