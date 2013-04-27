@@ -207,15 +207,30 @@ void put_apacket(apacket *p)
     free(p);
 }
 
+#if !ADB_HOST
+static int online_count = 0;
+int recovery_mode;
+#endif
+
 void handle_online(atransport *t)
 {
     D("adb: online\n");
+#if !ADB_HOST
+    if (recovery_mode && (++online_count == 1)) {
+        property_set("service.adb.online", "1");
+    }
+#endif
     t->online = 1;
 }
 
 void handle_offline(atransport *t)
 {
     D("adb: offline\n");
+#if !ADB_HOST
+    if (recovery_mode && (--online_count == 0)) {
+        property_set("service.adb.online", "0");
+    }
+#endif
     //Close the associated usb
     t->online = 0;
     run_transport_disconnects(t);
@@ -821,6 +836,11 @@ static BOOL WINAPI ctrlc_handler(DWORD type)
 
 static void adb_cleanup(void)
 {
+#if !ADB_HOST
+    if (recovery_mode) {
+        property_set("service.adb.online", "0");
+    }
+#endif
     usb_cleanup();
 }
 
