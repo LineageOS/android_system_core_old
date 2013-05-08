@@ -28,8 +28,7 @@
 
 
 // not fucking portable!
-#include <poll.h>
-//#include <sys/time.h> //
+//#include <poll.h>
 
 #include "sysdeps.h"
 
@@ -251,80 +250,6 @@ static void read_and_dump(int fd)
     }
 }
 
-static void read_and_write(int adbfd)
-{
-    struct pollfd pfd[2];
-    unsigned char buf[16384];
-    int n, wfd = fileno(stdin);
-    int lfd = fileno(stdout);
-    int plen;
-
-    int timeout = 1000; // for now
-
-    // jumbo
-//    plen = 16384;
-    plen = 4096;
-
-    D("attempting to set fd flags with fcntl()\n");
-    int flags;
-    flags = fcntl(wfd, F_GETFL, 0);
-    fcntl(wfd, F_SETFL, flags | O_NONBLOCK);
-
-    // enable for win32
-//    setmode(fileno(stdout), O_BINARY);
-//    setmode(fileno(stdin), O_BINARY);
-
-    D("readwrite(): setting up poll fds\n");
-
-    /* Setup Network FD */
-    pfd[0].fd = adbfd;
-    pfd[0].events = POLLIN;
-
-    /* Set up STDIN FD. */
-    pfd[1].fd = wfd;
-    pfd[1].events = POLLIN;
-
-    D("readwrite(): done setting up poll fds. pfd[0]=%d, pfd[1]=%d\n", pfd[0], pfd[1]);
-
-    while (pfd[0].fd != -1) {
-        if ((n = poll(pfd, 2, timeout)) < 0) {
-            D("polling failed, n=%d\n", n);
-//            adb_close(adbfd); // really? here?
-            return;
-        }
-
-        if (n == 0)
-            return;
-
-        if (pfd[0].revents & POLLIN) {
-            D("remote fd ready\n");
-            if ((n = adb_read(adbfd, buf, plen)) < 0)
-                return;
-            else if (n == 0) {
-                pfd[0].fd = -1;
-                pfd[0].events = 0;
-            } else {
-		D("writing %d bytes to stdout\n", n);
-                fwrite(buf, 1, n, stdout);
-                fflush(stdout);
-            }
-        }
-
-        if (pfd[1].revents & POLLIN) {
-            D("local fd ready\n");
-            if ((n = unix_read(wfd, buf, plen)) < 0)
-                return;
-            else if (n == 0) {
-                pfd[1].fd = -1;
-                pfd[1].events = 0;
-            } else {
-		D("writing %d bytes to adbfd\n", n);
-		adb_write(adbfd, buf, n);
-            }
-        }
-    }
-}
-
 static void copy_to_file(int inFd, int outFd) {
     const size_t BUFSIZE = 32 * 1024;
     char* buf = (char*) malloc(BUFSIZE);
@@ -406,6 +331,34 @@ static void *stdin_read_thread(void *x)
     return 0;
 }
 
+static void *stdin_dump_thread(void *x) {
+    int fd, fdi;
+    unsigned char buf[4096];
+    int r, n;
+
+    int *fds = (int*) x;
+    fd = fds[0];
+    fdi = fds[1];
+    free(fds);
+
+    for(;;) {
+        D("stdin_dump_thread(): pre unix_read(fdi=%d,...)\n", fdi);
+        r = unix_read(fdi, buf, 4096);
+        D("stdin_dump_thread(): post unix_read(fdi=%d,...)\n", fdi);
+        if(r == 0) break;
+        if(r < 0) {
+            if(errno == EINTR) continue;
+            break;
+        }
+
+        r = adb_write(fd, buf, r);
+        if(r <= 0) {
+            break;
+        }
+    }
+    return 0;
+}
+
 int interactive_shell(void)
 {
     adb_thread_t thr;
@@ -433,7 +386,6 @@ int interactive_shell(void)
 #endif
     return 0;
 }
-
 
 static void format_host_command(char* buffer, size_t  buflen, const char* command, transport_type ttype, const char* serial)
 {
@@ -1197,17 +1149,31 @@ top:
             D("non-interactive shell loop. buff=%s\n", buf);
             fd = adb_connect(buf);
             if(fd >= 0) {
+
 #ifdef HAVE_TERMIO_H
                 stdin_raw_init(0);
 #endif
-                D("about to readwrite(fd=%d)\n", fd);
-				read_and_write(fd);
-                D("readwrite() done.\n");
+                adb_thread_t thr;
+                int fdi;
+                int *fds;
+
+                fdi = 0; // stdin
+
+                fds = malloc(sizeof(int) * 2);
+                fds[0] = fd;
+                fds[1] = fdi;
+
+                D("about to create stdin_dump_thread (fd=%d)\n", fd);
+                adb_thread_create(&thr, stdin_dump_thread, fds);
+                read_and_dump(fd);
+                D("read_and_dump() done.\n");
                 adb_close(fd);
                 r = 0;
+
 #ifdef HAVE_TERMIO_H
                 stdin_raw_restore(0);
 #endif
+
             } else {
                 fprintf(stderr,"error: %s\n", adb_error());
                 r = -1;
