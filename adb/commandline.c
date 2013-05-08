@@ -26,6 +26,11 @@
 #include <ctype.h>
 #include <assert.h>
 
+
+// not fucking portable!
+#include <poll.h>
+//#include <sys/time.h> //
+
 #include "sysdeps.h"
 
 #ifdef HAVE_TERMIO_H
@@ -243,6 +248,80 @@ static void read_and_dump(int fd)
         }
         fwrite(buf, 1, len, stdout);
         fflush(stdout);
+    }
+}
+
+static void read_and_write(int adbfd)
+{
+    struct pollfd pfd[2];
+    unsigned char buf[16384];
+    int n, wfd = fileno(stdin);
+    int lfd = fileno(stdout);
+    int plen;
+
+    int timeout = 1000; // for now
+
+    // jumbo
+//    plen = 16384;
+    plen = 4096;
+
+    D("attempting to set fd flags with fcntl()\n");
+    int flags;
+    flags = fcntl(wfd, F_GETFL, 0);
+    fcntl(wfd, F_SETFL, flags | O_NONBLOCK);
+
+    // enable for win32
+//    setmode(fileno(stdout), O_BINARY);
+//    setmode(fileno(stdin), O_BINARY);
+
+    D("readwrite(): setting up poll fds\n");
+
+    /* Setup Network FD */
+    pfd[0].fd = adbfd;
+    pfd[0].events = POLLIN;
+
+    /* Set up STDIN FD. */
+    pfd[1].fd = wfd;
+    pfd[1].events = POLLIN;
+
+    D("readwrite(): done setting up poll fds. pfd[0]=%d, pfd[1]=%d\n", pfd[0], pfd[1]);
+
+    while (pfd[0].fd != -1) {
+        if ((n = poll(pfd, 2, timeout)) < 0) {
+            D("polling failed, n=%d\n", n);
+//            adb_close(adbfd); // really? here?
+            return;
+        }
+
+        if (n == 0)
+            return;
+
+        if (pfd[0].revents & POLLIN) {
+            D("remote fd ready\n");
+            if ((n = adb_read(adbfd, buf, plen)) < 0)
+                return;
+            else if (n == 0) {
+                pfd[0].fd = -1;
+                pfd[0].events = 0;
+            } else {
+		D("writing %d bytes to stdout\n", n);
+                fwrite(buf, 1, n, stdout);
+                fflush(stdout);
+            }
+        }
+
+        if (pfd[1].revents & POLLIN) {
+            D("local fd ready\n");
+            if ((n = unix_read(wfd, buf, plen)) < 0)
+                return;
+            else if (n == 0) {
+                pfd[1].fd = -1;
+                pfd[1].events = 0;
+            } else {
+		D("writing %d bytes to adbfd\n", n);
+		adb_write(adbfd, buf, n);
+            }
+        }
     }
 }
 
@@ -1115,14 +1194,20 @@ top:
         }
 
         for(;;) {
-            D("interactive shell loop. buff=%s\n", buf);
+            D("non-interactive shell loop. buff=%s\n", buf);
             fd = adb_connect(buf);
             if(fd >= 0) {
-                D("about to read_and_dump(fd=%d)\n", fd);
-                read_and_dump(fd);
-                D("read_and_dump() done.\n");
+#ifdef HAVE_TERMIO_H
+                stdin_raw_init(0);
+#endif
+                D("about to readwrite(fd=%d)\n", fd);
+				read_and_write(fd);
+                D("readwrite() done.\n");
                 adb_close(fd);
                 r = 0;
+#ifdef HAVE_TERMIO_H
+                stdin_raw_restore(0);
+#endif
             } else {
                 fprintf(stderr,"error: %s\n", adb_error());
                 r = -1;
