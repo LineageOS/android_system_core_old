@@ -343,15 +343,19 @@ static void *stdin_dump_thread(void *x) {
 
     for(;;) {
         D("stdin_dump_thread(): pre unix_read(fdi=%d,...)\n", fdi);
-        r = unix_read(fdi, buf, 4096);
-        D("stdin_dump_thread(): post unix_read(fdi=%d,...)\n", fdi);
-        if(r == 0) break;
+        r = unix_read(fdi, buf, 512);
+        D("stdin_dump_thread(): post unix_read(fdi=%d, r=%d)\n", fdi, r);
+        if(r == 0) {
+            D("zero bytes read from stdin, bailing.\n");
+            break;
+        }
         if(r < 0) {
             if(errno == EINTR) continue;
             break;
         }
-
+        D("ready to adb_write() %d bytes\n", r);
         r = adb_write(fd, buf, r);
+        D("wrote %d bytes to adb\n", r);
         if(r <= 0) {
             break;
         }
@@ -1188,7 +1192,7 @@ top:
                     printf("\x1b[0m");
                     fflush(stdout);
                 }
-                D("interactive shell loop. return r=%d\n", r);
+                D("non-interactive shell loop. return r=%d\n", r);
                 return r;
             }
         }

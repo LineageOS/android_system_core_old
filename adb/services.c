@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <termios.h>
 
 #include "sysdeps.h"
 
@@ -294,6 +296,8 @@ static int create_subprocess(const char *cmd, const char *arg0, const char *arg1
         return -1;
     }
 
+
+
     *pid = fork();
     if(*pid < 0) {
         printf("- fork failed: %s -\n", strerror(errno));
@@ -310,6 +314,15 @@ static int create_subprocess(const char *cmd, const char *arg0, const char *arg1
         if(pts < 0) {
             fprintf(stderr, "child failed to open pseudo-term slave: %s\n", devname);
             exit(-1);
+        }
+
+        // set pseudoterminal into raw mode for non-interactive shell
+        if (arg1) {
+            D("setting ptmx into raw mode\n");
+            struct termios original_settings;
+            tcgetattr(pts, &original_settings);
+            cfmakeraw (&original_settings);
+            tcsetattr (pts, TCSANOW, &original_settings);
         }
 
         dup2(pts, 0);
