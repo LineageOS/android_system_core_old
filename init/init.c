@@ -665,6 +665,12 @@ static void import_kernel_nv(char *name, int for_emulator)
         cnt = snprintf(prop, sizeof(prop), "ro.boot.%s", boot_prop_name);
         if (cnt < PROP_NAME_MAX)
             property_set(prop, value);
+#ifdef USE_SEC_LPM_RESET_REASON
+    } else if (!strncmp(name, "sec_debug.reset_reason", 22)) {
+        if (!strcmp(value, "0x1a2b3c10")) {
+            property_set("ro.boot.mode", "charger");
+        }
+#endif
     }
 }
 
