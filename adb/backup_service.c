@@ -127,6 +127,7 @@ int backup_service(BackupOperation op, char* args) {
 
         // off we go
         execvp("/system/bin/bu", (char * const *)bu_args);
+        execvp("/sbin/bu", (char * const *)bu_args);
         // oops error - close up shop and go home
         fprintf(stderr, "Unable to exec 'bu', bailing\n");
         exit(-1);
