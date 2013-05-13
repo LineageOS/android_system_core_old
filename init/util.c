@@ -85,12 +85,15 @@ unsigned int decode_uid(const char *s)
  * daemon. We communicate the file descriptor's value via the environment
  * variable ANDROID_SOCKET_ENV_PREFIX<name> ("ANDROID_SOCKET_foo").
  */
-int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid)
+int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid, const char *socketcon)
 {
     struct sockaddr_un addr;
     int fd, ret;
 #ifdef HAVE_SELINUX
-    char *secon;
+    char *filecon;
+
+    if (socketcon)
+        setsockcreatecon(socketcon);
 #endif
 
     fd = socket(PF_UNIX, type, 0);
@@ -98,6 +101,11 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid)
         ERROR("Failed to open socket '%s': %s\n", name, strerror(errno));
         return -1;
     }
+
+#ifdef HAVE_SELINUX
+    if (socketcon)
+        setsockcreatecon(NULL);
+#endif
 
     memset(&addr, 0 , sizeof(addr));
     addr.sun_family = AF_UNIX;
@@ -111,11 +119,11 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid)
     }
 
 #ifdef HAVE_SELINUX
-    secon = NULL;
+    filecon = NULL;
     if (sehandle) {
-        ret = selabel_lookup(sehandle, &secon, addr.sun_path, S_IFSOCK);
+        ret = selabel_lookup(sehandle, &filecon, addr.sun_path, S_IFSOCK);
         if (ret == 0)
-            setfscreatecon(secon);
+            setfscreatecon(filecon);
     }
 #endif
 
@@ -127,7 +135,7 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid)
 
 #ifdef HAVE_SELINUX
     setfscreatecon(NULL);
-    freecon(secon);
+    freecon(filecon);
 #endif
 
     chown(addr.sun_path, uid, gid);
