@@ -445,6 +445,23 @@ typedef enum {
     AUDIO_DEVICE_IN_ALL_SCO = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET,
 } audio_devices_t;
 
+#ifdef STE_AUDIO
+
+// AUDIO_INPUT_CLIENT_ID_BASE provide a means to refer to client IdÂ´s not
+// explicitly defined in the enum audio_input_clients
+#define AUDIO_INPUT_CLIENT_ID_BASE AUDIO_INPUT_CLIENT_ID1
+
+// AUDIO_INPUT_CLIENT_ID_BASE provide a means to refer to client Id´s not explicitly defined in the enum audio_input_clients
+typedef enum audio_input_clients {
+        AUDIO_INPUT_CLIENT_ID1 = 0x1,
+        AUDIO_INPUT_CLIENT_ID2 = 0x2,
+        AUDIO_INPUT_CLIENT_ID3 = 0x3,
+        AUDIO_INPUT_CLIENT_ID4 = 0x4,
+        AUDIO_INPUT_CLIENT_PLAYBACK = 0x80000000, // request client of playback type
+        AUDIO_INPUT_CLIENT_RECORD = 0x80000001   // request client of recording type
+} audio_input_clients;
+#endif
+
 /* the audio output flags serve two purposes:
  * - when an AudioTrack is created they indicate a "wish" to be connected to an
  * output stream with attributes corresponding to the specified flags
