@@ -144,6 +144,15 @@ enum {
     HAL_PIXEL_FORMAT_YCbCr_422_SP       = 0x10, // NV16
     HAL_PIXEL_FORMAT_YCrCb_420_SP       = 0x11, // NV21
     HAL_PIXEL_FORMAT_YCbCr_422_I        = 0x14, // YUY2
+#ifdef STE_HARDWARE
+    HAL_PIXEL_FORMAT_YCBCR42XMBN        = 0xE,
+    HAL_PIXEL_FORMAT_YCbCr_422_P        = 0x12,
+    HAL_PIXEL_FORMAT_YCbCr_420_P        = 0x13,
+    HAL_PIXEL_FORMAT_YCbCr_420_SP       = 0x21,
+    HAL_PIXEL_FORMAT_YCrCb_422_SP       = 0x23,
+    HAL_PIXEL_FORMAT_YCrCb_422_P        = 0x24,
+    HAL_PIXEL_FORMAT_YCrCb_420_P        = 0x25,
+#endif
 };
 
 
