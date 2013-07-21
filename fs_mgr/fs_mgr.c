@@ -456,6 +456,15 @@ int fs_mgr_mount_all(char *fstab_file)
     }
 
     for (i = 0; fstab[i].blk_dev; i++) {
+#ifndef HAVE_SELINUX
+        char *contextpos = strstr(fstab[i].fs_options,",context=");
+
+        /* This makes it mandatory that context is the LAST mount option */
+        if (contextpos != NULL) {
+           *contextpos='\0';
+        }
+#endif
+
         if (fstab[i].fs_mgr_flags & MF_WAIT) {
             wait_for_file(fstab[i].blk_dev, WAIT_TIMEOUT);
         }
