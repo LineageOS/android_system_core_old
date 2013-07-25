@@ -168,7 +168,6 @@ void service_start(struct service *svc, const char *dynamic_args)
     int needs_console;
     int n;
     char *scon = NULL;
-#ifdef HAVE_SELINUX
     int rc;
 
         /* starting a service removes it from the disabled or reset

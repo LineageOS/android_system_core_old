@@ -87,7 +87,7 @@ int create_socket(const char *name, int type, mode_t perm, uid_t uid, gid_t gid,
 {
     struct sockaddr_un addr;
     int fd, ret;
-    char *secon;
+    char *filecon;
 
     if (socketcon)
         setsockcreatecon(socketcon);
