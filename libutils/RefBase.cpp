@@ -630,6 +630,13 @@ void RefBase::onLastWeakRef(const void* /*id*/)
 
 // ---------------------------------------------------------------------------
 
+#ifdef REFBASE_JB_MR1_COMPAT_SYMBOLS
+extern "C" void _ZN7android7RefBase14moveReferencesEPvPKvjRKNS_22ReferenceConverterBaseE(void* /*dst*/, void const* /*src*/, size_t /*n*/,
+        const ReferenceConverterBase& /*caster*/)
+{
+}
+#endif
+
 #if DEBUG_REFS
 void RefBase::renameRefs(size_t n, const ReferenceRenamer& renamer) {
     for (size_t i=0 ; i<n ; i++) {
