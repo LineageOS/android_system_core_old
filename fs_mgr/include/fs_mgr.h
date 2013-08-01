@@ -38,6 +38,13 @@ struct fstab_rec {
     long long length;
     char *label;
     int partnum;
+
+    // cwm
+    char *blk_device2;
+    char *fs_type2;
+    char *fs_options2;
+
+    char *lun;
 };
 
 struct fstab *fs_mgr_read_fstab(const char *fstab_path);
