@@ -223,6 +223,21 @@ static int filter_usb_device(char* sysfs_name,
             } else {
                 out = ept->bEndpointAddress;
             }
+
+            // USB3 devices are required to have superspeed companion
+            // descriptors. They aren't needed to locate the target
+            // so just skip them.
+            //
+            // When using the Android build environment, the old ch9.h
+            // header from the prebuilts directory for the host does
+            // not contain superspeed-related definitions.
+#ifndef USB_DT_SS_EP_COMP_SIZE
+#define USB_DT_SS_EP_COMP_SIZE      6
+#endif
+            if (dev->bcdUSB >= 0x0300) {
+                len -= USB_DT_SS_EP_COMP_SIZE;
+                ptr += USB_DT_SS_EP_COMP_SIZE;
+            }
         }
 
         info.has_bulk_in = (in != -1);
