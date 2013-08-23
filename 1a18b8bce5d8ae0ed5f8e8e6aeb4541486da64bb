@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baee8101_1cdd9214",
+        "filename": "toolbox/restorecon.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 6763
+      },
+      "writtenOn": "2013-08-23T05:44:48Z",
+      "side": 1,
+      "message": "no, this change requires a bleeding of policy internals into making the right decision.\n\nIf you want to relabel the data directory, ultimately we need to generate a delta between the existing policy, and the update, and apply that delta to the affected files. Something like relabeld might be the more appropriate solution.",
+      "revId": "1a18b8bce5d8ae0ed5f8e8e6aeb4541486da64bb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
