@@ -1,6 +1,6 @@
-cc_binary {
+cc_library_static {
     srcs: ["sdcard.cpp"],
-    name: "sdcard",
+    name: "libsdcard",
     cflags: [
         "-Wall",
         "-Wno-unused-parameter",
@@ -14,4 +14,21 @@ cc_binary {
     sanitize: {
         misc_undefined: ["integer"],
     },
+}
+
+cc_binary {
+    srcs: ["main.c"],
+    name: "sdcard",
+    cflags: [
+        "-Wall",
+        "-Wno-unused-parameter",
+        "-Werror",
+    ],
+    static_libs: ["libsdcard"],
+    shared_libs: [
+        "libbase",
+        "libc",
+        "libcutils",
+        "libminijail",
+    ],
 }
