@@ -1904,7 +1904,7 @@ static void run(const char* source_path, const char* label, uid_t uid,
     exit(1);
 }
 
-int main(int argc, char **argv) {
+int sdcard_main(int argc, char **argv) {
     const char *source_path = NULL;
     const char *label = NULL;
     uid_t uid = 0;
