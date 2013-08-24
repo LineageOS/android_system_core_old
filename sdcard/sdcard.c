@@ -2077,7 +2077,7 @@ static bool should_use_sdcardfs(void) {
     }
 }
 
-int main(int argc, char **argv) {
+int sdcard_main(int argc, char **argv) {
     const char *source_path = NULL;
     const char *label = NULL;
     uid_t uid = 0;
