@@ -76,6 +76,9 @@ static int   bootchart_count;
 #define BOARD_CHARGING_CMDLINE_NAME "androidboot.battchg_pause"
 #define BOARD_CHARGING_CMDLINE_VALUE "true"
 #endif
+#ifndef BOARD_CHARGING_BOOTMODE
+#define BOARD_CHARGING_BOOTMODE "charger"
+#endif
 
 static char console[32];
 static char bootmode[32];
@@ -961,7 +964,7 @@ int main(int argc, char **argv)
     restorecon("/dev/socket");
 #endif
 
-    is_charger = !strcmp(bootmode, "charger");
+    is_charger = !strcmp(bootmode, BOARD_CHARGING_BOOTMODE);
 
     INFO("property init\n");
     if (!is_charger)
