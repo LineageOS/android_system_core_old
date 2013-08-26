@@ -1007,7 +1007,7 @@ int main(int argc, char **argv)
     restorecon("/dev/socket");
     restorecon("/dev/__properties__");
 
-    is_charger = !strcmp(bootmode, "charger");
+    is_charger = !strncmp(bootmode, "charger", 7);
 
     INFO("property init\n");
     if (!is_charger)
