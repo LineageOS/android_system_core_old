@@ -81,7 +81,9 @@ LOCAL_SRC_FILES:= \
     watchdogd.cpp \
     vendor_init.cpp
 
-SYSTEM_CORE_INIT_DEFINES := BOARD_CHARGING_MODE_BOOTING_LPM
+SYSTEM_CORE_INIT_DEFINES := BOARD_CHARGING_MODE_BOOTING_LPM \
+    BOARD_CHARGING_CMDLINE_NAME \
+    BOARD_CHARGING_CMDLINE_VALUE
 
 $(foreach system_core_init_define,$(SYSTEM_CORE_INIT_DEFINES), \
   $(if $($(system_core_init_define)), \
