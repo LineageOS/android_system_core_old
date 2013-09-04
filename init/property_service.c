@@ -169,12 +169,12 @@ out:
     return -1;
 }
 
-/* (8 header words + 372 toc words) = 1520 bytes */
-/* 1536 bytes header and toc + 372 prop_infos @ 128 bytes = 49152 bytes */
+/* (8 header words + 496 toc words) = 2016 bytes */
+/* 2048 bytes header and toc + 496 prop_infos @ 128 bytes = 65536 bytes */
 
-#define PA_COUNT_MAX  372
-#define PA_INFO_START 1536
-#define PA_SIZE       49152
+#define PA_COUNT_MAX  496
+#define PA_INFO_START 2048
+#define PA_SIZE       65536
 
 static workspace pa_workspace;
 static prop_info *pa_info_array;
