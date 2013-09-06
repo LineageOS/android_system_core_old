@@ -27,6 +27,10 @@
 
 #define MAX_AUDIT_MESSAGE_LENGTH    8970
 
+#define AUDIT_OFF       0
+#define AUDIT_ON        1
+#define AUDIT_LOCKED    2
+
 typedef enum {
     GET_REPLY_BLOCKING=0,
     GET_REPLY_NONBLOCKING
@@ -107,5 +111,69 @@ extern int  audit_get_reply(int fd, struct audit_reply *rep, reply_t block,
  *  This function returns 0 on success, -errno on error.
  */
 extern int  audit_set_pid(int fd, uint32_t pid, rep_wait_t wmode);
+
+/**
+ * Sends a command to the audit netlink socket
+ * @param fd
+ *  The fd returned by a call to audit_open()
+ * @param type
+ *  message type, see audit.h in the kernel
+ * @param data
+ *  opaque data pointer
+ * @param size
+ *  size of data in *data
+ * @return
+ *  This function returns 0 on success, -errno on error.
+ */
+extern int  audit_send(int fd, int type, const void *data, unsigned int size);
+
+/**
+ * Allocates a rule and adds a directory to watch, defaults to all permissions.
+ * Call audit_update_watch_perms() subsequently to update permissions.
+ * @param rulep
+ *  double pointer to an unallocated audit_rule_data, which will be allocated. This must be freed
+ * @param path
+ *  path to add to the rule
+ * @return
+ *  This function returns 0 on success, -errno on error.
+ */
+extern int  audit_add_dir(struct audit_rule_data **rulep, const char *path);
+
+/**
+ * Sets enabled flag, 0 for audit off, 1 for audit on, 2 for audit locked
+ * @param fd
+ *  file descripter returned by audit_open()
+ * @param state
+ *  0 for audit off, 1 for audit on, 2 for audit locked
+ * @return
+ *  This function returns 0 on success, -errno on error, -1 if already locked
+ */
+extern int  audit_set_enabled(int fd, uint32_t state);
+
+/**
+ * Sets permissions for an already allocated watch rule
+ * @param rule
+ *  rule to set permissions on
+ * @param perms
+ *  permissions to set, AUDIT_PERM_{READ,WRITE,EXEC,ATTR}
+ * @return
+ *  This function returns 0 on success, -1 if rule is NULL and -2 if there are too many fields
+ */
+extern int  audit_update_watch_perms(struct audit_rule_data *rule, int perms);
+
+/**
+ * Sets permissions for an already allocated watch rule
+ * @param rule
+ *  rule to add field to
+ * @param field
+ *  field from audit.h AUDIT_PID...AUDIT_FILETYPE
+ * @param oper
+ *  operator from audit.h AUDIT_EQUAL|AUDIT_NOT_EQUAL|AUDIT_BIT_MASK
+ * @param value
+ *  value to match for the field (e.g., uid=1000, 1000 is the value)
+ * @return
+ *  This function returns 0 on success, -1 if rule is NULL and -2 if there are too many fields
+ */
+extern int  audit_add_field(struct audit_rule_data *rule, int field, int oper, char *value);
 
 #endif

@@ -41,4 +41,19 @@ AUDITD_MAX_LOG_FILE_SIZEKB := 1000
 
 PRODUCT_PACKAGES += auditd
 
+Rules
 
+Limited support for loading rules is present in auditd.
+Put an audit.rules file in /data/misc/audit/ and it will be read
+when auditd is run. Only enable (-e) and watch (-w) rules are
+currently supported. For watch files fields that are supported are:
+uid, euid, suid, fsuid, loginuid, gid, egid, sgid, fsgid and success.
+
+An example audit.rules may look like:
+
+# Audit successful writes to /system not done by the system UID
+-w /system -pwa -F success=1 -F uid!=system
+# Audit write attempts (successful or not) to /dev/block by anyone
+-w /dev/block -pwa
+# Audit write attempts to /data/security not done by system UID
+-w /data/security -pwa -F uid!=system

@@ -45,6 +45,7 @@
 
 #include "libaudit.h"
 #include "audit_log.h"
+#include "audit_rules.h"
 
 /*
  * TODO:
@@ -59,6 +60,8 @@
 #define AUDITD_LOG_DIR "/data/misc/audit"
 #define AUDITD_LOG_FILE AUDITD_LOG_DIR "/audit.log"
 #define AUDITD_OLD_LOG_FILE AUDITD_LOG_DIR "/audit.old"
+
+#define AUDITD_RULES_FILE "/data/misc/audit/audit.rules"
 
 #define AUDITD_MAX_LOG_FILE_SIZE (1024 * AUDITD_MAX_LOG_FILE_SIZEKB)
 
@@ -186,6 +189,16 @@ int main(int argc, char *argv[])
         rc = errno;
         SLOGE("Failed on audit_set_pid with error: %s", strerror(errno));
         goto err;
+    }
+
+    if (audit_set_enabled(audit_fd, 1) < 0) {
+        rc = errno;
+        SLOGE("Failed on audit_set_enabled with error: %s", strerror(errno));
+        goto err;
+    }
+
+    if (audit_rules_read_and_add(audit_fd, AUDITD_RULES_FILE)) {
+        SLOGE("error reading audit rules: %s", strerror(errno));
     }
 
     pfds.fd = audit_fd;
