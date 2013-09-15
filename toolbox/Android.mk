@@ -72,6 +72,8 @@ ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
 TOOLS += r
 endif
 
+TOOLS += setfattr
+
 ALL_TOOLS = $(TOOLS)
 ALL_TOOLS += \
 	cp \
