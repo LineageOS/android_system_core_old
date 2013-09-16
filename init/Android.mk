@@ -60,6 +60,9 @@ LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_UNSTRIPPED)
 
 LOCAL_STATIC_LIBRARIES := \
+	libext4_utils_static \
+	libsparse_static \
+	libz \
 	libfs_mgr \
 	liblogwrap \
 	libcutils \
