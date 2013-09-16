@@ -319,6 +319,7 @@ void sanitize(char *s)
         s++;
     *s = 0;
 }
+#ifndef TARGET_USERIMAGES_USE_F2FS
 void make_link(const char *oldpath, const char *newpath)
 {
     int ret;
@@ -342,7 +343,7 @@ void make_link(const char *oldpath, const char *newpath)
     if (ret && errno != EEXIST)
         ERROR("Failed to symlink %s to %s: %s (%d)\n", oldpath, newpath, strerror(errno), errno);
 }
-
+#endif
 void remove_link(const char *oldpath, const char *newpath)
 {
     char path[256];
