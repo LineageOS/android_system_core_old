@@ -67,6 +67,13 @@ LOCAL_STATIC_LIBRARIES := \
 	libc \
 	libselinux
 
+ifeq ($(TARGET_USERIMAGES_USE_F2FS),true)
+LOCAL_STATIC_LIBRARIES += \
+	libext4_utils_static \
+	libsparse_static \
+	libz
+endif
+
 include $(BUILD_EXECUTABLE)
 
 # Make a symlink from /sbin/ueventd and /sbin/watchdogd to /init
