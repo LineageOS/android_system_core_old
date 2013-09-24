@@ -52,6 +52,7 @@ LOCAL_SRC_FILES:= \
     signal_handler.cpp \
     ueventd.cpp \
     watchdogd.cpp \
+    vendor_init.cpp
 
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
@@ -96,4 +97,9 @@ LOCAL_POST_INSTALL_CMD := $(hide) mkdir -p $(TARGET_ROOT_OUT)/sbin; \
 
 LOCAL_SANITIZE := integer
 LOCAL_CLANG := true
+
+ifneq ($(strip $(TARGET_INIT_VENDOR_LIB)),)
+LOCAL_WHOLE_STATIC_LIBRARIES += $(TARGET_INIT_VENDOR_LIB)
+endif
+
 include $(BUILD_EXECUTABLE)
