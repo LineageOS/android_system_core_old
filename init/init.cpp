@@ -63,6 +63,7 @@
 #include "util.h"
 #include "ueventd.h"
 #include "watchdogd.h"
+#include "vendor_init.h"
 
 struct selabel_handle *sehandle;
 struct selabel_handle *sehandle_prop;
@@ -1076,6 +1077,11 @@ int main(int argc, char** argv) {
 
     property_load_boot_defaults();
     start_property_service();
+
+    /* update with vendor-specific property runtime
+     * overrides
+     */
+    vendor_load_properties();
 
     init_parse_config_file("/init.rc");
 
