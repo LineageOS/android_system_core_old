@@ -53,9 +53,6 @@ typedef enum {
     AUDIO_STREAM_ENFORCED_AUDIBLE = 7, /* Sounds that cannot be muted by user and must be routed to speaker */
     AUDIO_STREAM_DTMF             = 8,
     AUDIO_STREAM_TTS              = 9,
-#ifdef QCOM_FM_ENABLED
-    AUDIO_STREAM_FM               = 10,
-#endif
 #ifdef QCOM_HARDWARE
     AUDIO_STREAM_INCALL_MUSIC     = 11,
 #endif
