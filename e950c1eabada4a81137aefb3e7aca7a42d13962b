@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da37b569_c0e713ab",
+        "filename": "fs_mgr/recover_userdata.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2013-10-02T07:17:11Z",
+      "side": 1,
+      "message": "Tabs :(",
+      "revId": "e950c1eabada4a81137aefb3e7aca7a42d13962b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da37b569_80026b3d",
+        "filename": "fs_mgr/recover_userdata.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 32
+      },
+      "writtenOn": "2013-10-02T07:17:11Z",
+      "side": 1,
+      "message": "Define this string somewhere else, and do we really need that _arm extension?",
+      "revId": "e950c1eabada4a81137aefb3e7aca7a42d13962b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
