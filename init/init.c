@@ -110,6 +110,10 @@ static const char *ENV[32];
 
 static unsigned emmc_boot = 0;
 
+#ifdef USE_LPM_BOOT_KERNEL_ARGUMENT
+static unsigned lpm_bootmode = 0;
+#endif
+
 static unsigned charging_mode = 0;
 
 /* add_environment - add "key=value" to the current environment */
@@ -658,6 +662,12 @@ static void import_kernel_nv(char *name, int for_emulator)
             emmc_boot = 1;
         }
 #endif
+#ifdef USE_LPM_BOOT_KERNEL_ARGUMENT
+    } else if (!strcmp(name,"lpm_boot")) {
+        if (!strcmp(value,"1")) {
+            lpm_bootmode = 1;
+        }
+#endif
     } else if (!strcmp(name,BOARD_CHARGING_CMDLINE_NAME)) {
         strlcpy(battchg_pause, value, sizeof(battchg_pause));
     } else if (!strncmp(name, "androidboot.", 12) && name_len > 12) {
@@ -863,7 +873,11 @@ int audit_callback(void *data, security_class_t cls, char *buf, size_t len)
 static int charging_mode_booting(void)
 {
 #ifndef BOARD_CHARGING_MODE_BOOTING_LPM
+#ifdef USE_LPM_BOOT_KERNEL_ARGUMENT
+    return lpm_bootmode;
+#else
     return 0;
+#endif
 #else
     int f;
     char cmb;
