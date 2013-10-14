@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a50d1a3_ab40b508",
+        "filename": "init/init.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1092,
+      "author": {
+        "id": 4733
+      },
+      "writtenOn": "2013-10-14T02:38:33Z",
+      "side": 1,
+      "message": "This one.",
+      "revId": "4a1e8909835c81aa8e5442b122275b587c4b724b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
