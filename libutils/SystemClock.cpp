@@ -38,7 +38,91 @@
 #define LOG_TAG "SystemClock"
 #include <utils/Log.h>
 
+#if HAVE_QC_TIME_SERVICES
+extern "C" {
+#include <utils/time_genoff.h>
+}
+#endif
+
 namespace android {
+
+#if HAVE_QC_TIME_SERVICES
+int setTimeServicesTime(time_bases_type base, int64_t millis)
+{
+    int rc = 0;
+    time_genoff_info_type time_set;
+    uint64_t value = millis;
+    time_set.base = base;
+    time_set.unit = TIME_MSEC;
+    time_set.operation = T_SET;
+    time_set.ts_val = &value;
+    rc = time_genoff_operation(&time_set);
+    if (rc) {
+        ALOGE("Error setting generic offset: %d. Still setting system time\n", rc);
+        rc = -1;
+    }
+    return rc;
+}
+#endif
+/*
+ * Set the current time.  This only works when running as root.
+ */
+int setCurrentTimeMillis(int64_t millis)
+{
+#if WIN32
+    // not implemented
+    return -1;
+#else
+    struct timeval tv;
+#ifdef HAVE_ANDROID_OS
+    struct timespec ts;
+    int fd;
+    int res;
+#endif
+    int ret = 0;
+
+#if HAVE_QC_TIME_SERVICES
+    int rc;
+    rc = setTimeServicesTime(ATS_USER, millis);
+    if (rc) {
+        ALOGE("Error setting generic offset: %d. Still setting system time\n", rc);
+    }
+#endif
+
+    if (millis <= 0 || millis / 1000LL >= INT_MAX) {
+        return -1;
+    }
+
+    tv.tv_sec = (time_t) (millis / 1000LL);
+    tv.tv_usec = (suseconds_t) ((millis % 1000LL) * 1000LL);
+
+    ALOGD("Setting time of day to sec=%d\n", (int) tv.tv_sec);
+
+#ifdef HAVE_ANDROID_OS
+    fd = open("/dev/alarm", O_RDWR);
+    if(fd < 0) {
+        ALOGW("Unable to open alarm driver: %s\n", strerror(errno));
+        return -1;
+    }
+    ts.tv_sec = tv.tv_sec;
+    ts.tv_nsec = tv.tv_usec * 1000;
+    res = ioctl(fd, ANDROID_ALARM_SET_RTC, &ts);
+    if(res < 0) {
+        ALOGW("Unable to set rtc to %ld: %s\n", tv.tv_sec, strerror(errno));
+        ret = -1;
+    }
+    close(fd);
+#else
+    if (settimeofday(&tv, NULL) != 0) {
+        ALOGW("Unable to set clock to %d.%d: %s\n",
+            (int) tv.tv_sec, (int) tv.tv_usec, strerror(errno));
+        ret = -1;
+    }
+#endif
+
+    return ret;
+#endif // WIN32
+}
 
 /*
  * native public static long uptimeMillis();
