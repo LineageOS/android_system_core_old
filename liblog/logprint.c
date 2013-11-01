@@ -33,8 +33,8 @@
 #include <assert.h>
 #include <arpa/inet.h>
 
-#include <cutils/logd.h>
-#include <cutils/logprint.h>
+#include <log/logd.h>
+#include <log/logprint.h>
 
 typedef struct FilterInfo_t {
     char *mTag;

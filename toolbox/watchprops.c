@@ -1,35 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
 
 #include <cutils/properties.h>
+#include <cutils/hashmap.h>
 
 #include <sys/atomics.h>
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-
-extern prop_area *__system_property_area__;
-
-typedef struct pwatch pwatch;
-
-struct pwatch
+static int str_hash(void *key)
 {
-    const prop_info *pi;
-    unsigned serial;
-};
+    return hashmapHash(key, strlen(key));
+}
 
-static pwatch watchlist[1024];
-
-static void announce(const prop_info *pi)
+static bool str_equals(void *keyA, void *keyB)
 {
-    char name[PROP_NAME_MAX];
-    char value[PROP_VALUE_MAX];
+    return strcmp(keyA, keyB) == 0;
+}
+
+static void announce(char *name, char *value)
+{
     char *x;
     
-    __system_property_read(pi, name, value);
-
     for(x = value; *x; x++) {
         if((*x < 32) || (*x > 127)) *x = '.';
     }
@@ -37,40 +32,64 @@ static void announce(const prop_info *pi)
     fprintf(stderr,"%10d %s = '%s'\n", (int) time(0), name, value);
 }
 
+static void add_to_watchlist(Hashmap *watchlist, const char *name,
+        const prop_info *pi)
+{
+    char *key = strdup(name);
+    unsigned *value = malloc(sizeof(unsigned));
+    if (!key || !value)
+        exit(1);
+
+    *value = __system_property_serial(pi);
+    hashmapPut(watchlist, key, value);
+}
+
+static void populate_watchlist(const prop_info *pi, void *cookie)
+{
+    Hashmap *watchlist = cookie;
+    char name[PROP_NAME_MAX];
+    char value_unused[PROP_VALUE_MAX];
+
+    __system_property_read(pi, name, value_unused);
+    add_to_watchlist(watchlist, name, pi);
+}
+
+static void update_watchlist(const prop_info *pi, void *cookie)
+{
+    Hashmap *watchlist = cookie;
+    char name[PROP_NAME_MAX];
+    char value[PROP_VALUE_MAX];
+    unsigned *serial;
+
+    __system_property_read(pi, name, value);
+    serial = hashmapGet(watchlist, name);
+    if (!serial) {
+        add_to_watchlist(watchlist, name, pi);
+        announce(name, value);
+    } else {
+        unsigned tmp = __system_property_serial(pi);
+        if (*serial != tmp) {
+            *serial = tmp;
+            announce(name, value);
+        }
+    }
+}
+
 int watchprops_main(int argc, char *argv[])
 {
-    prop_area *pa = __system_property_area__;
-    unsigned serial = pa->serial;
-    unsigned count = pa->count;
+    unsigned serial = 0;
+    unsigned count = 0;
     unsigned n;
     
-    if(count >= 1024) exit(1);
+    Hashmap *watchlist = hashmapCreate(1024, str_hash, str_equals);
+    if (!watchlist)
+        exit(1);
 
-    for(n = 0; n < count; n++) {
-        watchlist[n].pi = __system_property_find_nth(n);
-        watchlist[n].serial = watchlist[n].pi->serial;
-    }
+    __system_property_foreach(populate_watchlist, watchlist);
 
     for(;;) {
-        do {
-            __futex_wait(&pa->serial, serial, 0);
-        } while(pa->serial == serial);
-
-        while(count < pa->count){
-            watchlist[count].pi = __system_property_find_nth(count);
-            watchlist[count].serial = watchlist[n].pi->serial;
-            announce(watchlist[count].pi);
-            count++;
-            if(count == 1024) exit(1);
-        }
-
-        for(n = 0; n < count; n++){
-            unsigned tmp = watchlist[n].pi->serial;
-            if(watchlist[n].serial != tmp) {
-                announce(watchlist[n].pi);
-                watchlist[n].serial = tmp;
-            }
-        }
+        serial = __system_property_wait_any(serial);
+        __system_property_foreach(update_watchlist, watchlist);
     }
     return 0;
 }

@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <time.h>
+#include <ftw.h>
 
 #include <selinux/label.h>
 
@@ -311,14 +312,27 @@ int mkdir_recursive(const char *pathname, mode_t mode)
     return 0;
 }
 
+/*
+ * replaces any unacceptable characters with '_', the
+ * length of the resulting string is equal to the input string
+ */
 void sanitize(char *s)
 {
+    const char* accept =
+            "abcdefghijklmnopqrstuvwxyz"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "0123456789"
+            "_-.";
+
     if (!s)
         return;
-    while (isalnum(*s))
-        s++;
-    *s = 0;
+
+    for (; *s; s++) {
+        s += strspn(s, accept);
+        if (*s) *s = '_';
+    }
 }
+
 void make_link(const char *oldpath, const char *newpath)
 {
     int ret;
@@ -503,4 +517,18 @@ int restorecon(const char *pathname)
     }
     freecon(secontext);
     return 0;
+}
+
+static int nftw_restorecon(const char* filename, const struct stat* statptr,
+    int fileflags, struct FTW* pftw)
+{
+    restorecon(filename);
+    return 0;
+}
+
+int restorecon_recursive(const char* pathname)
+{
+    int fd_limit = 20;
+    int flags = FTW_DEPTH | FTW_MOUNT | FTW_PHYS;
+    return nftw(pathname, nftw_restorecon, fd_limit, flags);
 }

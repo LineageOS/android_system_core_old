@@ -66,7 +66,11 @@ TOOLS := \
 	runcon \
 	getsebool \
 	setsebool \
-	load_policy
+	load_policy \
+	swapon \
+	swapoff \
+	mkswap \
+	readlink
 
 ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
 TOOLS += r
