@@ -141,13 +141,17 @@ int main(int argc, char** argv)
     //printf("total read: %d\n", header.kernel_size);
     total_read += read_padding(f, header.kernel_size, pagesize);
 
-    sprintf(tmp, "%s/%s", directory, basename(filename));
-    strcat(tmp, "-ramdisk.gz");
-    FILE *r = fopen(tmp, "wb");
+
     byte* ramdisk = (byte*)malloc(header.ramdisk_size);
     //printf("Reading ramdisk...\n");
     fread(ramdisk, header.ramdisk_size, 1, f);
     total_read += header.ramdisk_size;
+    sprintf(tmp, "%s/%s", directory, basename(filename));
+    if(ramdisk[0] == 0x02 && ramdisk[1]== 0x21)
+        strcat(tmp, "-ramdisk.lz4");
+    else
+        strcat(tmp, "-ramdisk.gz");
+    FILE *r = fopen(tmp, "wb");
     fwrite(ramdisk, header.ramdisk_size, 1, r);
     fclose(r);
 
