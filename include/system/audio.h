@@ -392,10 +392,10 @@ enum {
     AUDIO_DEVICE_OUT_USB_ACCESSORY             = 0x2000,
     AUDIO_DEVICE_OUT_USB_DEVICE                = 0x4000,
     AUDIO_DEVICE_OUT_REMOTE_SUBMIX             = 0x8000,
-#ifdef QCOM_HARDWARE
     AUDIO_DEVICE_OUT_ANC_HEADSET               = 0x10000,
     AUDIO_DEVICE_OUT_ANC_HEADPHONE             = 0x20000,
     AUDIO_DEVICE_OUT_PROXY                     = 0x40000,
+#ifdef QCOM_HARDWARE
     AUDIO_DEVICE_OUT_FM                        = 0x80000,
     AUDIO_DEVICE_OUT_FM_TX                     = 0x100000,
 #endif
@@ -416,10 +416,10 @@ enum {
                                  AUDIO_DEVICE_OUT_USB_ACCESSORY |
                                  AUDIO_DEVICE_OUT_USB_DEVICE |
                                  AUDIO_DEVICE_OUT_REMOTE_SUBMIX |
-#ifdef QCOM_HARDWARE
                                  AUDIO_DEVICE_OUT_ANC_HEADSET |
                                  AUDIO_DEVICE_OUT_ANC_HEADPHONE |
                                  AUDIO_DEVICE_OUT_PROXY |
+#ifdef QCOM_HARDWARE
                                  AUDIO_DEVICE_OUT_FM |
                                  AUDIO_DEVICE_OUT_FM_TX |
 #endif
@@ -463,9 +463,9 @@ enum {
     AUDIO_DEVICE_IN_DGTL_DOCK_HEADSET     = AUDIO_DEVICE_BIT_IN | 0x400,
     AUDIO_DEVICE_IN_USB_ACCESSORY         = AUDIO_DEVICE_BIT_IN | 0x800,
     AUDIO_DEVICE_IN_USB_DEVICE            = AUDIO_DEVICE_BIT_IN | 0x1000,
-#ifdef QCOM_HARDWARE
     AUDIO_DEVICE_IN_ANC_HEADSET           = AUDIO_DEVICE_BIT_IN | 0x2000,
     AUDIO_DEVICE_IN_PROXY                 = AUDIO_DEVICE_BIT_IN | 0x4000,
+#ifdef QCOM_HARDWARE
     AUDIO_DEVICE_IN_FM_RX                 = AUDIO_DEVICE_BIT_IN | 0x8000,
     AUDIO_DEVICE_IN_FM_RX_A2DP            = AUDIO_DEVICE_BIT_IN | 0x10000,
 #endif
@@ -485,11 +485,11 @@ enum {
                                AUDIO_DEVICE_IN_DGTL_DOCK_HEADSET |
                                AUDIO_DEVICE_IN_USB_ACCESSORY |
                                AUDIO_DEVICE_IN_USB_DEVICE |
-#ifdef QCOM_HARDWARE
+                               AUDIO_DEVICE_IN_PROXY |
                                AUDIO_DEVICE_IN_ANC_HEADSET |
+#ifdef QCOM_HARDWARE
                                AUDIO_DEVICE_IN_FM_RX |
                                AUDIO_DEVICE_IN_FM_RX_A2DP |
-                               AUDIO_DEVICE_IN_PROXY |
 #endif
                                AUDIO_DEVICE_IN_DEFAULT),
     AUDIO_DEVICE_IN_ALL_SCO = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET,
