@@ -84,7 +84,7 @@ struct {
     { "sys.powerctl",     AID_SHELL,    0 },
     { "service.",         AID_SYSTEM,   0 },
     { "wlan.",            AID_SYSTEM,   0 },
-    { "bluetooth.",       AID_BLUETOOTH,   AID_SYSTEM },
+    { "bluetooth.",       AID_BLUETOOTH,    0 },
     { "dhcp.",            AID_SYSTEM,   0 },
     { "dhcp.",            AID_DHCP,     0 },
     { "debug.",           AID_SYSTEM,   0 },
@@ -99,6 +99,7 @@ struct {
     { "persist.security.", AID_SYSTEM,   0 },
     { "persist.service.bdroid.", AID_BLUETOOTH,   0 },
     { "selinux."         , AID_SYSTEM,   0 },
+    { "wc_transport.",     AID_BLUETOOTH,   AID_SYSTEM },
     { "net.pdp",          AID_RADIO,    AID_RADIO },
     { "service.bootanim.exit", AID_GRAPHICS, 0 },
 #ifdef PROPERTY_PERMS_APPEND
