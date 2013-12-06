@@ -98,6 +98,7 @@ int main(int argc, char** argv)
     fread(&header, sizeof(header), 1, f);
     printf("BOARD_KERNEL_CMDLINE %s\n", header.cmdline);
     printf("BOARD_KERNEL_BASE %08x\n", header.kernel_addr - 0x00008000);
+    printf("BOARD_RAMDISK_OFFSET %08x\n", header.ramdisk_addr - header.kernel_addr + 0x00008000);
     printf("BOARD_PAGE_SIZE %d\n", header.page_size);
     printf("BOARD_DT_SIZE %d\n", header.dt_size);
     
@@ -116,6 +117,13 @@ int main(int argc, char** argv)
     char basetmp[200];
     sprintf(basetmp, "%08x", header.kernel_addr - 0x00008000);
     write_string_to_file(tmp, basetmp);
+
+    //printf("ramdisk_offset...\n");
+    sprintf(tmp, "%s/%s", directory, basename(filename));
+    strcat(tmp, "-ramdisk_offset");
+    char ramdisktmp[200];
+    sprintf(ramdisktmp, "%08x", header.ramdisk_addr - header.kernel_addr + 0x00008000);
+    write_string_to_file(tmp, ramdisktmp);
 
     //printf("pagesize...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
