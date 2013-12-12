@@ -244,7 +244,8 @@ static void add_platform_device(const char *path)
         bus = node_to_item(node, struct platform_node, list);
         if ((bus->path_len < path_len) &&
                 (path[bus->path_len] == '/') &&
-                !strncmp(path, bus->path, bus->path_len))
+                !strncmp(path, bus->path, bus->path_len) &&
+                (strcmp(bus->path, "/devices/soc.0") != 0))
             /* subdevice of an existing platform, ignore it */
             return;
     }
