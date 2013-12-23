@@ -409,7 +409,12 @@ static int create_subproc_thread(const char *name, const subproc_mode mode)
         arg0 = "-c"; arg1 = name;
     }
 
-    if (stat(ALTERNATE_SHELL_COMMAND, &st) == 0) {
+    char value[PROPERTY_VALUE_MAX];
+    property_get("persist.sys.adb.shell", value, "");
+    if (value[0] != '\0' && stat(value, &st) == 0) {
+        shell_command = value;
+    }
+    else if (stat(ALTERNATE_SHELL_COMMAND, &st) == 0) {
         shell_command = ALTERNATE_SHELL_COMMAND;
     }
     else {
