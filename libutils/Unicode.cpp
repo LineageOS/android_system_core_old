@@ -576,10 +576,10 @@ void utf8_to_utf16(const uint8_t* u8str, size_t u8len, char16_t* u16str) {
 char16_t* utf8_to_utf16_n(const uint8_t* src, size_t srcLen, char16_t* dst, size_t dstLen) {
     const uint8_t* const u8end = src + srcLen;
     const uint8_t* u8cur = src;
-    const uint16_t* const u16end = dst + dstLen;
+    const uint16_t* const u16end = (const uint16_t*)dst + dstLen;
     char16_t* u16cur = dst;
 
-    while (u8cur < u8end && u16cur < u16end) {
+    while (u8cur < u8end && (const uint16_t*)u16cur < u16end) {
         size_t u8len = utf8_codepoint_len(*u8cur);
         uint32_t codepoint = utf8_to_utf32_codepoint(u8cur, u8len);
 
