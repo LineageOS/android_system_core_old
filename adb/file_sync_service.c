@@ -21,7 +21,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <grp.h>
 #include <utime.h>
 #include <unistd.h>
 
@@ -38,15 +37,6 @@
 static bool is_on_system(const char *name) {
     const char *SYSTEM = "/system/";
     return (strncmp(SYSTEM, name, strlen(SYSTEM)) == 0);
-}
-
-static bool has_group_sdcard(const char *path) {
-    const char *SDCARD = "sdcard";
-    struct stat info;
-    if(stat(path, &info) != 0)
-        return 0;
-    struct group *gr = getgrgid(info.st_gid);
-    return (strstr(gr->gr_name, SDCARD) != NULL);
 }
 
 static int mkdirs(char *name)
@@ -74,12 +64,10 @@ static int mkdirs(char *name)
             *x = '/';
             return ret;
         } else if(ret == 0) {
-            if(!has_group_sdcard(name)) {
-                ret = chown(name, uid, gid);
-                if (ret < 0) {
-                    *x = '/';
-                    return ret;
-                }
+            ret = chown(name, uid, gid);
+            if (ret < 0) {
+                *x = '/';
+                return ret;
             }
             selinux_android_restorecon(name);
         }
@@ -208,7 +196,7 @@ static int handle_send_file(int s, char *path, unsigned int uid,
         if(fail_errno(s))
             return -1;
         fd = -1;
-    } else if(!has_group_sdcard(path)) {
+    } else {
         if(fchown(fd, uid, gid) != 0) {
             fail_errno(s);
             errno = 0;
