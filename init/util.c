@@ -498,11 +498,35 @@ int make_dir(const char *path, mode_t mode)
     return rc;
 }
 
-int restorecon(const char *pathname)
+static int restorecon_sb(const char *pathname, const struct stat *sb)
 {
     char *secontext = NULL;
-    struct stat sb;
+    char *oldsecontext = NULL;
     int i;
+
+    if (selabel_lookup(sehandle, &secontext, pathname, sb->st_mode) < 0)
+        return -errno;
+
+    if (lgetfilecon(pathname, &oldsecontext) < 0) {
+        freecon(secontext);
+        return -errno;
+    }
+
+    if (strcmp(oldsecontext, secontext) != 0) {
+        if (lsetfilecon(pathname, secontext) < 0) {
+            freecon(oldsecontext);
+            freecon(secontext);
+            return -errno;
+        }
+    }
+    freecon(oldsecontext);
+    freecon(secontext);
+    return 0;
+}
+
+int restorecon(const char *pathname)
+{
+    struct stat sb;
 
     if (is_selinux_enabled() <= 0 || !sehandle)
         return 0;
