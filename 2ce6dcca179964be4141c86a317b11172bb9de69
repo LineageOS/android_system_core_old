@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a5ae5dd_6982a154",
+        "filename": "init/util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 2975
+      },
+      "writtenOn": "2014-01-21T06:58:39Z",
+      "side": 1,
+      "message": "This function is never called.",
+      "revId": "2ce6dcca179964be4141c86a317b11172bb9de69",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
