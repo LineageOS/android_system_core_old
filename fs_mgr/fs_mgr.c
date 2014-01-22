@@ -239,74 +239,16 @@ out:
     return f;
 }
 
-/* Read a line of text till the next newline character.
- * If no newline is found before the buffer is full, continue reading till a new line is seen,
- * then return an empty buffer.  This effectively ignores lines that are too long.
- * On EOF, return null.
- */
-static char *fs_getline(char *buf, int size, FILE *file)
-{
-    int cnt = 0;
-    int eof = 0;
-    int eol = 0;
-    int c;
-
-    if (size < 1) {
-        return NULL;
-    }
-
-    while (cnt < (size - 1)) {
-        c = getc(file);
-        if (c == EOF) {
-            eof = 1;
-            break;
-        }
-
-        *(buf + cnt) = c;
-        cnt++;
-
-        if (c == '\n') {
-            eol = 1;
-            break;
-        }
-    }
-
-    /* Null terminate what we've read */
-    *(buf + cnt) = '\0';
-
-    if (eof) {
-        if (cnt) {
-            return buf;
-        } else {
-            return NULL;
-        }
-    } else if (eol) {
-        return buf;
-    } else {
-        /* The line is too long.  Read till a newline or EOF.
-         * If EOF, return null, if newline, return an empty buffer.
-         */
-        while(1) {
-            c = getc(file);
-            if (c == EOF) {
-                return NULL;
-            } else if (c == '\n') {
-                *buf = '\0';
-                return buf;
-            }
-        }
-    }
-}
-
 struct fstab *fs_mgr_read_fstab(const char *fstab_path)
 {
     FILE *fstab_file;
     int cnt, entries;
-    int len;
-    char line[256];
+    ssize_t len;
+    size_t alloc_len = 0;
+    char *line = NULL;
     const char *delim = " \t";
     char *save_ptr, *p;
-    struct fstab *fstab;
+    struct fstab *fstab = NULL;
     struct fstab_rec *recs;
     struct fs_mgr_flag_values flag_vals;
 #define FS_OPTIONS_LEN 1024
@@ -319,9 +261,8 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
     }
 
     entries = 0;
-    while (fs_getline(line, sizeof(line), fstab_file)) {
+    while ((len = getline(&line, &alloc_len, fstab_file)) != -1) {
         /* if the last character is a newline, shorten the string by 1 byte */
-        len = strlen(line);
         if (line[len - 1] == '\n') {
             line[len - 1] = '\0';
         }
@@ -338,7 +279,7 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
 
     if (!entries) {
         ERROR("No entries found in fstab\n");
-        return 0;
+        goto err;
     }
 
     /* Allocate and init the fstab structure */
@@ -350,9 +291,8 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
     fseek(fstab_file, 0, SEEK_SET);
 
     cnt = 0;
-    while (fs_getline(line, sizeof(line), fstab_file)) {
+    while ((len = getline(&line, &alloc_len, fstab_file)) != -1) {
         /* if the last character is a newline, shorten the string by 1 byte */
-        len = strlen(line);
         if (line[len - 1] == '\n') {
             line[len - 1] = '\0';
         }
@@ -377,25 +317,25 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
 
         if (!(p = strtok_r(line, delim, &save_ptr))) {
             ERROR("Error parsing mount source\n");
-            return 0;
+            goto err;
         }
         fstab->recs[cnt].blk_device = strdup(p);
 
         if (!(p = strtok_r(NULL, delim, &save_ptr))) {
             ERROR("Error parsing mount_point\n");
-            return 0;
+            goto err;
         }
         fstab->recs[cnt].mount_point = strdup(p);
 
         if (!(p = strtok_r(NULL, delim, &save_ptr))) {
             ERROR("Error parsing fs_type\n");
-            return 0;
+            goto err;
         }
         fstab->recs[cnt].fs_type = strdup(p);
 
         if (!(p = strtok_r(NULL, delim, &save_ptr))) {
             ERROR("Error parsing mount_flags\n");
-            return 0;
+            goto err;
         }
         tmp_fs_options[0] = '\0';
         fstab->recs[cnt].flags = parse_flags(p, mount_flags, NULL,
@@ -410,7 +350,7 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
 
         if (!(p = strtok_r(NULL, delim, &save_ptr))) {
             ERROR("Error parsing fs_mgr_options\n");
-            return 0;
+            goto err;
         }
         fstab->recs[cnt].fs_mgr_flags = parse_flags(p, fs_mgr_flags,
                                                     &flag_vals, NULL, 0);
@@ -423,8 +363,15 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
         cnt++;
     }
     fclose(fstab_file);
-
+    free(line);
     return fstab;
+
+err:
+    fclose(fstab_file);
+    free(line);
+    if (fstab)
+        fs_mgr_free_fstab(fstab);
+    return NULL;
 }
 
 void fs_mgr_free_fstab(struct fstab *fstab)
@@ -443,7 +390,6 @@ void fs_mgr_free_fstab(struct fstab *fstab)
         free(fstab->recs[i].fs_options);
         free(fstab->recs[i].key_loc);
         free(fstab->recs[i].label);
-        i++;
     }
 
     /* Free the fstab_recs array created by calloc(3) */
@@ -577,6 +523,7 @@ int fs_mgr_mount_all(struct fstab *fstab)
     int encrypted = 0;
     int ret = -1;
     int mret;
+    int mount_errno;
 
     if (!fstab) {
         return ret;
@@ -620,6 +567,9 @@ int fs_mgr_mount_all(struct fstab *fstab)
             continue;
         }
 
+        /* back up errno as partition_wipe clobbers the value */
+        mount_errno = errno;
+
         /* mount(2) returned an error, check if it's encrypted and deal with it */
         if ((fstab->recs[i].fs_mgr_flags & MF_CRYPT) &&
             !partition_wiped(fstab->recs[i].blk_device)) {
@@ -628,15 +578,16 @@ int fs_mgr_mount_all(struct fstab *fstab)
              */
             if (mount("tmpfs", fstab->recs[i].mount_point, "tmpfs",
                   MS_NOATIME | MS_NOSUID | MS_NODEV, CRYPTO_TMPFS_OPTIONS) < 0) {
-                ERROR("Cannot mount tmpfs filesystem for encrypted fs at %s\n",
-                        fstab->recs[i].mount_point);
+                ERROR("Cannot mount tmpfs filesystem for encrypted fs at %s error: %s\n",
+                        fstab->recs[i].mount_point, strerror(errno));
                 goto out;
             }
             encrypted = 1;
         } else {
-            ERROR("Cannot mount filesystem on %s at %s\n",
-                    fstab->recs[i].blk_device, fstab->recs[i].mount_point);
-            goto out;
+            ERROR("Failed to mount an un-encryptable or wiped partition on"
+                    "%s at %s options: %s error: %s\n",
+                    fstab->recs[i].blk_device, fstab->recs[i].mount_point,
+                    fstab->recs[i].fs_options, strerror(mount_errno));            goto out;
         }
     }
 
@@ -704,8 +655,8 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
         }
         if (__mount(n_blk_device, m, fstab->recs[i].fs_type,
                     fstab->recs[i].flags, fstab->recs[i].fs_options)) {
-            ERROR("Cannot mount filesystem on %s at %s\n",
-                    n_blk_device, m);
+            ERROR("Cannot mount filesystem on %s at %s options: %s error: %s\n",
+                n_blk_device, m, fstab->recs[i].fs_options, strerror(errno));
             goto out;
         } else {
             ret = 0;
