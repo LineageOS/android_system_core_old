@@ -1364,6 +1364,7 @@ static int handle_readdir(struct fuse* fuse, struct fuse_handler* handler,
     struct fuse_dirent *fde = (struct fuse_dirent*) buffer;
     struct dirent *de;
     struct dirhandle *h = id_to_ptr(req->fh);
+    struct node* parent_node;
 
     TRACE("[%d] READDIR %p\n", handler->token, h);
     if (req->offset == 0) {
@@ -1371,6 +1372,7 @@ static int handle_readdir(struct fuse* fuse, struct fuse_handler* handler,
         TRACE("[%d] calling rewinddir()\n", handler->token);
         rewinddir(h->d);
     }
+skip:
     de = readdir(h->d);
     if (!de) {
         return 0;
@@ -1380,6 +1382,13 @@ static int handle_readdir(struct fuse* fuse, struct fuse_handler* handler,
     fde->off = req->offset + 1;
     fde->type = de->d_type;
     fde->namelen = strlen(de->d_name);
+
+    parent_node = lookup_node_by_id_locked(fuse, hdr->nodeid);
+
+    if (!check_caller_access_to_name(fuse, hdr, parent_node, de->d_name, R_OK, false)) {
+        goto skip;
+    }
+
     memcpy(fde->name, de->d_name, fde->namelen + 1);
     fuse_reply(fuse, hdr->unique, fde,
             FUSE_DIRENT_ALIGN(sizeof(struct fuse_dirent) + fde->namelen));
