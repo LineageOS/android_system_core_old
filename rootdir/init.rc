@@ -232,18 +232,12 @@ on post-fs-data
     mkdir /data/misc/systemkeys 0700 system system
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    restorecon_recursive /data/misc/wifi/sockets
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     # give system access to wpa_supplicant.conf for backup and restore
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
     mkdir /data/local 0751 root root
     mkdir /data/misc/media 0700 media media
-    restorecon_recursive /data/misc/media
-
-    # Set security context of any pre-existing /data/misc/adb/adb_keys file.
-    restorecon /data/misc/adb
-    restorecon /data/misc/adb/adb_keys
 
     # For security reasons, /data/local/tmp should always be empty.
     # Do not place files or directories in /data/local/tmp
@@ -287,6 +281,9 @@ on post-fs-data
 
     # Reload policy from /data/security if present.
     setprop selinux.reload_policy 1
+
+    # Set SELinux security contexts on upgrade or policy update.
+    restorecon_recursive /data
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
