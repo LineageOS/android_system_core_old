@@ -813,7 +813,7 @@ char* engrave_tombstone(pid_t pid, pid_t tid, int signal, uintptr_t abort_msg_ad
     mkdir(TOMBSTONE_DIR, 0755);
     chown(TOMBSTONE_DIR, AID_SYSTEM, AID_SYSTEM);
 
-    if (selinux_android_restorecon(TOMBSTONE_DIR) == -1) {
+    if (selinux_android_restorecon(TOMBSTONE_DIR, 0) == -1) {
         *detach_failed = false;
         return NULL;
     }
