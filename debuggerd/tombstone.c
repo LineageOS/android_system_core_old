@@ -759,7 +759,7 @@ static char* find_and_open_tombstone(int* fd)
         if (errno != ENOENT)
             continue;
 
-        *fd = open(path, O_CREAT | O_EXCL | O_WRONLY, 0600);
+        *fd = open(path, O_CREAT | O_EXCL | O_WRONLY | O_NOFOLLOW, 0600);
         if (*fd < 0)
             continue;   /* raced ? */
 
@@ -811,14 +811,24 @@ char* engrave_tombstone(pid_t pid, pid_t tid, int signal, uintptr_t abort_msg_ad
         bool dump_sibling_threads, bool quiet, bool* detach_failed,
         int* total_sleep_time_usec) {
     mkdir(TOMBSTONE_DIR, 0755);
-    chown(TOMBSTONE_DIR, AID_SYSTEM, AID_SYSTEM);
+    int fd;
+    if(((fd = open(TOMBSTONE_DIR, O_NOFOLLOW|O_RDONLY)) != -1) ||((fd = open(TOMBSTONE_DIR, O_NOFOLLOW|O_WRONLY)) != -1)){
+        if (fchown(fd, AID_SYSTEM, AID_SYSTEM) < 0){
+            fprintf(stderr, "Unable to chown %s: %s\n", TOMBSTONE_DIR, strerror(errno));
+            close(fd);
+            return NULL;
+        }
+        close(fd);
+    } else {
+            fprintf(stderr, "Unable to open %s: %s\n", TOMBSTONE_DIR, strerror(errno));
+            return NULL;
+    }
 
     if (selinux_android_restorecon(TOMBSTONE_DIR, 0) == -1) {
         *detach_failed = false;
         return NULL;
     }
 
-    int fd;
     char* path = find_and_open_tombstone(&fd);
     if (!path) {
         *detach_failed = false;
