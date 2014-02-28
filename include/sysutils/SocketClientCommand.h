@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <errno.h>
+#ifndef _SOCKETCLIENTCOMMAND_H
+#define _SOCKETCLIENTCOMMAND_H
 
-#define LOG_TAG "FrameworkCommand"
+#include <sysutils/SocketClient.h>
 
-#include <cutils/log.h>
+class SocketClientCommand {
+public:
+    virtual ~SocketClientCommand() { }
+    virtual void runSocketCommand(SocketClient *client) = 0;
+};
 
-#include <sysutils/FrameworkCommand.h>
-
-#define UNUSED __attribute__((unused))
-
-FrameworkCommand::FrameworkCommand(const char *cmd) {
-    mCommand = cmd;
-}
-
-int FrameworkCommand::runCommand(SocketClient *c UNUSED, int argc UNUSED,
-                                 char **argv UNUSED) {
-    SLOGW("Command %s has no run handler!", getCommand());
-    errno = ENOSYS;
-    return -1;
-}
+#endif
