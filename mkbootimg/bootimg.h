@@ -49,6 +49,21 @@ struct boot_img_hdr
     unsigned id[8]; /* timestamp / checksum / sha1 / etc */
 };
 
+typedef struct mtk_header mtk_header;
+
+#define MTK_MAGIC "\x88\x16\x88\x58"
+#define MTK_MAGIC_SIZE 4
+#define MTK_NAME_SIZE 32
+#define MTK_HEADER_SIZE 512
+
+struct mtk_header
+{
+    unsigned char magic[MTK_MAGIC_SIZE];
+    unsigned size;
+    char name[MTK_NAME_SIZE];
+    unsigned char padding[MTK_HEADER_SIZE - (MTK_MAGIC_SIZE+sizeof(unsigned)+MTK_NAME_SIZE)];
+};
+
 /*
 ** +-----------------+ 
 ** | boot header     | 1 page

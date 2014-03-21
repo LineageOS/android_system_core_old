@@ -25,25 +25,48 @@
 #include "mincrypt/sha.h"
 #include "bootimg.h"
 
-static void *load_file(const char *fn, unsigned *_sz)
+static void *load_file(const char *vendor, const char *imgtype, const char *fn, unsigned *_sz)
 {
     char *data;
+    int vendoff;
+    int vendsz;
+    int fileoff;
+    int filesz;
     int sz;
     int fd;
 
     data = 0;
+
+    vendoff = vendsz = 0;
+    if (!strcmp(vendor, "mtk")) {
+        vendsz = MTK_HEADER_SIZE;
+    }
+
+    fileoff = vendoff + vendsz;
+
     fd = open(fn, O_RDONLY);
     if(fd < 0) return 0;
 
-    sz = lseek(fd, 0, SEEK_END);
-    if(sz < 0) goto oops;
+    filesz = lseek(fd, 0, SEEK_END);
+    if(filesz < 0) goto oops;
+
+    sz = vendsz + filesz;
 
     if(lseek(fd, 0, SEEK_SET) != 0) goto oops;
 
     data = (char*) malloc(sz);
     if(data == 0) goto oops;
 
-    if(read(fd, data, sz) != sz) goto oops;
+    if (!strcmp(vendor, "mtk")) {
+        mtk_header *hdr = (mtk_header *)data;
+        memcpy(hdr->magic, MTK_MAGIC, MTK_MAGIC_SIZE);
+        hdr->size = filesz;
+        memset(hdr->name, 0, sizeof(hdr->name));
+        strcpy(hdr->name, imgtype);
+        memset(hdr->padding, 0xff, sizeof(hdr->padding));
+    }
+
+    if(read(fd, data+fileoff, filesz) != filesz) goto oops;
     close(fd);
 
     if(_sz) *_sz = sz;
@@ -58,6 +81,8 @@ oops:
 int usage(void)
 {
     fprintf(stderr,"usage: mkbootimg\n"
+            "       --vendor <name>\n"
+            "       --imgtype <boot|recovery>\n"
             "       --kernel <filename>\n"
             "       --ramdisk <filename>\n"
             "       [ --second <2ndbootloader-filename> ]\n"
@@ -98,6 +123,8 @@ int main(int argc, char **argv)
 {
     boot_img_hdr hdr;
 
+    char *vendor = "generic";
+    char *imgtype = "boot";
     char *kernel_fn = 0;
     void *kernel_data = 0;
     char *ramdisk_fn = 0;
@@ -134,6 +161,10 @@ int main(int argc, char **argv)
         argv += 2;
         if(!strcmp(arg, "--output") || !strcmp(arg, "-o")) {
             bootimg = val;
+        } else if(!strcmp(arg, "--vendor")) {
+            vendor = val;
+        } else if(!strcmp(arg, "--imgtype")) {
+            imgtype = val;
         } else if(!strcmp(arg, "--kernel")) {
             kernel_fn = val;
         } else if(!strcmp(arg, "--ramdisk")) {
@@ -178,6 +209,17 @@ int main(int argc, char **argv)
         return usage();
     }
 
+    if(vendor == 0) {
+        vendor = "generic";
+    }
+
+    if(!strcmp(imgtype, "recovery")) {
+        imgtype = "RECOVERY";
+    }
+    else {
+        imgtype = "ROOTFS";
+    }
+
     if(kernel_fn == 0) {
         fprintf(stderr,"error: no kernel image specified\n");
         return usage();
@@ -203,7 +245,7 @@ int main(int argc, char **argv)
     }
     strcpy((char*)hdr.cmdline, cmdline);
 
-    kernel_data = load_file(kernel_fn, &hdr.kernel_size);
+    kernel_data = load_file(vendor, "KERNEL", kernel_fn, &hdr.kernel_size);
     if(kernel_data == 0) {
         fprintf(stderr,"error: could not load kernel '%s'\n", kernel_fn);
         return 1;
@@ -213,7 +255,7 @@ int main(int argc, char **argv)
         ramdisk_data = 0;
         hdr.ramdisk_size = 0;
     } else {
-        ramdisk_data = load_file(ramdisk_fn, &hdr.ramdisk_size);
+        ramdisk_data = load_file(vendor, imgtype, ramdisk_fn, &hdr.ramdisk_size);
         if(ramdisk_data == 0) {
             fprintf(stderr,"error: could not load ramdisk '%s'\n", ramdisk_fn);
             return 1;
@@ -221,7 +263,7 @@ int main(int argc, char **argv)
     }
 
     if(second_fn) {
-        second_data = load_file(second_fn, &hdr.second_size);
+        second_data = load_file(vendor, "SECOND", second_fn, &hdr.second_size);
         if(second_data == 0) {
             fprintf(stderr,"error: could not load secondstage '%s'\n", second_fn);
             return 1;
@@ -229,7 +271,7 @@ int main(int argc, char **argv)
     }
 
     if(dt_fn) {
-        dt_data = load_file(dt_fn, &hdr.dt_size);
+        dt_data = load_file(vendor, "DT", dt_fn, &hdr.dt_size);
         if (dt_data == 0) {
             fprintf(stderr,"error: could not load device tree image '%s'\n", dt_fn);
             return 1;
