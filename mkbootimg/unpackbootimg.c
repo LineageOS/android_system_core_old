@@ -12,6 +12,14 @@
 
 typedef unsigned char byte;
 
+int get_vendhdr_size(byte *buf, int len)
+{
+    if(len >= MTK_HEADER_SIZE && memcmp(buf, MTK_MAGIC, MTK_MAGIC_SIZE) == 0) {
+        return MTK_HEADER_SIZE;
+    }
+    return 0;
+}
+
 int read_padding(FILE* f, unsigned itemsize, int pagesize)
 {
     byte* buf = (byte*)malloc(sizeof(byte) * pagesize);
@@ -52,6 +60,7 @@ int main(int argc, char** argv)
     char* directory = "./";
     char* filename = NULL;
     int pagesize = 0;
+    int vendhdrsize = 0;
 
     argc--;
     argv++;
@@ -160,7 +169,8 @@ int main(int argc, char** argv)
     //printf("Reading kernel...\n");
     fread(kernel, header.kernel_size, 1, f);
     total_read += header.kernel_size;
-    fwrite(kernel, header.kernel_size, 1, k);
+    vendhdrsize = get_vendhdr_size(kernel, header.kernel_size);
+    fwrite(kernel+vendhdrsize, header.kernel_size-vendhdrsize, 1, k);
     fclose(k);
 
     //printf("total read: %d\n", header.kernel_size);
@@ -171,13 +181,14 @@ int main(int argc, char** argv)
     //printf("Reading ramdisk...\n");
     fread(ramdisk, header.ramdisk_size, 1, f);
     total_read += header.ramdisk_size;
+    vendhdrsize = get_vendhdr_size(ramdisk, header.ramdisk_size);
     sprintf(tmp, "%s/%s", directory, basename(filename));
     if(ramdisk[0] == 0x02 && ramdisk[1]== 0x21)
         strcat(tmp, "-ramdisk.lz4");
     else
         strcat(tmp, "-ramdisk.gz");
     FILE *r = fopen(tmp, "wb");
-    fwrite(ramdisk, header.ramdisk_size, 1, r);
+    fwrite(ramdisk+vendhdrsize, header.ramdisk_size-vendhdrsize, 1, r);
     fclose(r);
 
     total_read += read_padding(f, header.ramdisk_size, pagesize);
