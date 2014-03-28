@@ -1268,7 +1268,7 @@ int main(int argc, char **argv)
     charger->uevent_fd = fd;
     coldboot(charger, "/sys/class/power_supply", "add");
 
-    ret = res_create_surface("charger/battery_fail", &charger->surf_unknown);
+    ret = res_create_display_surface("charger/battery_fail", &charger->surf_unknown);
     if (ret < 0) {
         LOGE("Cannot load image\n");
         charger->surf_unknown = NULL;
@@ -1277,7 +1277,7 @@ int main(int argc, char **argv)
     for (i = 0; i < charger->batt_anim->num_frames; i++) {
         struct frame *frame = &charger->batt_anim->frames[i];
 
-        ret = res_create_surface(frame->name, &frame->surface);
+        ret = res_create_display_surface(frame->name, &frame->surface);
         if (ret < 0) {
             LOGE("Cannot load image %s\n", frame->name);
             /* TODO: free the already allocated surfaces... */
