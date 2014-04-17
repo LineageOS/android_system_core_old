@@ -79,21 +79,20 @@ public:
  * Flattenable objects must implement this protocol.
  */
 
-template <typename T>
 class Flattenable {
 public:
     // size in bytes of the flattened object
-    inline size_t getFlattenedSize() const;
+    virtual size_t getFlattenedSize() const = 0;
 
     // number of file descriptors to flatten
-    inline size_t getFdCount() const;
+    virtual size_t getFdCount() const = 0;
 
     // flattens the object into buffer.
     // size should be at least of getFlattenedSize()
     // file descriptors are written in the fds[] array but ownership is
     // not transfered (ie: they must be dupped by the caller of
     // flatten() if needed).
-    inline status_t flatten(void*& buffer, size_t& size, int*& fds, size_t& count) const;
+    virtual status_t flatten(void*& buffer, size_t& size, int*& fds, size_t& count) const = 0;
 
     // unflattens the object from buffer.
     // size should be equal to the value of getFlattenedSize() when the
@@ -102,27 +101,11 @@ public:
     // don't need to be dupped(). ie: the caller of unflatten doesn't
     // keep ownership. If a fd is not retained by unflatten() it must be
     // explicitly closed.
-    inline status_t unflatten(void const*& buffer, size_t& size, int const*& fds, size_t& count);
-};
+    virtual status_t unflatten(void const*& buffer, size_t& size, int const*& fds, size_t& count) = 0;
 
-template<typename T>
-inline size_t Flattenable<T>::getFlattenedSize() const {
-    return static_cast<T const*>(this)->T::getFlattenedSize();
-}
-template<typename T>
-inline size_t Flattenable<T>::getFdCount() const {
-    return static_cast<T const*>(this)->T::getFdCount();
-}
-template<typename T>
-inline status_t Flattenable<T>::flatten(
-        void*& buffer, size_t& size, int*& fds, size_t& count) const {
-    return static_cast<T const*>(this)->T::flatten(buffer, size, fds, count);
-}
-template<typename T>
-inline status_t Flattenable<T>::unflatten(
-        void const*& buffer, size_t& size, int const*& fds, size_t& count) {
-    return static_cast<T*>(this)->T::unflatten(buffer, size, fds, count);
-}
+protected:
+    virtual ~Flattenable() = 0;
+};
 
 /*
  * LightFlattenable is a protocol allowing object to serialize themselves out
