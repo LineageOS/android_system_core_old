@@ -325,6 +325,7 @@ void usage(void)
             "  -n <page size>                           specify the nand page size. default: 2048\n"
             "  -S <size>[K|M|G]                         automatically sparse files greater than\n"
             "                                           size.  0 to disable\n"
+            "  -f                                       send raw command\n"
         );
 }
 
@@ -896,6 +897,7 @@ int main(int argc, char **argv)
     int status;
     int c;
     int r;
+    int send_raw_command = 0;
 
     const struct option longopts[] = {
         {"base", required_argument, 0, 'b'},
@@ -910,7 +912,7 @@ int main(int argc, char **argv)
 
     while (1) {
         int option_index = 0;
-        c = getopt_long(argc, argv, "wub:k:n:r:s:S:lp:c:i:m:h", longopts, NULL);
+        c = getopt_long(argc, argv, "wub:k:n:r:s:S:lp:c:i:m:h:f", longopts, NULL);
         if (c < 0) {
             break;
         }
@@ -966,6 +968,9 @@ int main(int argc, char **argv)
         case 'w':
             wants_wipe = 1;
             break;
+        case 'f':
+            send_raw_command = 1;
+            break;
         case '?':
             return 1;
         default:
@@ -995,7 +1000,10 @@ int main(int argc, char **argv)
     usb = open_device();
 
     while (argc > 0) {
-        if(!strcmp(*argv, "getvar")) {
+        if(send_raw_command) {
+            argc = do_oem_command(argc, argv);
+        }
+        else if(!strcmp(*argv, "getvar")) {
             require(2);
             fb_queue_display(argv[1], argv[1]);
             skip(2);
