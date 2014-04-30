@@ -79,7 +79,7 @@ static unsigned char padding[131072] = { 0, };
 int write_padding(int fd, unsigned pagesize, unsigned itemsize)
 {
     unsigned pagemask = pagesize - 1;
-    unsigned count;
+    ssize_t count;
 
     if((itemsize & pagemask) == 0) {
         return 0;
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     unsigned pagesize = 2048;
     int fd;
     SHA_CTX ctx;
-    uint8_t* sha;
+    const uint8_t* sha;
     unsigned base           = 0x10000000;
     unsigned kernel_offset  = 0x00008000;
     unsigned ramdisk_offset = 0x01000000;
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
         return usage();
     }
 
-    strcpy(hdr.name, board);
+    strcpy((char *) hdr.name, board);
 
     memcpy(hdr.magic, BOOT_MAGIC, BOOT_MAGIC_SIZE);
 
@@ -263,19 +263,19 @@ int main(int argc, char **argv)
     if(write(fd, &hdr, sizeof(hdr)) != sizeof(hdr)) goto fail;
     if(write_padding(fd, pagesize, sizeof(hdr))) goto fail;
 
-    if(write(fd, kernel_data, hdr.kernel_size) != hdr.kernel_size) goto fail;
+    if(write(fd, kernel_data, hdr.kernel_size) != (ssize_t) hdr.kernel_size) goto fail;
     if(write_padding(fd, pagesize, hdr.kernel_size)) goto fail;
 
-    if(write(fd, ramdisk_data, hdr.ramdisk_size) != hdr.ramdisk_size) goto fail;
+    if(write(fd, ramdisk_data, hdr.ramdisk_size) != (ssize_t) hdr.ramdisk_size) goto fail;
     if(write_padding(fd, pagesize, hdr.ramdisk_size)) goto fail;
 
     if(second_data) {
-        if(write(fd, second_data, hdr.second_size) != hdr.second_size) goto fail;
+        if(write(fd, second_data, hdr.second_size) != (ssize_t) hdr.second_size) goto fail;
         if(write_padding(fd, pagesize, hdr.ramdisk_size)) goto fail;
     }
 
     if(dt_data) {
-        if(write(fd, dt_data, hdr.dt_size) != hdr.dt_size) goto fail;
+        if(write(fd, dt_data, hdr.dt_size) != (ssize_t) hdr.dt_size) goto fail;
         if(write_padding(fd, pagesize, hdr.dt_size)) goto fail;
     }
     return 0;

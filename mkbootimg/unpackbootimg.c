@@ -16,7 +16,7 @@ int read_padding(FILE* f, unsigned itemsize, int pagesize)
 {
     byte* buf = (byte*)malloc(sizeof(byte) * pagesize);
     unsigned pagemask = pagesize - 1;
-    unsigned count;
+    ssize_t count;
 
     if((itemsize & pagemask) == 0) {
         free(buf);
@@ -112,42 +112,42 @@ int main(int argc, char** argv)
     //printf("cmdline...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-cmdline");
-    write_string_to_file(tmp, header.cmdline);
+    write_string_to_file(tmp, (char*) header.cmdline);
     
     //printf("base...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-base");
     char basetmp[200];
     sprintf(basetmp, "%08x", header.kernel_addr - 0x00008000);
-    write_string_to_file(tmp, basetmp);
+    write_string_to_file(tmp, (char*) basetmp);
 
     //printf("ramdisk_offset...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-ramdisk_offset");
     char ramdisktmp[200];
     sprintf(ramdisktmp, "%08x", header.ramdisk_addr - header.kernel_addr + 0x00008000);
-    write_string_to_file(tmp, ramdisktmp);
+    write_string_to_file(tmp, (char*) ramdisktmp);
 
     //printf("second_offset...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-second_offset");
     char secondtmp[200];
     sprintf(secondtmp, "%08x", header.second_addr - header.kernel_addr + 0x00008000);
-    write_string_to_file(tmp, secondtmp);
+    write_string_to_file(tmp, (char*) secondtmp);
 
     //printf("tags_offset...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-tags_offset");
     char tagstmp[200];
     sprintf(tagstmp, "%08x", header.tags_addr - header.kernel_addr + 0x00008000);
-    write_string_to_file(tmp, tagstmp);
+    write_string_to_file(tmp, (char*) tagstmp);
 
     //printf("pagesize...\n");
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-pagesize");
     char pagesizetmp[200];
     sprintf(pagesizetmp, "%d", header.page_size);
-    write_string_to_file(tmp, pagesizetmp);
+    write_string_to_file(tmp, (char*) pagesizetmp);
     
     total_read += sizeof(header);
     //printf("total read: %d\n", total_read);
