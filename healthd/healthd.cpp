@@ -36,8 +36,15 @@
 using namespace android;
 
 // Periodic chores intervals in seconds
+#ifdef QCOM_HARDWARE
+#define DEFAULT_PERIODIC_CHORES_INTERVAL_FAST (60 * 10)
+//For the designs without low battery detection,need to enable
+//the default 60*10s wakeup timer to periodic check.
+#define DEFAULT_PERIODIC_CHORES_INTERVAL_SLOW -1
+#else
 #define DEFAULT_PERIODIC_CHORES_INTERVAL_FAST (60 * 1)
 #define DEFAULT_PERIODIC_CHORES_INTERVAL_SLOW (60 * 10)
+#endif
 
 static struct healthd_config healthd_config = {
     .periodic_chores_interval_fast = DEFAULT_PERIODIC_CHORES_INTERVAL_FAST,
