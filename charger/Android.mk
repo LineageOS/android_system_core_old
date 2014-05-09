@@ -22,7 +22,11 @@ LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)
 LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_UNSTRIPPED)
 
-LOCAL_C_INCLUDES := $(call include-path-for, recovery)
+ifneq ($(RECOVERY_VARIANT),)
+    LOCAL_C_INCLUDES := bootable/recovery-$(RECOVERY_VARIANT)
+else
+    LOCAL_C_INCLUDES := bootable/recovery
+endif
 
 LOCAL_STATIC_LIBRARIES := libminui libpixelflinger_static libpng
 ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
