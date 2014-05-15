@@ -549,6 +549,15 @@ service installd /system/bin/installd
     class main
     socket installd stream 600 system system
 
+service flash_recovery /system/etc/install-recovery.sh
+    class main
+    disabled
+    oneshot
+
+# update recovery if enabled
+on property:persist.sys.recovery_update=true
+    start flash_recovery
+
 service racoon /system/bin/racoon
     class main
     socket racoon stream 600 system system
