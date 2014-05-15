@@ -129,6 +129,11 @@ int chmod_main(int argc, char **argv)
         s++;
     }
 
+    // We are using O_NONBLOCK in order to avoid issues with non-regular files,
+    // e.g. fifos. According to fifo(7), opening a FIFO for read only with
+    // O_NONBLOCK will succeed even if noone has opened on the write side yet.
+    flag |= O_NONBLOCK;
+
     for (i = 2; i < argc; i++) {
         if(((fd = open(argv[i], flag|O_RDONLY )) != -1)||((fd = open(argv[i], flag|O_WRONLY )) != -1)) {
             if (fchmod(fd, mode) < 0){
