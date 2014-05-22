@@ -37,7 +37,9 @@ using namespace android;
 
 // Periodic chores intervals in seconds
 #define DEFAULT_PERIODIC_CHORES_INTERVAL_FAST (60 * 10)
-#define DEFAULT_PERIODIC_CHORES_INTERVAL_SLOW (60 * 10)
+//For the designs without low battery detection,need to enable
+//the default 60*10s wakeup timer to periodic check.
+#define DEFAULT_PERIODIC_CHORES_INTERVAL_SLOW -1
 
 static struct healthd_config healthd_config = {
     .periodic_chores_interval_fast = DEFAULT_PERIODIC_CHORES_INTERVAL_FAST,
