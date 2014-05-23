@@ -556,6 +556,7 @@ service flash_recovery /system/etc/install-recovery.sh
 
 # update recovery if enabled
 on property:persist.sys.recovery_update=true
+    chmod 0544 /system/etc/install-recovery.sh
     start flash_recovery
 
 service racoon /system/bin/racoon
