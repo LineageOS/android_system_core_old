@@ -549,7 +549,7 @@ service installd /system/bin/installd
     class main
     socket installd stream 600 system system
 
-service flash_recovery /system/etc/install-recovery.sh
+service flash_recovery /system/etc/install-cm-recovery.sh
     class main
     disabled
     oneshot
