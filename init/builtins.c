@@ -409,6 +409,7 @@ static struct {
     { "private",    MS_PRIVATE },
     { "slave",      MS_SLAVE },
     { "shared",     MS_SHARED },
+    { "sync",       MS_SYNCHRONOUS },
     { "defaults",   0 },
     { 0,            0 },
 };
