@@ -1451,7 +1451,7 @@ top:
         return 0;
     }
 
-    if(!strcmp(argv[0],"logcat") || !strcmp(argv[0],"lolcat") || !strcmp(argv[0],"longcat")) {
+    if(!strcmp(argv[0],"logcat") || !strcmp(argv[0],"lolcat") || !strcmp(argv[0],"longcat") || !strcmp(argv[0],"logdog")) {
         return logcat(ttype, serial, argc, argv);
     }
 

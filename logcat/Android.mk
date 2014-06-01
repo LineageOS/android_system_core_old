@@ -12,6 +12,7 @@ LOCAL_MODULE:= logcat
 include $(BUILD_EXECUTABLE)
 
 SYMLINK := $(TARGET_OUT)/bin/lolcat
+SYMLINK := $(TARGET_OUT)/bin/logdog
 $(SYMLINK): LOGCAT_BINARY := $(LOCAL_MODULE)
 $(SYMLINK): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
 	@echo "Symlink: $@ -> $(LOGCAT_BINARY)"
