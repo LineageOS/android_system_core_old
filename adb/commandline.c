@@ -657,7 +657,7 @@ static int logcat(transport_type transport, char* serial, int argc, char **argv)
 
     free(quoted_log_tags);
 
-    if (!strcmp(argv[0],"longcat")) {
+    if (!strcmp(argv[0],"longcat") || !strcmp(argv[0],"longdog")) {
         strncat(buf, " -v long", sizeof(buf)-1);
     }
 
@@ -1451,7 +1451,8 @@ top:
         return 0;
     }
 
-    if(!strcmp(argv[0],"logcat") || !strcmp(argv[0],"lolcat") || !strcmp(argv[0],"longcat")) {
+    if(!strcmp(argv[0],"logcat") || !strcmp(argv[0],"lolcat") || !strcmp(argv[0],"longcat") ||
+            !strcmp(argv[0],"logdog") || !strcmp(argv[0],"loldog") || !strcmp(argv[0],"longdog")) {
         return logcat(ttype, serial, argc, argv);
     }
 
