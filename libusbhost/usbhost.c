@@ -37,6 +37,7 @@
 
 #include <sys/ioctl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/inotify.h>
 #include <dirent.h>
@@ -189,6 +190,7 @@ int usb_host_load(struct usb_host_context *context,
 {
     int done = 0;
     int i;
+    struct stat usbfsdir;
 
     context->cb_added = added_cb;
     context->cb_removed = removed_cb;
@@ -197,17 +199,23 @@ int usb_host_load(struct usb_host_context *context,
     D("Created device discovery thread\n");
 
     /* watch for files added and deleted within USB_FS_DIR */
+    context->wdd = -1;
     context->wddbus = -1;
     for (i = 0; i < MAX_USBFS_WD_COUNT; i++)
         context->wds[i] = -1;
 
-    /* watch the root for new subdirectories */
-    context->wdd = inotify_add_watch(context->fd, DEV_DIR, IN_CREATE | IN_DELETE);
-    if (context->wdd < 0) {
-        fprintf(stderr, "inotify_add_watch failed\n");
-        if (discovery_done_cb)
-            discovery_done_cb(client_data);
-        return done;
+    /* watch the root for new subdirectories; skip if final USB_FS_DIR
+       path already exist
+     */
+    if (stat(USB_FS_DIR, &usbfsdir) == -1) {
+        context->wdd = inotify_add_watch(context->fd, DEV_DIR, IN_CREATE | IN_DELETE);
+        if (context->wdd < 0)
+            goto failed;
+    } else {
+        /* Final USB_FS_DIR already exists; watch base bus dir in case of bus/usb removal */
+        context->wddbus = inotify_add_watch(context->fd, DEV_BUS_DIR, IN_CREATE | IN_DELETE);
+        if (context->wddbus < 0)
+            goto failed;
     }
 
     watch_existing_subdirs(context, context->wds, MAX_USBFS_WD_COUNT);
@@ -217,6 +225,12 @@ int usb_host_load(struct usb_host_context *context,
     if (discovery_done_cb)
         done |= discovery_done_cb(client_data);
 
+    return done;
+
+failed:
+    fprintf(stderr, "inotify_add_watch failed\n");
+    if (discovery_done_cb)
+        discovery_done_cb(client_data);
     return done;
 } /* usb_host_load() */
 
