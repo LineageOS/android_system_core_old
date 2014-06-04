@@ -33,10 +33,14 @@
 #include "adb.h"
 #include "file_sync_service.h"
 
-/* TODO: use fs_config to configure permissions on /data */
 static bool is_on_system(const char *name) {
     const char *SYSTEM = "/system/";
     return (strncmp(SYSTEM, name, strlen(SYSTEM)) == 0);
+}
+
+static bool is_on_data(const char *name) {
+    const char *DATA = "/data/";
+    return (strncmp(DATA, name, strlen(DATA)) == 0);
 }
 
 static int mkdirs(char *name)
@@ -54,7 +58,7 @@ static int mkdirs(char *name)
         x = adb_dirstart(x);
         if(x == 0) return 0;
         *x = 0;
-        if (is_on_system(name)) {
+        if (is_on_system(name) || is_on_data(name)) {
             fs_config(name, 1, &uid, &gid, &mode, &cap);
         }
         ret = adb_mkdir(name, mode);
@@ -363,7 +367,7 @@ static int do_send(int s, char *path, char *buffer)
         if(*tmp == '/') {
             tmp++;
         }
-        if (is_on_system(path)) {
+        if (is_on_system(path) || is_on_data(path)) {
             fs_config(tmp, 0, &uid, &gid, &mode, &cap);
         }
         ret = handle_send_file(s, path, uid, gid, mode, buffer);
