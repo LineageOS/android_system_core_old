@@ -559,6 +559,28 @@ static void process_ps_uevent(struct charger *charger, struct uevent *uevent)
             supply = NULL;
         }
     } else if (!strcmp(uevent->action, "change")) {
+#ifdef BATTERY_DEVICE_NAME
+        /* remove discharging battery */
+        char *path, ps_status[32];
+        int ret;
+
+        if (!supply)
+            return;
+
+        ret = asprintf(&path, "/sys/%s/status", uevent->path);
+        if (ret <= 0) {
+            return;
+        }
+        ret = read_file(path, ps_status, sizeof(ps_status));
+        free(path);
+        if (ret < 0) {
+            return;
+        }
+        if (!strncmp(ps_status, "Discharging", 11)) {
+            /* fixup state to make it go offline later */
+            supply->online = online = false;
+        }
+#endif
         if (!supply) {
             LOGE("power supply '%s' not found ('%s' %d)\n",
                  uevent->ps_name, ps_type, online);
