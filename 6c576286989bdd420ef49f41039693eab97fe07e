@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da0c15f0_fe03990d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2195
+      },
+      "writtenOn": "2014-06-05T21:16:40Z",
+      "side": 1,
+      "message": "Including a Change-Id here or even git hash would make it easier when looking for it in the future.",
+      "revId": "6c576286989bdd420ef49f41039693eab97fe07e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da0c15f0_69ffd101",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2195
+      },
+      "writtenOn": "2014-06-05T21:16:40Z",
+      "side": 1,
+      "message": "Why ignore /data/media ?",
+      "revId": "6c576286989bdd420ef49f41039693eab97fe07e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
