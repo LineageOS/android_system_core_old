@@ -71,8 +71,12 @@ int main(int argc, char *argv[])
 
     // Don't return early. Give the reboot command time to take effect
     // to avoid messing up scripts which do "adb shell reboot && adb wait-for-device"
-    while(1) { pause(); }
+    ret = sleep(5);
 
-    fprintf(stderr, "Done\n");
+    if (ret == 0) {
+        fprintf(stderr, "Reboot command timed out\n");
+    } else {
+        fprintf(stderr, "Done\n");
+    }
     return 0;
 }
