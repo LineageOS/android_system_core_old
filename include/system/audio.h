@@ -845,6 +845,7 @@ static inline size_t audio_bytes_per_sample(audio_format_t format)
         size = sizeof(int32_t);
         break;
     case AUDIO_FORMAT_PCM_16_BIT:
+    case AUDIO_FORMAT_PCM_16_BIT_OFFLOAD:
         size = sizeof(int16_t);
         break;
     case AUDIO_FORMAT_PCM_8_BIT:
