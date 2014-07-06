@@ -746,10 +746,12 @@ static inline bool audio_is_valid_format(audio_format_t format)
 {
     switch (format & AUDIO_FORMAT_MAIN_MASK) {
     case AUDIO_FORMAT_PCM:
+#ifndef OMAP_ENHANCEMENT
         if (format != AUDIO_FORMAT_PCM_16_BIT &&
                 format != AUDIO_FORMAT_PCM_8_BIT) {
             return false;
         }
+#endif
     case AUDIO_FORMAT_MP3:
     case AUDIO_FORMAT_AMR_NB:
     case AUDIO_FORMAT_AMR_WB:
