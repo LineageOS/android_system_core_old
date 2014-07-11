@@ -253,6 +253,8 @@ enum {
  * as it may not interact properly with the framework's use of the
  * ANativeWindow.
  */
+
+#define OEM_DEFINE_HOOK_PERFORM            3000
 enum {
     NATIVE_WINDOW_SET_USAGE                 =  0,
     NATIVE_WINDOW_CONNECT                   =  1,   /* deprecated */
@@ -273,6 +275,7 @@ enum {
     NATIVE_WINDOW_SET_POST_TRANSFORM_CROP   = 16,   /* private */
     NATIVE_WINDOW_SET_BUFFERS_SIZE          = 17,   /* private */
     NATIVE_WINDOW_UPDATE_BUFFERS_GEOMETRY   = 18,   /* private */
+    NATIVE_WINDOW_SET_SURFACE_SWITCH_CONTEXT = (OEM_DEFINE_HOOK_PERFORM + 1),
 };
 
 /* parameter for NATIVE_WINDOW_[API_][DIS]CONNECT */
