@@ -58,6 +58,7 @@ typedef enum {
                                         */
     AUDIO_STREAM_DTMF             = 8,
     AUDIO_STREAM_TTS              = 9,
+    AUDIO_STREAM_INCALL_MUSIC     = 10,
 
     AUDIO_STREAM_CNT,
     AUDIO_STREAM_MAX              = AUDIO_STREAM_CNT - 1,
