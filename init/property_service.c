@@ -48,6 +48,7 @@
 #include "init.h"
 #include "util.h"
 #include "log.h"
+#include "vendor_init.h"
 
 #define PERSISTENT_PROPERTY_DIR  "/data/property"
 
@@ -603,6 +604,9 @@ void load_all_props(void)
     load_properties_from_file(PROP_PATH_SYSTEM_BUILD, NULL);
     load_properties_from_file(PROP_PATH_SYSTEM_DEFAULT, NULL);
     load_properties_from_file(PROP_PATH_FACTORY, "ro.*");
+
+    /* Read vendor-specific property runtime overrides. */
+    vendor_load_properties();
 
     load_override_properties();
 
