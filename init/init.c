@@ -85,6 +85,7 @@ static char hardware[32];
 static unsigned revision = 0;
 static char qemu[32];
 static char battchg_pause[32];
+static char bootchg[32];
 
 static struct action *cur_action = NULL;
 static struct command *cur_command = NULL;
@@ -842,6 +843,7 @@ static void export_kernel_boot_props(void)
         { "ro.boot.mode", "ro.bootmode", "unknown", },
         { "ro.boot.baseband", "ro.baseband", "unknown", },
         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
+        { "ro.boot.bootchg", "ro.bootchg", "unknown", },
     };
 
     for (i = 0; i < ARRAY_SIZE(prop_map); i++) {
@@ -859,6 +861,8 @@ static void export_kernel_boot_props(void)
     /* save a copy for init's usage during boot */
     property_get("ro.bootmode", tmp);
     strlcpy(bootmode, tmp, sizeof(bootmode));
+    property_get("ro.bootchg", tmp);
+    strlcpy(bootchg, tmp, sizeof(bootchg));
 
     /* if this was given on kernel command line, override what we read
      * before (e.g. from /proc/cpuinfo), if anything */
@@ -1173,7 +1177,7 @@ int main(int argc, char **argv)
     restorecon("/dev/__properties__");
     restorecon_recursive("/sys");
 
-    is_charger = !strcmp(bootmode, "charger");
+    is_charger = (!strcmp(bootmode, "charger") || !strcmp(bootchg, "true"));
 
     INFO("property init\n");
     if (!is_charger)
