@@ -39,6 +39,7 @@
 #include <cutils/partition_utils.h>
 #include <cutils/properties.h>
 #include <logwrap/logwrap.h>
+#include <blkid/blkid.h>
 
 #include "mincrypt/rsa.h"
 #include "mincrypt/sha.h"
@@ -524,6 +525,7 @@ int fs_mgr_mount_all(struct fstab *fstab)
     int ret = -1;
     int mret;
     int mount_errno;
+    char *fstype = NULL;
 
     if (!fstab) {
         return ret;
@@ -540,6 +542,18 @@ int fs_mgr_mount_all(struct fstab *fstab)
             !strcmp(fstab->recs[i].fs_type, "emmc") ||
             !strcmp(fstab->recs[i].fs_type, "mtd")) {
             continue;
+        }
+
+        if (!strcmp(fstab->recs[i].fs_type, "auto")) {
+            fstype = blkid_get_tag_value(NULL, "TYPE", fstab->recs[i].blk_device);
+            if (fstype) {
+                INFO("Found %s filesystem on %s\n", fstype, fstab->recs[i].blk_device);
+                fstab->recs[i].fs_type = blkid_get_tag_value(NULL, "TYPE",
+                        fstab->recs[i].blk_device);
+            } else {
+                ERROR("None or unknown filesystem on %s\n", fstab->recs[i].blk_device);
+                continue;
+            }
         }
 
         if (fstab->recs[i].fs_mgr_flags & MF_WAIT) {
