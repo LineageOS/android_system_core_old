@@ -18,6 +18,7 @@
 #define __CORE_FS_MGR_PRIV_H
 
 #include <cutils/klog.h>
+#include <fs_map.h>
 #include <fs_mgr.h>
 
 #define INFO(x...)    KLOG_INFO("fs_mgr", x)

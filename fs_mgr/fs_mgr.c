@@ -526,6 +526,7 @@ int fs_mgr_mount_all(struct fstab *fstab)
     int mret;
     int mount_errno;
     char *fstype = NULL;
+    struct fs_map *options;
 
     if (!fstab) {
         return ret;
@@ -549,6 +550,17 @@ int fs_mgr_mount_all(struct fstab *fstab)
             if (fstype) {
                 INFO("Found %s filesystem on %s\n", fstype, fstab->recs[i].blk_device);
                 fstab->recs[i].fs_type = fstype;
+                for (options = fs_map_array; options->fs_type; options++) {
+                    if (options->fs_type == fstype) {
+                        if (options->mount_point == fstab->recs[i].mount_point ||
+                                !options->mount_point) {
+                            INFO("Found mount options for fs type: %s on mount point: %s - %s",
+                                    fstype, fstab->recs[i].mount_point, options->mount_options);
+                            fstab->recs[i].fs_options = options->mount_options;
+                            break;
+                        }
+                    }
+                }
             } else {
                 ERROR("None or unknown filesystem on %s\n", fstab->recs[i].blk_device);
                 continue;
