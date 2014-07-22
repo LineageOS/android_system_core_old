@@ -200,8 +200,8 @@ typedef enum {
     AUDIO_FORMAT_MP2                 = 0x15000000UL,
     AUDIO_FORMAT_EVRCNW              = 0x16000000UL,
     AUDIO_FORMAT_PCM_OFFLOAD         = 0x17000000UL,
-    AUDIO_FORMAT_FLAC                = 0x18000000UL,
 #endif
+    AUDIO_FORMAT_FLAC                = 0x18000000UL,
     AUDIO_FORMAT_MAIN_MASK           = 0xFF000000UL,
     AUDIO_FORMAT_SUB_MASK            = 0x00FFFFFFUL,
 
