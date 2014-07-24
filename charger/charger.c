@@ -72,6 +72,7 @@
 #define BATTERY_FULL_THRESH     95
 
 #define BACKLIGHT_TOGGLE_PATH "/sys/class/leds/lcd-backlight/brightness"
+#define CHARGING_ENABLED_PATH "/sys/class/power_supply/battery/charging_enabled"
 
 #define LAST_KMSG_PATH          "/proc/last_kmsg"
 #define LAST_KMSG_MAX_SZ        (32 * 1024)
@@ -1245,6 +1246,7 @@ void alarm_thread_create()
 int main(int argc, char **argv)
 {
     int ret;
+    int charging_enabled;
     struct charger *charger = &charger_state;
     int64_t now = curr_time_ms() - 1;
     int fd;
@@ -1276,6 +1278,14 @@ int main(int argc, char **argv)
         alarm_thread_create();
 
     LOGI("--------------- STARTING CHARGER MODE ---------------\n");
+
+    /* check the charging is enabled or not */
+    ret = read_file_int(CHARGING_ENABLED_PATH, &charging_enabled);
+    if (!ret && !charging_enabled) {
+        /* if charging is disabled, reboot and exit power off charging */
+        LOGI("android charging is disabled, exit!\n");
+        android_reboot(ANDROID_RB_RESTART, 0, 0);
+    }
 
     gr_init();
     gr_font_size(&char_width, &char_height);
