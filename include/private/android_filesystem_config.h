@@ -97,6 +97,7 @@
 #define AID_NET_BT_STACK  3008  /* bluetooth: access config files */
 #define AID_QCOM_ONCRPC   3009  /* can read/write /dev/oncrpc files */
 #define AID_QCOM_DIAG     3010  /* can read/write /dev/diag */
+#define AID_SENSORS       3011 /* access to /dev/socket/sensor_ctl_socket & QCCI/QCSI */
 
 #define AID_EVERYBODY     9997  /* shared between all apps in the same profile */
  
@@ -180,7 +181,7 @@ static const struct android_id_info android_ids[] = {
     { "net_bw_acct",   AID_NET_BW_ACCT, },
     { "net_bt_stack",  AID_NET_BT_STACK, },
     { "qcom_diag", AID_QCOM_DIAG, },
-
+    { "sensors",       AID_SENSORS, },
     { "everybody",     AID_EVERYBODY, },
     { "misc",          AID_MISC, },
     { "nobody",        AID_NOBODY, },
