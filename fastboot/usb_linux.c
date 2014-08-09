@@ -83,19 +83,23 @@ static inline int badname(const char *name)
     return 0;
 }
 
-static int check(void *_desc, int len, unsigned type, int size)
+static char* getDescriptor(char* desc, int len, int type, int size)
 {
-    unsigned char *desc = _desc;
-
-    if(len < size) return -1;
-    if(desc[0] < size) return -1;
-    if(desc[0] > len) return -1;
-    if(desc[1] != type) return -1;
-
-    return 0;
+    while(len>0){
+        if(desc[1]==type){
+            if(desc[0]>len)
+                return -1;
+            if(desc[0]!=size)
+                return -1;
+            return desc;
+        }
+        len-=desc[0];
+        desc+=desc[0];
+    }
+    return -1;
 }
 
-static int filter_usb_device(int fd, char *ptr, int len, int writable,
+static int filter_usb_device(int fd, char *desc, int len, int writable,
                              ifc_match_func callback,
                              int *ept_in_id, int *ept_out_id, int *ifc_id)
 {
@@ -111,18 +115,15 @@ static int filter_usb_device(int fd, char *ptr, int len, int writable,
     
     struct stat st;
     int result;
+    char *ptr;
 
-    if(check(ptr, len, USB_DT_DEVICE, USB_DT_DEVICE_SIZE))
+    if((ptr=getDescriptor(desc, len, USB_DT_DEVICE, USB_DT_DEVICE_SIZE))<0)
         return -1;
     dev = (void*) ptr;
-    len -= dev->bLength;
-    ptr += dev->bLength;
 
-    if(check(ptr, len, USB_DT_CONFIG, USB_DT_CONFIG_SIZE))
+    if((ptr=getDescriptor(desc, len, USB_DT_CONFIG, USB_DT_CONFIG_SIZE))<0)
         return -1;
     cfg = (void*) ptr;
-    len -= cfg->bLength;
-    ptr += cfg->bLength;
 
     info.dev_vendor = dev->idVendor;
     info.dev_product = dev->idProduct;
@@ -198,11 +199,9 @@ static int filter_usb_device(int fd, char *ptr, int len, int writable,
     }
 
     for(i = 0; i < cfg->bNumInterfaces; i++) {
-        if(check(ptr, len, USB_DT_INTERFACE, USB_DT_INTERFACE_SIZE))
+        if((ptr=getDescriptor(desc, len, USB_DT_INTERFACE, USB_DT_INTERFACE_SIZE))<0)
             return -1;
         ifc = (void*) ptr;
-        len -= ifc->bLength;
-        ptr += ifc->bLength;
 
         in = -1;
         out = -1;
@@ -211,11 +210,9 @@ static int filter_usb_device(int fd, char *ptr, int len, int writable,
         info.ifc_protocol = ifc->bInterfaceProtocol;
 
         for(e = 0; e < ifc->bNumEndpoints; e++) {
-            if(check(ptr, len, USB_DT_ENDPOINT, USB_DT_ENDPOINT_SIZE))
+            if((ptr=getDescriptor(desc, len, USB_DT_ENDPOINT, USB_DT_ENDPOINT_SIZE))<0)
                 return -1;
             ept = (void*) ptr;
-            len -= ept->bLength;
-            ptr += ept->bLength;
 
             if((ept->bmAttributes & 0x03) != 0x02)
                 continue;
