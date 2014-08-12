@@ -270,7 +270,7 @@ typedef enum {
 
     AUDIO_FORMAT_EVRC                = 0x10000000UL,
     AUDIO_FORMAT_QCELP               = 0x11000000UL,
-    AUDIO_FORMAT_DTS                 = 0x120000000UL,
+    AUDIO_FORMAT_DTS                 = 0x12000000UL,
     AUDIO_FORMAT_WMA                 = 0x13000000UL,
     AUDIO_FORMAT_WMA_PRO             = 0x14000000UL,
     AUDIO_FORMAT_AAC_ADIF            = 0x15000000UL,
