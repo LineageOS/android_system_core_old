@@ -102,6 +102,10 @@ struct {
     { "wc_transport.",     AID_BLUETOOTH,   AID_SYSTEM },
     { "net.pdp",          AID_RADIO,    AID_RADIO },
     { "service.bootanim.exit", AID_GRAPHICS, 0 },
+#ifdef MTK_HARDWARE
+    { "nvram_init",      AID_NVRAM,   0 },
+    { "gps.",            AID_GPS,     AID_SYSTEM },
+#endif
 #ifdef PROPERTY_PERMS_APPEND
 PROPERTY_PERMS_APPEND
 #endif

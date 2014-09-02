@@ -115,6 +115,9 @@
 #define AID_MOT_DLNA      9011  /* DLNA native */
 #endif // MOTOROLA_UIDS
 
+#define AID_MTKCCCI       9996
+#define AID_NVRAM         9997
+
 #define AID_MISC          9998  /* access to misc storage */
 #define AID_NOBODY        9999
 
@@ -207,6 +210,8 @@ static const struct android_id_info android_ids[] = {
     { "mot_dlna",  AID_MOT_DLNA, },
 #endif
     { "sensors",       AID_SENSORS, },
+    { "ccci", AID_MTKCCCI, },
+    { "nvram", AID_NVRAM, },
     { "misc",          AID_MISC, },
     { "nobody",        AID_NOBODY, },
     { "theme_man", AID_THEMEMAN },

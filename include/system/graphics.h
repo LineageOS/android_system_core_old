@@ -90,6 +90,17 @@ enum {
      * GL_OES_EGL_image_external OpenGL ES extension.
      */
 
+#ifdef MTK_HARDWARE
+    HAL_PIXEL_FORMAT_I420           = 0x00000100,     // MTK I420
+    HAL_PIXEL_FORMAT_NV12_BLK       = 0x00000101,     // MTK NV12 block progres
+    HAL_PIXEL_FORMAT_NV12_BLK_FCM   = 0x00000102,     // MTK NV12 block field m
+
+    HAL_PIXEL_FORMAT_YUV_PRIVATE    = 0x00000103,     // I420 or NV12_BLK or NV
+
+    HAL_PIXEL_FORMAT_I420_DI        = 0x00000106,     // MTK I420 for deinterla
+    HAL_PIXEL_FORMAT_YV12_DI        = 0x00000107,     // MTK YV12 for deinterla
+#endif
+
     /*
      * Android YUV format:
      *

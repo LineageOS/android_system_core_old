@@ -267,6 +267,7 @@ int __android_log_write(int prio, const char *tag, const char *msg)
         !strcmp(tag, "KINETO") ||
         !strncmp(tag, "KIPC", 4) ||
         !strncmp(tag, "Kineto", 6) ||
+        !strncmp(tag, "MUXD", 4) ||
         !strncmp(tag, "QCRIL", 5) ||
         !strncmp(tag, "QC-RIL", 6) ||
         !strncmp(tag, "QC-QMI", 6) ||
@@ -426,3 +427,9 @@ int __android_log_btwrite(int32_t tag, char type, const void *payload,
 
     return write_to_log(LOG_ID_EVENTS, vec, 3);
 }
+
+#ifdef MTK_HARDWARE
+void __attribute__((weak)) __xlog_buf_printf(void *args) {
+    return;
+}
+#endif
