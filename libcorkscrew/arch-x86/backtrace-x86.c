@@ -20,8 +20,9 @@
 
 #ifndef __BIONIC__
 // glibc has its own renaming of the Linux kernel's structures.
-#define _GNU_SOURCE // For REG_EBP, REG_ESP, and REG_EIP.
-#include <ucontext.h>
+// define this here, so that it's defined before the first inclusion
+// of glibc's features.h
+#  define _GNU_SOURCE // For REG_EBP, REG_ESP, and REG_EIP.
 #endif
 
 #define LOG_TAG "Corkscrew"
@@ -44,14 +45,14 @@
 
 #if defined(__BIONIC__)
 
-#if defined(__BIONIC_HAVE_UCONTEXT_T)
+#  if defined(__BIONIC_HAVE_UCONTEXT_T)
 
 // Bionic offers the Linux kernel headers.
-#include <asm/sigcontext.h>
-#include <asm/ucontext.h>
+#    include <asm/sigcontext.h>
+#    include <asm/ucontext.h>
 typedef struct ucontext ucontext_t;
 
-#else /* __BIONIC_HAVE_UCONTEXT_T */
+#  else /* __BIONIC_HAVE_UCONTEXT_T */
 
 /* Old versions of the Android <signal.h> didn't define ucontext_t. */
 
@@ -79,18 +80,17 @@ typedef struct ucontext {
     uint32_t uc_sigmask;
 } ucontext_t;
 
-#endif /* __BIONIC_HAVE_UCONTEXT_T */
+#  endif /* __BIONIC_HAVE_UCONTEXT_T */
 
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) /* ! __BIONIC__ */
 
-#define _XOPEN_SOURCE
-#include <ucontext.h>
+#  define _XOPEN_SOURCE
+#  include <ucontext.h>
 
-#else
+#else /* ! __BIONIC__ && ! __APPLE__ */
 
-// glibc has its own renaming of the Linux kernel's structures.
-#define _GNU_SOURCE // For REG_EBP, REG_ESP, and REG_EIP.
-#include <ucontext.h>
+/* _GNU_SOURCE is already defined above */
+#  include <ucontext.h>
 
 #endif
 
