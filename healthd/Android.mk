@@ -3,9 +3,21 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
+
+LOCAL_CFLAGS := -Werror
+
+HEALTHD_CHARGER_DEFINES := BACKLIGHT_PATH \
+    CHARGING_ENABLED_PATH
+
+$(foreach healthd_charger_define,$(HEALTHD_CHARGER_DEFINES), \
+  $(if $($(healthd_charger_define)), \
+    $(eval LOCAL_CFLAGS += -D$(healthd_charger_define)=\"$($(healthd_charger_define))\") \
+  ) \
+)
+
 LOCAL_SRC_FILES := healthd_board_default.cpp
 LOCAL_MODULE := libhealthd.default
-LOCAL_CFLAGS := -Werror
+
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -32,9 +44,7 @@ LOCAL_CFLAGS := -D__STDC_LIMIT_MACROS -Werror
 
 HEALTHD_CHARGER_DEFINES := RED_LED_PATH \
     GREEN_LED_PATH \
-    BLUE_LED_PATH \
-    BACKLIGHT_PATH \
-    CHARGING_ENABLED_PATH
+    BLUE_LED_PATH
 
 $(foreach healthd_charger_define,$(HEALTHD_CHARGER_DEFINES), \
   $(if $($(healthd_charger_define)), \

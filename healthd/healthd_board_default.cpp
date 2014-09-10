@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
+#include <cutils/klog.h>
+#include <fcntl.h>
+
 #include <healthd.h>
+
+#ifndef BACKLIGHT_PATH
+#define BACKLIGHT_PATH          "/sys/class/leds/lcd-backlight/brightness"
+#endif
+#define BACKLIGHT_ON_LEVEL      100
+
+#define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
+#define LOGW(x...) do { KLOG_WARNING("charger", x); } while (0)
+#define LOGV(x...) do { KLOG_DEBUG("charger", x); } while (0)
 
 void healthd_board_init(struct healthd_config*)
 {
@@ -38,9 +50,29 @@ void healthd_board_mode_charger_battery_update(struct android::BatteryProperties
 
 }
 
-void healthd_board_mode_charger_set_backlight(bool)
+void healthd_board_mode_charger_set_backlight(bool on)
 {
+    int fd;
+    char buffer[10];
 
+    if (access(BACKLIGHT_PATH, R_OK | W_OK) != 0)
+    {
+        LOGW("Backlight control not support\n");
+        return;
+    }
+
+    memset(buffer, '\0', sizeof(buffer));
+    fd = open(BACKLIGHT_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open backlight node : %s\n", strerror(errno));
+        return;
+    }
+    LOGV("Enabling backlight\n");
+    snprintf(buffer, sizeof(buffer), "%d\n", on ? BACKLIGHT_ON_LEVEL : 0);
+    if (write(fd, buffer,strlen(buffer)) < 0) {
+        LOGE("Could not write to backlight node : %s\n", strerror(errno));
+    }
+    close(fd);
 }
 
 void healthd_board_mode_charger_init()
