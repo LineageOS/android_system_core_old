@@ -356,6 +356,9 @@ int main(int argc, char **argv) {
         exit(2);
     }
 
+    periodic_chores();
+    healthd_mode_ops->heartbeat();
+
     healthd_mainloop();
     KLOG_ERROR("Main loop terminated, exiting\n");
     return 3;
