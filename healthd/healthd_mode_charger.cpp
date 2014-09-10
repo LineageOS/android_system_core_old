@@ -80,6 +80,7 @@ char *locale;
 #define RED_LED_PATH            "/sys/class/leds/red/brightness"
 #define GREEN_LED_PATH          "/sys/class/leds/green/brightness"
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
+#define BACKLIGHT_PATH          "/sys/class/leds/lcd-backlight/brightness"
 
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGI(x...) do { KLOG_INFO("charger", x); } while (0)
@@ -264,6 +265,37 @@ static int set_battery_soc_leds(int soc)
         old_color = color;
         LOGV("soc = %d, set led color 0x%x\n", soc, soc_leds[i].color);
     }
+
+    return 0;
+}
+
+#define BACKLIGHT_ON_LEVEL    100
+static int set_backlight_on(void)
+{
+    int fd;
+    char buffer[10];
+
+    if (access(BACKLIGHT_PATH, R_OK | W_OK) != 0)
+    {
+        LOGI("Backlight control not support\n");
+        return 0;
+    }
+
+    memset(buffer, '\0', sizeof(buffer));
+    fd = open(BACKLIGHT_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open backlight node : %s\n", strerror(errno));
+        goto cleanup;
+    }
+    LOGV("Enabling backlight\n");
+    snprintf(buffer, sizeof(buffer), "%d\n", BACKLIGHT_ON_LEVEL);
+    if (write(fd, buffer,strlen(buffer)) < 0) {
+        LOGE("Could not write to backlight node : %s\n", strerror(errno));
+        goto cleanup;
+    }
+cleanup:
+    if (fd >= 0)
+        close(fd);
 
     return 0;
 }
@@ -524,9 +556,11 @@ static void update_screen_state(struct charger *charger, int64_t now)
         batt_anim->capacity = batt_cap;
     }
 
-    /* unblank the screen  on first cycle */
-    if (batt_anim->cur_cycle == 0)
+    /* unblank the screen on first cycle */
+    if (batt_anim->cur_cycle == 0) {
+        set_backlight_on();
         gr_fb_blank(false);
+    }
 
     /* draw the new frame (@ cur_frame) */
     redraw_screen(charger);
