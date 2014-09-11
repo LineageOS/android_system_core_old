@@ -75,6 +75,20 @@ char* locale;
 
 #define LAST_KMSG_MAX_SZ (32 * 1024)
 
+#ifndef RED_LED_PATH
+#define RED_LED_PATH            "/sys/class/leds/red/brightness"
+#endif
+#ifndef GREEN_LED_PATH
+#define GREEN_LED_PATH          "/sys/class/leds/green/brightness"
+#endif
+#ifndef BLUE_LED_PATH
+#define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
+#endif
+
+#ifndef BLINK_PATH
+#define BLINK_PATH              "/sys/class/leds/red/device/blink"
+#endif
+
 #define LOGE(x...) KLOG_ERROR("charger", x);
 #define LOGW(x...) KLOG_WARNING("charger", x);
 #define LOGV(x...) KLOG_DEBUG("charger", x);
@@ -100,6 +114,10 @@ struct charger {
     animation* batt_anim;
     GRSurface* surf_unknown;
     int boot_min_cap;
+
+#ifndef NO_CHARGER_LED
+    int old_soc;
+#endif
 };
 
 static const animation BASE_ANIMATION = {
@@ -181,10 +199,110 @@ static animation::frame default_animation_frames[] = {
 
 static animation battery_animation = BASE_ANIMATION;
 
+enum {
+    RED_LED = 0x01 << 0,
+    GREEN_LED = 0x01 << 1,
+    BLUE_LED = 0x01 << 2,
+};
+
+#ifndef NO_CHARGER_LED
+struct led_ctl {
+    int color;
+    const char *path;
+};
+
+struct led_ctl leds[3] =
+    {{RED_LED, RED_LED_PATH},
+    {GREEN_LED, GREEN_LED_PATH},
+    {BLUE_LED, BLUE_LED_PATH}};
+
+struct soc_led_color_mapping {
+    int soc;
+    int color;
+};
+
+struct soc_led_color_mapping soc_leds[3] = {
+    {15, RED_LED},
+    {90, RED_LED | GREEN_LED},
+    {100, GREEN_LED},
+};
+#endif
+
 static charger charger_state;
 static healthd_config* healthd_config;
 static android::BatteryProperties* batt_prop;
 static std::unique_ptr<HealthdDraw> healthd_draw;
+
+#ifndef NO_CHARGER_LED
+static int set_blink(int val)
+{
+    int fd;
+    char buffer[10];
+
+    fd = open(BLINK_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open blink file\n");
+        return -1;
+    }
+    snprintf(buffer, sizeof(buffer), "%d\n", val);
+    if (write(fd, buffer, strlen(buffer)) < 0) {
+        LOGE("Could not write to blink file\n");
+        close(fd);
+        return -1;
+    }
+    close(fd);
+    return 0;
+}
+
+static int set_tricolor_led(int on, int color)
+{
+    int fd;
+    char buffer[10];
+
+    for (size_t i = 0; i < ARRAY_SIZE(leds); i++) {
+        if ((color & leds[i].color) && (access(leds[i].path, R_OK | W_OK) == 0)) {
+            fd = open(leds[i].path, O_RDWR);
+            if (fd < 0) {
+                LOGE("Could not open led node %d\n", i);
+                continue;
+            }
+            if (on)
+                snprintf(buffer, sizeof(buffer), "255\n");
+            else
+                snprintf(buffer, sizeof(buffer), "0\n");
+            if (write(fd, buffer, strlen(buffer)) < 0)
+                LOGE("Could not write to led node\n");
+            if (fd >= 0)
+                close(fd);
+        }
+    }
+
+    return 0;
+}
+
+static int set_battery_soc_leds(int soc)
+{
+    int i, color;
+    static int old_color = 0;
+
+    for (i = 0; i < (int)ARRAY_SIZE(soc_leds); i++) {
+        if (soc <= soc_leds[i].soc)
+            break;
+    }
+    color = soc_leds[i].color;
+    if (old_color != color) {
+        set_tricolor_led(0, old_color);
+        set_tricolor_led(1, color);
+        old_color = color;
+        LOGV("soc = %d, set led color 0x%x\n", soc, soc_leds[i].color);
+    }
+
+    /* This is required to commit the changes to hardware */
+    set_blink(0);
+
+    return 0;
+}
+#endif
 
 /* current time in milliseconds */
 static int64_t curr_time_ms() {
@@ -473,7 +591,22 @@ static void handle_input_state(charger* charger, int64_t now) {
 }
 
 static void handle_power_supply_state(charger* charger, int64_t now) {
+#ifndef NO_CHARGER_LED
+    int soc = 0;
+#endif
+
     if (!charger->have_battery_state) return;
+
+#ifndef NO_CHARGER_LED
+    if (batt_prop && batt_prop->batteryLevel >= 0) {
+        soc = batt_prop->batteryLevel;
+    }
+
+    if (charger->old_soc != soc) {
+        charger->old_soc = soc;
+        set_battery_soc_leds(soc);
+    }
+#endif
 
     if (!charger->charger_connected) {
         /* Last cycle would have stopped at the extreme top of battery-icon
@@ -669,4 +802,8 @@ void healthd_mode_charger_init(struct healthd_config* config) {
     charger->next_pwr_check = -1;
     healthd_config = config;
     charger->boot_min_cap = config->boot_min_cap;
+
+#ifndef NO_CHARGER_LED
+    charger->old_soc = 0;
+#endif
 }
