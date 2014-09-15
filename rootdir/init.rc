@@ -514,7 +514,7 @@ service vold /system/bin/vold
 service netd /system/bin/netd
     class main
     socket netd stream 0660 root system
-    socket dnsproxyd stream 0660 root inet
+    socket dnsproxyd stream 0666 root inet
     socket mdns stream 0660 root system
 
 service debuggerd /system/bin/debuggerd
