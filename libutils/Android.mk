@@ -98,6 +98,8 @@ LOCAL_SRC_FILES:= \
 	Looper.cpp \
 	Trace.cpp
 
+LOCAL_CFLAGS += -DVECTOR_COMPAT
+
 ifeq ($(TARGET_OS),linux)
 LOCAL_LDLIBS += -lrt -ldl
 endif

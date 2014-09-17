@@ -106,16 +106,16 @@ protected:
     virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
     virtual void            do_move_backward(void* dest, const void* from, size_t num) const = 0;
 
-#if NEEDS_VECTORIMPL_SYMBOLS
+#ifdef VECTOR_COMPAT
     // take care of FBC...
-    virtual void            reservedVectorImpl1();
-    virtual void            reservedVectorImpl2();
-    virtual void            reservedVectorImpl3();
-    virtual void            reservedVectorImpl4();
-    virtual void            reservedVectorImpl5();
-    virtual void            reservedVectorImpl6();
-    virtual void            reservedVectorImpl7();
-    virtual void            reservedVectorImpl8();
+    void            reservedVectorImpl1();
+    void            reservedVectorImpl2();
+    void            reservedVectorImpl3();
+    void            reservedVectorImpl4();
+    void            reservedVectorImpl5();
+    void            reservedVectorImpl6();
+    void            reservedVectorImpl7();
+    void            reservedVectorImpl8();
 #endif
 
 private:
@@ -168,16 +168,16 @@ public:
 protected:
     virtual int             do_compare(const void* lhs, const void* rhs) const = 0;
 
-#if NEEDS_VECTORIMPL_SYMBOLS
+#ifdef VECTOR_COMPAT
     // take care of FBC...
-    virtual void            reservedSortedVectorImpl1();
-    virtual void            reservedSortedVectorImpl2();
-    virtual void            reservedSortedVectorImpl3();
-    virtual void            reservedSortedVectorImpl4();
-    virtual void            reservedSortedVectorImpl5();
-    virtual void            reservedSortedVectorImpl6();
-    virtual void            reservedSortedVectorImpl7();
-    virtual void            reservedSortedVectorImpl8();
+    void            reservedSortedVectorImpl1();
+    void            reservedSortedVectorImpl2();
+    void            reservedSortedVectorImpl3();
+    void            reservedSortedVectorImpl4();
+    void            reservedSortedVectorImpl5();
+    void            reservedSortedVectorImpl6();
+    void            reservedSortedVectorImpl7();
+    void            reservedSortedVectorImpl8();
 #endif
 
 private:

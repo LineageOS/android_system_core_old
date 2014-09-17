@@ -518,15 +518,15 @@ void VectorImpl::_do_move_backward(void* dest, const void* from, size_t num) con
     do_move_backward(dest, from, num);
 }
 
-#if NEEDS_VECTORIMPL_SYMBOLS
-void VectorImpl::reservedVectorImpl1() { }
-void VectorImpl::reservedVectorImpl2() { }
-void VectorImpl::reservedVectorImpl3() { }
-void VectorImpl::reservedVectorImpl4() { }
-void VectorImpl::reservedVectorImpl5() { }
-void VectorImpl::reservedVectorImpl6() { }
-void VectorImpl::reservedVectorImpl7() { }
-void VectorImpl::reservedVectorImpl8() { }
+#ifdef VECTOR_COMPAT
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl1() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl2() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl3() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl4() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl5() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl6() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl7() { }
+void __attribute__ ((visibility ("protected"))) VectorImpl::reservedVectorImpl8() { }
 #endif
 
 /*****************************************************************************/
@@ -644,15 +644,15 @@ ssize_t SortedVectorImpl::remove(const void* item)
     return i;
 }
 
-#if NEEDS_VECTORIMPL_SYMBOLS
-void SortedVectorImpl::reservedSortedVectorImpl1() { };
-void SortedVectorImpl::reservedSortedVectorImpl2() { };
-void SortedVectorImpl::reservedSortedVectorImpl3() { };
-void SortedVectorImpl::reservedSortedVectorImpl4() { };
-void SortedVectorImpl::reservedSortedVectorImpl5() { };
-void SortedVectorImpl::reservedSortedVectorImpl6() { };
-void SortedVectorImpl::reservedSortedVectorImpl7() { };
-void SortedVectorImpl::reservedSortedVectorImpl8() { };
+#ifdef VECTOR_COMPAT
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl1() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl2() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl3() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl4() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl5() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl6() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl7() { };
+void __attribute__ ((visibility ("protected"))) SortedVectorImpl::reservedSortedVectorImpl8() { };
 #endif
 
 /*****************************************************************************/
