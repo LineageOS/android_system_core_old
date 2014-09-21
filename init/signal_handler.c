@@ -61,7 +61,13 @@ static int wait_for_one_process(int block)
         return 0;
     }
 
-    NOTICE("process '%s', pid %d exited\n", svc->name, pid);
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+        NOTICE("process '%s', pid %d exited\n", svc->name, pid);
+    else
+        ERROR("process '%s', pid %d %s %d, status=0x%x\n", svc->name, pid,
+            WIFEXITED(status) ? "exited with status " : "died with signal",
+            WIFEXITED(status) ? WEXITSTATUS(status) : WTERMSIG(status),
+            status);
 
     if (!(svc->flags & SVC_ONESHOT) || (svc->flags & SVC_RESTART)) {
         kill(-pid, SIGKILL);
