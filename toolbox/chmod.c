@@ -9,16 +9,20 @@
 
 #include <unistd.h>
 #include <time.h>
+#include <fcntl.h>
+#include <getopt.h>
 
-void recurse_chmod(char* path, int mode)
+void recurse_chmod(char* path, int mode, unsigned int flag)
 {
     struct dirent *dp;
     DIR *dir = opendir(path);
+    int fd = 0;
     if (dir == NULL) {
         // not a directory, carry on
         return;
     }
-    char *subpath = malloc(sizeof(char)*PATH_MAX);
+    int maxpathlen = sizeof(char)*PATH_MAX;
+    char *subpath = malloc(maxpathlen);
     int pathlen = strlen(path);
 
     while ((dp = readdir(dir)) != NULL) {
@@ -30,16 +34,23 @@ void recurse_chmod(char* path, int mode)
             exit(1);
         }
 
-        strcpy(subpath, path);
-        strcat(subpath, "/");
-        strcat(subpath, dp->d_name);
+        strlcpy(subpath, path, maxpathlen);
+        strlcat(subpath, "/", maxpathlen);
+        strlcat(subpath, dp->d_name, maxpathlen);
 
-        if (chmod(subpath, mode) < 0) {
-            fprintf(stderr, "Unable to chmod %s: %s\n", subpath, strerror(errno));
+        if(((fd = open(subpath, flag|O_RDONLY)) != -1) || ((fd = open(subpath, flag|O_WRONLY)) != -1)) {
+            if (fchmod(fd, mode) < 0){
+                fprintf(stderr, "Unable to chmod %s: %s\n", subpath, strerror(errno));
+                close(fd);
+                exit(1);
+            }
+            close(fd);
+        } else {
+            fprintf(stderr, "Unable to open %s: %s\n", subpath, strerror(errno));
             exit(1);
         }
 
-        recurse_chmod(subpath, mode);
+        recurse_chmod(subpath, mode, flag);
     }
     free(subpath);
     closedir(dir);
@@ -49,6 +60,7 @@ static int usage()
 {
     fprintf(stderr, "Usage: chmod [OPTION] <MODE> <FILE>\n");
     fprintf(stderr, "  -R, --recursive         change files and directories recursively\n");
+    fprintf(stderr, "  -h, --no-dereference    do not follow symlink\n");
     fprintf(stderr, "  --help                  display this help and exit\n");
 
     return 10;
@@ -57,15 +69,37 @@ static int usage()
 int chmod_main(int argc, char **argv)
 {
     int i;
+    int noFollow = 0;
+    int fd = 0;
+    int ch = 0;
+    int recursive = 0;
+    unsigned int flag =0;
+    int help = 0;
+    static struct option long_options[] =
+        {
+            {"help",       no_argument,       0, 'H'},
+            {"recursive",  no_argument,       0, 'R'},
+            {"no-dereference",  no_argument,  0, 'h'}
+        };
+    /* getopt_long stores the option index here. */
+    int option_index = 0;
+    while((ch = getopt_long(argc, argv, "HhR",long_options,&option_index)) != -1)
+    switch(ch){
+        case 'H':
+            help = 1;
+            break;
+        case 'R':
+            recursive = 1;
+            break;
+        case 'h':
+            noFollow = 1;
+            break;
+        default:
+            break;
 
-    if (argc < 3 || strcmp(argv[1], "--help") == 0) {
-        return usage();
     }
 
-    int recursive = (strcmp(argv[1], "-R") == 0 ||
-                     strcmp(argv[1], "--recursive") == 0) ? 1 : 0;
-
-    if (recursive && argc < 4) {
+    if (argc < 3 || help || (recursive && argc < 4)) {
         return usage();
     }
 
@@ -73,7 +107,15 @@ int chmod_main(int argc, char **argv)
         argc--;
         argv++;
     }
+    if (noFollow && argc < 4) {
+        return usage();
+    }
 
+    if(noFollow) {
+        flag = O_NOFOLLOW;
+        argc--;
+        argv++;
+    }
     int mode = 0;
     const char* s = argv[1];
     while (*s) {
@@ -88,14 +130,20 @@ int chmod_main(int argc, char **argv)
     }
 
     for (i = 2; i < argc; i++) {
-        if (chmod(argv[i], mode) < 0) {
-            fprintf(stderr, "Unable to chmod %s: %s\n", argv[i], strerror(errno));
+        if(((fd = open(argv[i], flag|O_RDONLY )) != -1)||((fd = open(argv[i], flag|O_WRONLY )) != -1)) {
+            if (fchmod(fd, mode) < 0){
+                fprintf(stderr, "Unable to chmod %s: %s\n", argv[i], strerror(errno));
+                close(fd);
+                return 10;
+            }
+            close(fd);
+        } else {
+            fprintf(stderr, "Unable to open %s: %s\n", argv[i], strerror(errno));
             return 10;
         }
         if (recursive) {
-            recurse_chmod(argv[i], mode);
+            recurse_chmod(argv[i], mode, flag);
         }
     }
     return 0;
 }
-
