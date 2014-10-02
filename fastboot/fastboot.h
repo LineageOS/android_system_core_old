@@ -38,6 +38,7 @@ int fb_command(usb_handle *usb, const char *cmd);
 int fb_command_response(usb_handle *usb, const char *cmd, char *response);
 int fb_download_data(usb_handle *usb, const void *data, unsigned size);
 int fb_download_data_sparse(usb_handle *usb, struct sparse_file *s);
+int fb_pull_file(usb_handle *usb, const char *file_name);
 char *fb_get_error(void);
 
 #define FB_COMMAND_SZ 64
@@ -58,6 +59,7 @@ void fb_queue_reboot(void);
 void fb_queue_command(const char *cmd, const char *msg);
 void fb_queue_download(const char *name, void *data, unsigned size);
 void fb_queue_notice(const char *notice);
+void fb_queue_dump(char *filename);
 int fb_execute_queue(usb_handle *usb);
 int fb_queue_is_empty(void);
 
