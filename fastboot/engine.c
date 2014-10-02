@@ -76,6 +76,7 @@ char *mkmsg(const char *fmt, ...)
 #define OP_NOTICE     4
 #define OP_FORMAT     5
 #define OP_DOWNLOAD_SPARSE 6
+#define OP_DUMP       8
 
 typedef struct Action Action;
 
@@ -573,6 +574,15 @@ void fb_queue_notice(const char *notice)
     a->data = (void*) notice;
 }
 
+void fb_queue_dump(char *filename)
+{
+    Action *a;
+
+    a = queue_action(OP_DUMP, "");
+    a->data = filename;
+    a->msg = mkmsg("Dumping to %s", filename);
+}
+
 int fb_execute_queue(usb_handle *usb)
 {
     Action *a;
@@ -612,6 +622,10 @@ int fb_execute_queue(usb_handle *usb)
             if (status) break;
         } else if (a->op == OP_DOWNLOAD_SPARSE) {
             status = fb_download_data_sparse(usb, a->data);
+            status = a->func(a, status, status ? fb_get_error() : "");
+            if (status) break;
+        } else if (a->op == OP_DUMP) {
+            status = fb_pull_file(usb, a->data);
             status = a->func(a, status, status ? fb_get_error() : "");
             if (status) break;
         } else {

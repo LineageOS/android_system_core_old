@@ -31,6 +31,8 @@
 #define round_down(a, b) \
     ({ typeof(a) _a = (a); typeof(b) _b = (b); _a - (_a % _b); })
 
+#define _LARGEFILE64_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -311,4 +313,103 @@ int fb_download_data_sparse(usb_handle *usb, struct sparse_file *s)
     fb_download_data_sparse_flush(usb);
 
     return _command_end(usb);
+}
+
+#define DUMP_BUFSIZE 0x100000
+static int dump_file(usb_handle *usb, const char *filename)
+{
+    int r = -1;
+	FILE *file;
+    uint64_t filesize;
+	char *buf;
+
+    // allocate buf
+    buf = malloc(DUMP_BUFSIZE);
+    if (!buf) die("out of memory");
+    memset(buf, 0, DUMP_BUFSIZE);
+
+    // open file
+    file = fopen64(filename, "wb");
+    if(!file) die("open file failed");
+
+    // read header
+    r = usb_read(usb, buf, 20);
+    if(r < 0) {
+        sprintf(ERROR, "status read failed (%s)", strerror(errno));
+        usb_close(usb);
+        r = -1;
+        goto out;
+    }
+    buf[r] = 0;
+
+    // get filesize
+    if(sscanf(buf, "DATA%016llx", &filesize) != 1 ) {
+        sprintf(ERROR, "invalid protocol(%s)", buf);
+        usb_close(usb);
+        r = -1;
+        goto out;
+    }
+
+    uint64_t size_left = filesize;
+    uint64_t size_read = 0;
+    uint64_t size_chunk = size_left;
+    for(;;) {
+        if(size_chunk>DUMP_BUFSIZE)
+            size_chunk = DUMP_BUFSIZE;
+
+        // read chunk
+        r = usb_read(usb, buf, size_chunk);
+        if(r < 0) {
+            sprintf(ERROR, "data read failed (%s)", strerror(errno));
+            usb_close(usb);
+            r = -1;
+            break;
+        }
+
+        // chunk data to file
+        if(fwrite(buf, 1, r, file)<(size_t)r) {
+            sprintf(ERROR, "data write failed (%s)", strerror(errno));
+            usb_close(usb);
+            r = -1;
+            break;
+        }
+
+        // recalculate sizes
+        size_left -= r;
+        size_read += r;
+        size_chunk = size_left;
+
+        // print status
+        fwrite("\b\b\b\b\b\b\b", 1, 7, stderr);
+        fprintf(stderr, "%.2f%%", (double)size_read * 100.0 / (double)filesize);
+
+        // done
+        if (!size_left) {
+            r = 0;
+            break;
+        }
+    }
+
+    // clear status
+    fwrite("\b\b\b\b\b\b\b", 1, 7, stderr);
+
+out:
+  if(file)
+    fclose(file);
+  if(buf)
+    free(buf);
+
+    return r;
+}
+
+int fb_pull_file(usb_handle *usb, const char *file_name)
+{
+  int r;
+
+  r = dump_file(usb, file_name);
+  if (r < 0) {
+      return -1;
+  }
+
+  return _command_end(usb);
 }
