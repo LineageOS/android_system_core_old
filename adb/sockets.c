@@ -445,6 +445,7 @@ asocket *create_local_service_socket(const char *name)
 
 #if !ADB_HOST
     if ((!strncmp(name, "root:", 5) && getuid() != 0)
+        || (!strncmp(name, "unroot:", 7) && getuid() == 0)
         || !strncmp(name, "usb:", 4)
         || !strncmp(name, "tcpip:", 6)) {
         D("LS(%d): enabling exit_on_close\n", s->id);

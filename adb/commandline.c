@@ -181,6 +181,7 @@ void help()
         "  adb reboot [bootloader|recovery] - reboots the device, optionally into the bootloader or recovery program\n"
         "  adb reboot-bootloader        - reboots the device into the bootloader\n"
         "  adb root                     - restarts the adbd daemon with root permissions\n"
+        "  adb unroot                   - restarts the adbd daemon without root permissions\n"
         "  adb usb                      - restarts the adbd daemon listening on USB\n"
         "  adb tcpip <port>             - restarts the adbd daemon listening on TCP on the specified port"
         "\n"
@@ -1216,7 +1217,7 @@ top:
     if(!strcmp(argv[0], "remount") || !strcmp(argv[0], "reboot")
             || !strcmp(argv[0], "reboot-bootloader")
             || !strcmp(argv[0], "tcpip") || !strcmp(argv[0], "usb")
-            || !strcmp(argv[0], "root")) {
+            || !strcmp(argv[0], "root") || !strcmp(argv[0], "unroot")) {
         char command[100];
         if (!strcmp(argv[0], "reboot-bootloader"))
             snprintf(command, sizeof(command), "reboot:bootloader");
