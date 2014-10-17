@@ -83,6 +83,21 @@ endif
 
 include $(BUILD_STATIC_LIBRARY)
 
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := healthd_board_msm.cpp
+LOCAL_MODULE := libhealthd.qcom
+LOCAL_CFLAGS := -Werror
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/include
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
+
+LOCAL_STATIC_LIBRARIES := \
+    libbase
+
+LOCAL_WHOLE_STATIC_LIBRARIES := \
+    libcutils
+
+include $(BUILD_STATIC_LIBRARY)
+
 ### charger ###
 include $(CLEAR_VARS)
 ifeq ($(strip $(BOARD_CHARGER_NO_UI)),true)
@@ -137,6 +152,10 @@ LOCAL_STATIC_LIBRARIES += libsuspend
 endif
 
 LOCAL_HAL_STATIC_LIBRARIES := libhealthd
+
+ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
+BOARD_HAL_STATIC_LIBRARIES ?= libhealthd.qcom
+endif
 
 # Symlink /charger to /sbin/charger
 LOCAL_POST_INSTALL_CMD := $(hide) mkdir -p $(TARGET_ROOT_OUT) \
