@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2014 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-#include <healthd.h>
-#include "healthd_msm.h"
-
-void healthd_board_init(struct healthd_config*)
-{
-    // use defaults
-    power_off_alarm_init();
-}
-
-
-int healthd_board_battery_update(struct android::BatteryProperties*)
-{
-    // return 0 to log periodic polled battery status to kernel log
-    return 0;
-}
+#ifndef _HEALTHD_MSM_H_
+#define _HEALTHD_MSM_H_
+void power_off_alarm_init(void);
+#endif /* _HEALTHD_MSM_H_ */
