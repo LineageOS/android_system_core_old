@@ -561,6 +561,7 @@ int do_restart(int nargs, char **args)
 int do_powerctl(int nargs, char **args)
 {
     char command[PROP_VALUE_MAX];
+    char override[PROP_VALUE_MAX] = {0};
     int res;
     int len = 0;
     int cmd = 0;
@@ -573,6 +574,18 @@ int do_powerctl(int nargs, char **args)
     }
 
     if (strncmp(command, "shutdown", 8) == 0) {
+        if (property_get("ro.sys.powerctl.no.shutdown", override)
+                > 0 && !strcmp(override, "1")) {
+            if (property_get("sys.charger.connected", override)
+                    > 0 && !strcmp(override, "1")) {
+                cmd = ANDROID_RB_RESTART2;
+                /* Assume bootloader accepts a reboot target "charging"
+                 * to enter charge-only mode in this case.
+                 */
+                reboot_target = "charging";
+                goto out;
+            }
+        }
         cmd = ANDROID_RB_POWEROFF;
         len = 8;
     } else if (strncmp(command, "reboot", 6) == 0) {
@@ -598,7 +611,7 @@ int do_powerctl(int nargs, char **args)
         ERROR("powerctl: unrecognized reboot target '%s'\n", &command[len]);
         return -EINVAL;
     }
-
+out:
     return android_reboot(cmd, 0, reboot_target);
 }
 
