@@ -42,6 +42,8 @@
 #define FAKE_BATTERY_TEMPERATURE 424
 #define ALWAYS_PLUGGED_CAPACITY 100
 
+#define CHARGER_CONNECTION_PROP "sys.charger.connected"
+
 namespace android {
 
 struct sysfsStringEnumMap {
@@ -56,6 +58,16 @@ static int mapSysfsString(const char* str,
             return map[i].val;
 
     return -1;
+}
+
+static void updateChargerStatusProp (bool status) {
+    const char* charger_status;
+    char prop[PROP_VALUE_MAX] = {0};
+    charger_status = status ? "1" : "";
+
+    if (property_get(CHARGER_CONNECTION_PROP, prop, NULL) <= 0
+            || strcmp(prop, charger_status))
+        property_set(CHARGER_CONNECTION_PROP, charger_status);
 }
 
 int BatteryMonitor::getBatteryStatus(const char* status) {
@@ -184,6 +196,7 @@ int BatteryMonitor::getIntField(const String8& path) {
 
 bool BatteryMonitor::update(void) {
     bool logthis;
+    bool chargerConnected;
 
     props.chargerAcOnline = false;
     props.chargerUsbOnline = false;
@@ -401,9 +414,12 @@ bool BatteryMonitor::update(void) {
         KLOG_WARNING(LOG_TAG, "%s\n", dmesgline);
     }
 
-    healthd_mode_ops->battery_update(&props);
-    return props.chargerAcOnline | props.chargerUsbOnline |
+    chargerConnected = props.chargerAcOnline | props.chargerUsbOnline |
             props.chargerWirelessOnline | props.chargerDockAcOnline;
+    updateChargerStatusProp(chargerConnected);
+
+    healthd_mode_ops->battery_update(&props);
+    return chargerConnected;
 }
 
 status_t BatteryMonitor::getProperty(int id, struct BatteryProperty *val) {
