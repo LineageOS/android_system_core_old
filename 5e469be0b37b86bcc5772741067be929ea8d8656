@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_0a12a762",
+        "filename": "include/private/android_filesystem_config.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 5574
+      },
+      "writtenOn": "2014-10-23T00:56:32Z",
+      "side": 1,
+      "message": "Oh look, a whitespace!",
+      "revId": "5e469be0b37b86bcc5772741067be929ea8d8656",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
