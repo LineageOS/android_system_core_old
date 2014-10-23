@@ -81,6 +81,7 @@ char *locale;
 #define GREEN_LED_PATH          "/sys/class/leds/green/brightness"
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
 #define BACKLIGHT_PATH          "/sys/class/leds/lcd-backlight/brightness"
+#define CHARGING_ENABLED_PATH   "/sys/class/power_supply/battery/charging_enabled"
 
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGI(x...) do { KLOG_INFO("charger", x); } while (0)
@@ -363,6 +364,56 @@ out:
     LOGI("\n");
     LOGI("************* END LAST KMSG *************\n");
     LOGI("\n");
+}
+
+static int read_file(const char *path, char *buf, size_t sz)
+{
+    int fd;
+    size_t cnt;
+
+    fd = open(path, O_RDONLY, 0);
+    if (fd < 0)
+        goto err;
+
+    cnt = read(fd, buf, sz - 1);
+    if (cnt <= 0)
+        goto err;
+    buf[cnt] = '\0';
+    if (buf[cnt - 1] == '\n') {
+        cnt--;
+        buf[cnt] = '\0';
+    }
+
+    close(fd);
+    return cnt;
+
+err:
+    if (fd >= 0)
+        close(fd);
+    return -1;
+}
+
+static int read_file_int(const char *path, int *val)
+{
+    char buf[32];
+    int ret;
+    int tmp;
+    char *end;
+
+    ret = read_file(path, buf, sizeof(buf));
+    if (ret < 0)
+        return -1;
+
+    tmp = strtol(buf, &end, 0);
+    if (end == buf ||
+        ((end < buf+sizeof(buf)) && (*end != '\n' && *end != '\0')))
+        goto err;
+
+    *val = tmp;
+    return 0;
+
+err:
+    return -1;
 }
 
 static int get_battery_capacity()
@@ -996,6 +1047,7 @@ void alarm_thread_create()
 void healthd_mode_charger_init(struct healthd_config* /*config*/)
 {
     int ret;
+    int charging_enabled = 1;
     struct charger *charger = &charger_state;
     int i;
     int epollfd;
@@ -1005,6 +1057,14 @@ void healthd_mode_charger_init(struct healthd_config* /*config*/)
     alarm_thread_create();
 
     LOGI("--------------- STARTING CHARGER MODE ---------------\n");
+
+    /* check the charging is enabled or not */
+    ret = read_file_int(CHARGING_ENABLED_PATH, &charging_enabled);
+    if (!ret && !charging_enabled) {
+        /* if charging is disabled, reboot and exit power off charging */
+        LOGI("android charging is disabled, exit!\n");
+        android_reboot(ANDROID_RB_RESTART, 0, 0);
+    }
 
     ret = ev_init(input_callback, charger);
     if (!ret) {
