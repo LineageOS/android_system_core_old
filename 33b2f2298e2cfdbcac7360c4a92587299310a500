@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a18252c_72023140",
+        "filename": "init/devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 4820
+      },
+      "writtenOn": "2014-10-28T14:14:53Z",
+      "side": 1,
+      "message": "Firmware would not be directly stored in /data. It\u0027s copied or symlinked from somewhere.  This isn\u0027t the way to do it.  If it were stored in /data, a factory reset would remove it.",
+      "revId": "33b2f2298e2cfdbcac7360c4a92587299310a500",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a18252c_52ff3534",
+        "filename": "init/devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4820
+      },
+      "writtenOn": "2014-10-28T14:14:53Z",
+      "side": 1,
+      "message": "This is kind of redundant since /etc is a symlink to /system/etc",
+      "revId": "33b2f2298e2cfdbcac7360c4a92587299310a500",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
