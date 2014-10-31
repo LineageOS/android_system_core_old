@@ -1074,12 +1074,14 @@ void healthd_mode_charger_init(struct healthd_config* /*config*/)
 
     LOGI("--------------- STARTING CHARGER MODE ---------------\n");
 
-    /* check the charging is enabled or not */
-    ret = read_file_int(CHARGING_ENABLED_PATH, &charging_enabled);
-    if (!ret && !charging_enabled) {
-        /* if charging is disabled, reboot and exit power off charging */
-        LOGI("android charging is disabled, exit!\n");
-        android_reboot(ANDROID_RB_RESTART, 0, 0);
+    if (mode == NORMAL) {
+        /* check the charging is enabled or not */
+        ret = read_file_int(CHARGING_ENABLED_PATH, &charging_enabled);
+        if (!ret && !charging_enabled) {
+            /* if charging is disabled, reboot and exit power off charging */
+            LOGI("android charging is disabled, exit!\n");
+            android_reboot(ANDROID_RB_RESTART, 0, 0);
+        }
     }
 
     ret = ev_init(input_callback, charger);
