@@ -1208,7 +1208,6 @@ int main(int argc, char **argv)
     /* execute all the boot actions to get us started */
     action_for_each_trigger("init", action_add_queue_tail);
 
-    /* skip mounting filesystems in charger mode */
     if (!is_charger) {
         action_for_each_trigger("early-fs", action_add_queue_tail);
         if(emmc_boot) {
@@ -1218,6 +1217,8 @@ int main(int argc, char **argv)
         }
         action_for_each_trigger("post-fs", action_add_queue_tail);
         action_for_each_trigger("post-fs-data", action_add_queue_tail);
+    } else {
+        action_for_each_trigger("charger-fs", action_add_queue_tail);
     }
 
     /* Repeat mix_hwrng_into_linux_rng in case /dev/hw_random or /dev/random

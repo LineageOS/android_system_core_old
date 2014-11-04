@@ -237,6 +237,21 @@ static void find_usb_device(const char *base,
                             // looks like ADB...
                         ep1 = (struct usb_endpoint_descriptor *)bufptr;
                         bufptr += USB_DT_ENDPOINT_SIZE;
+
+                        // USB3 devices are required to have superspeed
+                        // companion descriptors. They aren't needed to
+                        // locate the target so just skip them.
+                        //
+                        // When using the Android build environment, the old
+                        // ch9.h header from the prebuilts directory for the
+                        // host does not contain superspeed definitions.
+#ifndef USB_DT_SS_EP_COMP_SIZE
+#define USB_DT_SS_EP_COMP_SIZE      6
+#endif
+                        if (device->bcdUSB >= 0x0300) {
+                            bufptr += USB_DT_SS_EP_COMP_SIZE;
+                        }
+
                         ep2 = (struct usb_endpoint_descriptor *)bufptr;
                         bufptr += USB_DT_ENDPOINT_SIZE;
 
