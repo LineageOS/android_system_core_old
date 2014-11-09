@@ -278,6 +278,7 @@ typedef struct camera_face {
      * -2000, -2000 if this is not supported.
      */
     int32_t mouth[2];
+#ifdef QCOM_BSP
     int32_t smile_degree;
     int32_t smile_score;
     int32_t blink_detected;
@@ -290,6 +291,7 @@ typedef struct camera_face {
     int32_t top_bottom_gaze;
     int32_t leye_blink;
     int32_t reye_blink;
+#endif
 
 } camera_face_t;
 
