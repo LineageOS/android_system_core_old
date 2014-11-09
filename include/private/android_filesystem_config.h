@@ -160,8 +160,9 @@ static const struct android_id_info android_ids[] = {
     { "sdcard_r",      AID_SDCARD_R, },
     { "clat",          AID_CLAT, },
     { "loop_radio",    AID_LOOP_RADIO, },
+#if defined(QCOM_LEGACY_UIDS)
     { "qcom_oncrpc",   AID_QCOM_ONCRPC, },
-    { "qcom_diag",     AID_QCOM_DIAG, },
+#endif
     { "mediadrm",      AID_MEDIA_DRM, },
     { "package_info",  AID_PACKAGE_INFO, },
     { "sdcard_pics",   AID_SDCARD_PICS, },
