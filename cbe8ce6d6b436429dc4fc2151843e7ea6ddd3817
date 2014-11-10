@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_993bbb9c",
+        "filename": "liblog/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 68
+      },
+      "writtenOn": "2014-11-10T13:19:21Z",
+      "side": 0,
+      "message": "Don\u0027t disable the whole warnings as errors thing. If all you\u0027re after is disabling the unused argument I wouldn\u0027t be opposed to either:\n\na) Disabling that erroring on tha warning in specific\nb) Using the usual #define UNUSED(a) (void)(a); and then apply it to the vars.",
+      "revId": "cbe8ce6d6b436429dc4fc2151843e7ea6ddd3817",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
