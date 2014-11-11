@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a122d0e_e7a32a4e",
+        "filename": "liblog/logd_write_kern.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 5678
+      },
+      "writtenOn": "2014-11-11T12:27:30Z",
+      "side": 1,
+      "message": "The codebase uses __unused flags on the parameters instead of this. I\u0027d suggest to also use that for consistency.",
+      "revId": "8b8424add1f7a2a8f116757f6ca5e2b385d9a973",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
