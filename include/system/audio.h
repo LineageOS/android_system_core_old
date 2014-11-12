@@ -282,6 +282,7 @@ typedef enum {
     AUDIO_FORMAT_AAC_ADIF            = 0x15000000UL,
     AUDIO_FORMAT_EVRCB               = 0x16000000UL,
     AUDIO_FORMAT_EVRCWB              = 0x17000000UL,
+    AUDIO_FORMAT_EAC3                = 0x12000000UL,
     AUDIO_FORMAT_DTS_LBR             = 0x18000000UL,
     AUDIO_FORMAT_AMR_WB_PLUS         = 0x19000000UL,
     AUDIO_FORMAT_MP2                 = 0x1A000000UL,
@@ -309,6 +310,8 @@ typedef enum {
 #ifdef QCOM_HARDWARE
     AUDIO_FORMAT_AC3_DM              =  (AUDIO_FORMAT_AC3 |
                                           AUDIO_FORMAT_DOLBY_SUB_DM),
+    AUDIO_FORMAT_EAC3_DM             =  (AUDIO_FORMAT_EAC3 |
+		                          AUDIO_FORMAT_DOLBY_SUB_DM),
     AUDIO_FORMAT_E_AC3_DM             =  (AUDIO_FORMAT_E_AC3 |
                                           AUDIO_FORMAT_DOLBY_SUB_DM),
 #endif
@@ -657,6 +660,8 @@ enum {
     /* USB host mode: your Android device is a USB host and the dock is a USB device */
     AUDIO_DEVICE_OUT_USB_DEVICE                = 0x4000,
     AUDIO_DEVICE_OUT_REMOTE_SUBMIX             = 0x8000,
+    AUDIO_DEVICE_OUT_ANC_HEADSET               = 0x10000,
+    AUDIO_DEVICE_OUT_ANC_HEADPHONE             = 0x20000,
     /* Telephony voice TX path */
     AUDIO_DEVICE_OUT_TELEPHONY_TX              = 0x10000,
     /* Analog jack with line impedance detected */
@@ -692,6 +697,8 @@ enum {
                                  AUDIO_DEVICE_OUT_USB_ACCESSORY |
                                  AUDIO_DEVICE_OUT_USB_DEVICE |
                                  AUDIO_DEVICE_OUT_REMOTE_SUBMIX |
+				 AUDIO_DEVICE_OUT_ANC_HEADSET |
+				 AUDIO_DEVICE_OUT_ANC_HEADPHONE |
                                  AUDIO_DEVICE_OUT_TELEPHONY_TX |
                                  AUDIO_DEVICE_OUT_LINE |
                                  AUDIO_DEVICE_OUT_HDMI_ARC |
@@ -730,6 +737,7 @@ enum {
     AUDIO_DEVICE_IN_DGTL_DOCK_HEADSET     = AUDIO_DEVICE_BIT_IN | 0x400,
     AUDIO_DEVICE_IN_USB_ACCESSORY         = AUDIO_DEVICE_BIT_IN | 0x800,
     AUDIO_DEVICE_IN_USB_DEVICE            = AUDIO_DEVICE_BIT_IN | 0x1000,
+    AUDIO_DEVICE_IN_ANC_HEADSET           = AUDIO_DEVICE_BIT_IN | 0x2000,
     /* FM tuner input */
     AUDIO_DEVICE_IN_FM_TUNER              = AUDIO_DEVICE_BIT_IN | 0x2000,
     /* TV tuner input */
@@ -805,14 +813,14 @@ typedef enum {
     AUDIO_OUTPUT_FLAG_NON_BLOCKING = 0x20, // use non-blocking write
     AUDIO_OUTPUT_FLAG_HW_AV_SYNC = 0x40, // output uses a hardware A/V synchronization source
 #ifdef QCOM_HARDWARE
+    AUDIO_OUTPUT_FLAG_LPA = 0x1000,      // use LPA
+    AUDIO_OUTPUT_FLAG_TUNNEL = 0x2000,   // use Tunnel
     AUDIO_OUTPUT_FLAG_VOIP_RX = 0x1000,  // use this flag in combination with DIRECT to
                                          // indicate HAL to activate EC & NS
                                          // path for VOIP calls
     AUDIO_OUTPUT_FLAG_INCALL_MUSIC = 0x2000, //use this flag for incall music delivery
     // flag for HDMI compressed passthrough
     AUDIO_OUTPUT_FLAG_COMPRESS_PASSTHROUGH = 0x4000,
-    AUDIO_OUTPUT_FLAG_LPA = 0x8000,
-    AUDIO_OUTPUT_FLAG_TUNNEL = 0x10000
 #endif
 } audio_output_flags_t;
 
@@ -1425,6 +1433,7 @@ static inline bool audio_is_valid_format(audio_format_t format)
     case AUDIO_FORMAT_VORBIS:
     case AUDIO_FORMAT_OPUS:
     case AUDIO_FORMAT_AC3:
+    case AUDIO_FORMAT_EAC3:
     case AUDIO_FORMAT_E_AC3:
 #ifdef QCOM_HARDWARE
     case AUDIO_FORMAT_QCELP:
@@ -1434,7 +1443,6 @@ static inline bool audio_is_valid_format(audio_format_t format)
     case AUDIO_FORMAT_AAC_ADIF:
     case AUDIO_FORMAT_WMA:
     case AUDIO_FORMAT_WMA_PRO:
-    case AUDIO_FORMAT_DTS:
     case AUDIO_FORMAT_DTS_LBR:
     case AUDIO_FORMAT_AMR_WB_PLUS:
     case AUDIO_FORMAT_MP2:
