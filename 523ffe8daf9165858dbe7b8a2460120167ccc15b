@@ -34,6 +34,24 @@
       "revId": "523ffe8daf9165858dbe7b8a2460120167ccc15b",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a122d0e_28c16f81",
+        "filename": "liblog/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2014-11-12T12:22:29Z",
+      "side": 1,
+      "message": "Weird, well, clean it up and we\u0027ll get this in.",
+      "parentUuid": "1a122d0e_e8ce57b3",
+      "revId": "523ffe8daf9165858dbe7b8a2460120167ccc15b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
