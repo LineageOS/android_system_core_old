@@ -44,7 +44,7 @@ commonSources:= \
 	VectorImpl.cpp \
 	misc.cpp
 
-host_commonCflags := -DLIBUTILS_NATIVE=1 $(TOOL_CFLAGS) -Werror
+host_commonCflags := -DLIBUTILS_NATIVE=1 -DNEEDS_VECTORIMPL_SYMBOLS=1 $(TOOL_CFLAGS) -Werror
 
 ifeq ($(HOST_OS),windows)
 ifeq ($(strip $(USE_CYGWIN),),)
