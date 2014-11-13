@@ -201,6 +201,8 @@ ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
 OUR_TOOLS += r
 endif
 
+OUR_TOOLS += setfattr
+
 ALL_TOOLS = $(BSD_TOOLS) $(OUR_TOOLS)
 
 LOCAL_SRC_FILES := \
