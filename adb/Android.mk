@@ -62,7 +62,6 @@ LOCAL_SRC_FILES := \
 	file_sync_client.c \
 	$(EXTRA_SRCS) \
 	$(USB_SRCS) \
-	usb_vendors.c
 
 LOCAL_C_INCLUDES += external/openssl/include
 
@@ -154,7 +153,6 @@ LOCAL_SRC_FILES := \
 	file_sync_client.c \
 	get_my_path_linux.c \
 	usb_linux.c \
-	usb_vendors.c \
 	fdevent.c
 
 LOCAL_CFLAGS := \
