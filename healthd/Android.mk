@@ -46,7 +46,7 @@ LOCAL_SRC_FILES := \
     AnimationParser.cpp
 
 LOCAL_MODULE := libhealthd_charger
-LOCAL_C_INCLUDES := bootable/recovery $(LOCAL_PATH)/include
+LOCAL_C_INCLUDES := $(call project-path-for,recovery) $(LOCAL_PATH)/include
 LOCAL_EXPORT_C_INCLUDE_DIRS := \
     $(LOCAL_PATH) \
     $(LOCAL_PATH)/include
