@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bab6814e_256fe493",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 10581
+      },
+      "writtenOn": "2014-11-25T15:55:27Z",
+      "side": 1,
+      "message": "parameter struct charger * charger could be improved by making the data const and the pointer const",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab6814e_8555f0c7",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 10581
+      },
+      "writtenOn": "2014-11-25T15:55:27Z",
+      "side": 1,
+      "message": "disregard my comment, I see that you are protecting an overflow with snprintf..  a macro would be better here than a magic number especially if it could be used by charger-\u003ebatt_anim to set the max size in a single place",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab6814e_0558e0f9",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 10581
+      },
+      "writtenOn": "2014-11-25T15:55:27Z",
+      "side": 1,
+      "message": "suggestion\n\n#endif //SHOW_CAPACITY_IN_CHARGER",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab6814e_a562b4ab",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 10581
+      },
+      "writtenOn": "2014-11-25T15:55:27Z",
+      "side": 1,
+      "message": "prefer braces in this if else clause",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
