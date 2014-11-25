@@ -741,6 +741,9 @@ static void draw_battery(struct charger *charger)
 {
     struct animation *batt_anim = charger->batt_anim;
     struct frame *frame = &batt_anim->frames[batt_anim->cur_frame];
+#ifdef SHOW_CAPACITY_IN_CHARGER
+    char str[5];
+#endif
 
     if (batt_anim->num_frames != 0) {
         draw_surface_centered(charger, frame->surface);
@@ -748,6 +751,15 @@ static void draw_battery(struct charger *charger)
              batt_anim->cur_frame, frame->name, frame->min_capacity,
              frame->disp_time);
     }
+
+#ifdef SHOW_CAPACITY_IN_CHARGER
+    snprintf(str, sizeof(str), "%d%%", batt_anim->capacity);
+    if (batt_anim->cur_frame < 3)
+        gr_color(255, 255, 255, 255);
+    else
+        gr_color(0, 0, 0, 255);
+    draw_text(&str, -1, -1);
+#endif
 }
 
 static void redraw_screen(struct charger *charger)
