@@ -184,11 +184,15 @@ static const struct android_id_info android_ids[] = {
     { "net_admin",     AID_NET_ADMIN, },
     { "net_bw_stats",  AID_NET_BW_STATS, },
     { "qcom_diag", AID_QCOM_DIAG, },
+#if !defined(QCOM_LEGACY_UIDS)
     { "ims", AID_IMS, },
+#endif
     { "net_bw_acct",   AID_NET_BW_ACCT, },
     { "net_bt_stack",  AID_NET_BT_STACK, },
     { "qcom_diag", AID_QCOM_DIAG, },
+#if !defined(QCOM_LEGACY_UIDS)
     { "sensors",       AID_SENSORS, },
+#endif
     { "everybody",     AID_EVERYBODY, },
     { "misc",          AID_MISC, },
     { "nobody",        AID_NOBODY, },
