@@ -163,10 +163,11 @@ static const struct fs_path_config android_files[] = {
     { 00444, AID_ROOT,      AID_ROOT,      0, ven_conf_dir + 1 },
     { 00444, AID_ROOT,      AID_ROOT,      0, ven_conf_file + 1 },
 
-    // the following two files are INTENTIONALLY set-uid, but they
-    // are NOT included on user builds.
+    // the following file is INTENTIONALLY set-uid, but it
+    // is NOT included on user builds.
     { 06755, AID_ROOT,      AID_ROOT,      0, "system/xbin/procmem" },
-    { 04750, AID_ROOT,      AID_SHELL,     0, "system/xbin/su" },
+    /* Lineage's daemonized su doesn't need the setuid bit */
+    { 00755, AID_ROOT,      AID_SHELL,     0, "system/xbin/su" },
 
     // the following files have enhanced capabilities and ARE included
     // in user builds.
