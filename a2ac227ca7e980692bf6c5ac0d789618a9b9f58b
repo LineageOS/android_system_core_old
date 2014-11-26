@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "bab6814e_f73f4fd4",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2014-11-26T08:52:15Z",
+      "side": 1,
+      "message": "I will add the comment.",
+      "parentUuid": "bab6814e_0558e0f9",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bab6814e_a562b4ab",
         "filename": "charger/charger.c",
         "patchSetId": 1
@@ -64,6 +82,24 @@
       "writtenOn": "2014-11-25T15:55:27Z",
       "side": 1,
       "message": "prefer braces in this if else clause",
+      "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bab6814e_e5879cd5",
+        "filename": "charger/charger.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2014-11-26T08:52:15Z",
+      "side": 1,
+      "message": "This way is consistent with rest of the file.",
+      "parentUuid": "bab6814e_a562b4ab",
       "revId": "a2ac227ca7e980692bf6c5ac0d789618a9b9f58b",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
