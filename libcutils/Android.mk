@@ -140,6 +140,10 @@ endif
 LOCAL_C_INCLUDES := $(libcutils_c_includes) $(KERNEL_HEADERS)
 LOCAL_STATIC_LIBRARIES := liblog
 LOCAL_CFLAGS += $(targetSmpFlag)
+
+ifeq ($(BOARD_HAS_MTK_HARDWARE), true)
+LOCAL_WHOLE_STATIC_LIBRARIES += libpmem-dev
+endif
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
