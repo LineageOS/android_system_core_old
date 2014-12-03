@@ -106,7 +106,7 @@ protected:
     virtual void            do_move_forward(void* dest, const void* from, size_t num) const = 0;
     virtual void            do_move_backward(void* dest, const void* from, size_t num) const = 0;
 
-#if NEEDS_VECTORIMPL_SYMBOLS
+#ifdef NEEDS_VECTORIMPL_SYMBOLS
     // take care of FBC...
     virtual void            reservedVectorImpl1();
     virtual void            reservedVectorImpl2();
@@ -168,7 +168,7 @@ public:
 protected:
     virtual int             do_compare(const void* lhs, const void* rhs) const = 0;
 
-#if NEEDS_VECTORIMPL_SYMBOLS
+#ifdef NEEDS_VECTORIMPL_SYMBOLS
     // take care of FBC...
     virtual void            reservedSortedVectorImpl1();
     virtual void            reservedSortedVectorImpl2();
