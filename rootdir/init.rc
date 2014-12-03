@@ -324,6 +324,9 @@ on post-fs-data
 
     # Set SELinux security contexts on upgrade or policy update.
     restorecon_recursive /data
+    restorecon /data/data
+    restorecon /data/user
+    restorecon /data/user/0
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
