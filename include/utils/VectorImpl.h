@@ -22,6 +22,13 @@
 #include <sys/types.h>
 #include <utils/Errors.h>
 
+// Only provide back-compat symbols for target
+#ifdef HOST_BUILD
+#ifdef NEEDS_VECTORIMPL_SYMBOLS
+#undef NEEDS_VECTORIMPL_SYMBOLS
+#endif
+#endif
+
 // ---------------------------------------------------------------------------
 // No user serviceable parts in here...
 // ---------------------------------------------------------------------------
