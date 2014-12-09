@@ -116,7 +116,7 @@ void FdPrinter::printLine(const char* string) {
     }
 
 #ifndef USE_MINGW
-    dprintf(mFd, mFormatString, mPrefix, string);
+    //dprintf(mFd, mFormatString, mPrefix, string);
 #endif
 }
 
