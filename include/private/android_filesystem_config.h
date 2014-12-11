@@ -102,6 +102,8 @@
 #define AID_QCOM_DIAG     3009  /* can read/write /dev/diag */
 #define AID_IMS           3010 /* can read/write /dev/socket/imsrtp */
 #define AID_SENSORS       3011 /* access to /dev/socket/sensor_ctl_socket & QCCI/QCSI */
+#define AID_RFS           3012  /* Remote Filesystem for peripheral processors */
+#define AID_RFS_SHARED    3013  /* Shared files for Remote Filesystem for peripheral processors  */
 #endif
 
 #define AID_EVERYBODY     9997  /* shared between all apps in the same profile */
@@ -192,6 +194,8 @@ static const struct android_id_info android_ids[] = {
     { "qcom_diag", AID_QCOM_DIAG, },
 #if !defined(QCOM_LEGACY_UIDS)
     { "sensors",       AID_SENSORS, },
+    { "rfs",           AID_RFS, },
+    { "rfs_shared",    AID_RFS_SHARED, },
 #endif
     { "everybody",     AID_EVERYBODY, },
     { "misc",          AID_MISC, },
