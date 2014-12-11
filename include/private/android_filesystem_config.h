@@ -116,6 +116,9 @@
 #define AID_OEM_RESERVED_2_START 5000
 #define AID_OEM_RESERVED_2_END   5999
 
+#define AID_RFS           3012  /* Remote Filesystem for peripheral processors */
+#define AID_RFS_SHARED    3013  /* Shared files for Remote Filesystem for peripheral processors  */
+
 #define AID_EVERYBODY     9997  /* shared between all apps in the same profile */
 #define AID_MISC          9998  /* access to misc storage */
 #define AID_NOBODY        9999
@@ -211,6 +214,9 @@ static const struct android_id_info android_ids[] = {
     { "net_bt_stack",  AID_NET_BT_STACK, },
     { "readproc",      AID_READPROC, },
     { "wakelock",      AID_WAKELOCK, },
+
+    { "rfs",           AID_RFS, },
+    { "rfs_shared",    AID_RFS_SHARED, },
 
     { "everybody",     AID_EVERYBODY, },
     { "misc",          AID_MISC, },
