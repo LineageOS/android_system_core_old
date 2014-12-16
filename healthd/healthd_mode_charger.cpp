@@ -72,9 +72,15 @@ char *locale;
 #define LAST_KMSG_PATH          "/proc/last_kmsg"
 #define LAST_KMSG_PSTORE_PATH   "/sys/fs/pstore/console-ramoops"
 #define LAST_KMSG_MAX_SZ        (32 * 1024)
+#ifndef RED_LED_PATH
 #define RED_LED_PATH            "/sys/class/leds/red/brightness"
+#endif
+#ifndef GREEN_LED_PATH
 #define GREEN_LED_PATH          "/sys/class/leds/green/brightness"
+#endif
+#ifndef BLUE_LED_PATH
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
+#endif
 
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGW(x...) do { KLOG_WARNING("charger", x); } while (0)
