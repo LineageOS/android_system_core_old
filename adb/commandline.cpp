@@ -820,6 +820,8 @@ static int adb_sideload_legacy(const char* filename, int in_fd, int size) {
 
 #define SIDELOAD_HOST_BLOCK_SIZE (CHUNK_SIZE)
 
+#define MB (1024*1024)
+
 /*
  * The sideload-host protocol serves the data in a file (given on the
  * command line) to the client, using a simple protocol:
@@ -840,10 +842,19 @@ static int adb_sideload_legacy(const char* filename, int in_fd, int size) {
  *   we hang up.
  */
 static int adb_sideload_host(const char* filename) {
+    static const char spinner[] = "/-\\|";
+    static const int spinlen = sizeof(spinner)-1;
+    size_t last_xfer = 0;
+    int spin_index = 0;
     // TODO: use a LinePrinter instead...
     struct stat sb;
     if (stat(filename, &sb) == -1) {
         fprintf(stderr, "adb: failed to stat file %s: %s\n", filename, strerror(errno));
+        return -1;
+    }
+    if (sb.st_size == 0) {
+        printf("\n");
+        fprintf(stderr, "* '%s' is empty *\n", filename);
         return -1;
     }
     unique_fd package_fd(adb_open(filename, O_RDONLY));
@@ -870,8 +881,25 @@ static int adb_sideload_host(const char* filename) {
     char buf[SIDELOAD_HOST_BLOCK_SIZE];
 
     size_t xfer = 0;
-    int last_percent = -1;
     while (true) {
+        fd_set fds;
+        struct timeval tv;
+        FD_ZERO(&fds);
+        FD_SET(device_fd, &fds);
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
+        int rc = select(device_fd+1, &fds, NULL, NULL, &tv);
+        size_t diff = xfer - last_xfer;
+        if (rc == 0 || diff >= (1*MB)) {
+            spin_index = (spin_index+1) % spinlen;
+            printf("\rserving: '%s' %4umb %.2fx %c", filename,
+                    (unsigned)xfer/(1*MB), (double)xfer/sb.st_size, spinner[spin_index]);
+            fflush(stdout);
+            last_xfer = xfer;
+        }
+        if (rc == 0) {
+            continue;
+        }
         if (!ReadFdExactly(device_fd, buf, 8)) {
             fprintf(stderr, "adb: failed to read command: %s\n", strerror(errno));
             return -1;
@@ -913,20 +941,9 @@ static int adb_sideload_host(const char* filename) {
             return -1;
         }
         xfer += to_write;
-
-        // For normal OTA packages, we expect to transfer every byte
-        // twice, plus a bit of overhead (one read during
-        // verification, one read of each byte for installation, plus
-        // extra access to things like the zip central directory).
-        // This estimate of the completion becomes 100% when we've
-        // transferred ~2.13 (=100/47) times the package size.
-        int percent = static_cast<int>(xfer * 47LL / (sb.st_size ? sb.st_size : 1));
-        if (percent != last_percent) {
-            printf("\rserving: '%s'  (~%d%%)    ", filename, percent);
-            fflush(stdout);
-            last_percent = percent;
-        }
     }
+
+    printf("\ntotal xfer: %4umb %.2fx\n", (unsigned)xfer/(1*MB), (double)xfer/sb.st_size);
 }
 
 /**
