@@ -558,6 +558,11 @@ int adb_sideload_host(const char* fn) {
         fprintf(stderr, "* cannot read '%s' *\n", fn);
         return -1;
     }
+    if (sz == 0) {
+        printf("\n");
+        fprintf(stderr, "* '%s' is empty *\n", fn);
+        return -1;
+    }
 
     char buf[100];
     sprintf(buf, "sideload-host:%d:%d", sz, SIDELOAD_HOST_BLOCK_SIZE);
@@ -573,8 +578,29 @@ int adb_sideload_host(const char* fn) {
     int opt = SIDELOAD_HOST_BLOCK_SIZE;
     opt = setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (const void *) &opt, sizeof(opt));
 
-    int last_percent = -1;
+    static const char spinner[] = "/-\\|";
+    static const int spinlen = sizeof(spinner)-1;
+    size_t last_xfer = 0;
+    int spin_index = 0;
     for (;;) {
+        fd_set fds;
+        struct timeval tv;
+        FD_ZERO(&fds);
+        FD_SET(fd, &fds);
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
+        int rc = select(fd+1, &fds, NULL, NULL, &tv);
+        size_t diff = xfer - last_xfer;
+        if (rc == 0 || diff >= 1024*1024) {
+            spin_index = (spin_index+1) % spinlen;
+            printf("\rserving: '%s' %4dmb %.2fx %c", fn,
+                    xfer/(1024*1024), (double)xfer/sz, spinner[spin_index]);
+            fflush(stdout);
+            last_xfer = xfer;
+        }
+        if (rc == 0) {
+            continue;
+        }
         if (readx(fd, buf, 8)) {
             fprintf(stderr, "* failed to read command: %s\n", adb_error());
             status = -1;
@@ -609,22 +635,9 @@ int adb_sideload_host(const char* fn) {
             goto done;
         }
         xfer += to_write;
-
-        // For normal OTA packages, we expect to transfer every byte
-        // twice, plus a bit of overhead (one read during
-        // verification, one read of each byte for installation, plus
-        // extra access to things like the zip central directory).
-        // This estimate of the completion becomes 100% when we've
-        // transferred ~2.13 (=100/47) times the package size.
-        int percent = (int)(xfer * 47LL / (sz ? sz : 1));
-        if (percent != last_percent) {
-            printf("\rserving: '%s'  (~%d%%)    ", fn, percent);
-            fflush(stdout);
-            last_percent = percent;
-        }
     }
 
-    printf("\rTotal xfer: %.2fx%*s\n", (double)xfer / (sz ? sz : 1), (int)strlen(fn)+10, "");
+    printf("\ntotal xfer: %4dmb %.2fx\n", xfer/(1024*1024), (double)xfer/sz);
 
   done:
     if (fd >= 0) adb_close(fd);
