@@ -595,8 +595,8 @@ int adb_sideload_host(const char* fn) {
         size_t diff = xfer - last_xfer;
         if (rc == 0 || diff >= (1*MB)) {
             spin_index = (spin_index+1) % spinlen;
-            printf("\rserving: '%s' %4dmb %.2fx %c", fn,
-                    xfer/(1*MB), (double)xfer/sz, spinner[spin_index]);
+            printf("\rserving: '%s' %4umb %.2fx %c", fn,
+                    (unsigned)xfer/(1*MB), (double)xfer/sz, spinner[spin_index]);
             fflush(stdout);
             last_xfer = xfer;
         }
@@ -639,7 +639,7 @@ int adb_sideload_host(const char* fn) {
         xfer += to_write;
     }
 
-    printf("\ntotal xfer: %4dmb %.2fx\n", xfer/(1*MB), (double)xfer/sz);
+    printf("\ntotal xfer: %4umb %.2fx\n", (unsigned)xfer/(1*MB), (double)xfer/sz);
 
   done:
     if (fd >= 0) adb_close(fd);
