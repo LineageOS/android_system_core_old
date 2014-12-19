@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_115c9824",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "I know this is a nitpick, but shouldn\u0027t it be \u0027strlen(spinner) - 1\u0027?",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_f173ccb2",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "fd + 1",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_1173f8b2",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "1024 * 1024\n\nOr make it a constant: static const int MEGABYTE \u003d 1024 * 1024 and also use it below.",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_71687cbb",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "spin_index + 1",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_516580df",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "mb -\u003e MB?",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_d19fb0b2",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "\u0027/\u0027 -\u003e \u0027 / \u0027",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7aa08908_31a55404",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2014-12-19T22:49:30Z",
+      "side": 1,
+      "message": "See above.",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
