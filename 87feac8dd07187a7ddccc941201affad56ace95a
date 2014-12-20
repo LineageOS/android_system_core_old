@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7aa08908_a33a97cb",
+        "filename": "adb/commandline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 5503
+      },
+      "writtenOn": "2014-12-20T08:25:42Z",
+      "side": 1,
+      "message": "No, this is correct.  We want spinlen to be 4.  Both strlen(spinner) and sizeof(spinner)-1 are correct, but the latter is more efficient because it is calculated at compile time.",
+      "parentUuid": "7aa08908_115c9824",
+      "revId": "87feac8dd07187a7ddccc941201affad56ace95a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7aa08908_f173ccb2",
         "filename": "adb/commandline.c",
         "patchSetId": 1
