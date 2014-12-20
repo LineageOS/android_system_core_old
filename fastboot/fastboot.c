@@ -209,6 +209,7 @@ int match_fastboot_with_serial(usb_ifc_info *info, const char *local_serial)
        (info->dev_vendor != 0x0502) &&
        (info->dev_vendor != 0x0fce) &&  // Sony Ericsson
        (info->dev_vendor != 0x05c6) &&  // Qualcomm
+       (info->dev_vendor != 0x0738) &&  // Mad Catz
        (info->dev_vendor != 0x22b8) &&  // Motorola
        (info->dev_vendor != 0x0955) &&  // Nvidia
        (info->dev_vendor != 0x413c) &&  // DELL
