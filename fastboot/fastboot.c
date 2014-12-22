@@ -213,6 +213,7 @@ int match_fastboot_with_serial(usb_ifc_info *info, const char *local_serial)
        (info->dev_vendor != 0x0955) &&  // Nvidia
        (info->dev_vendor != 0x413c) &&  // DELL
        (info->dev_vendor != 0x2314) &&  // INQ Mobile
+       (info->dev_vendor != 0x2717) && // Xiaomi
        (info->dev_vendor != 0x0b05) &&  // Asus
        (info->dev_vendor != 0x0bb4))    // HTC
             return -1;
