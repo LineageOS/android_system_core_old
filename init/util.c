@@ -405,14 +405,14 @@ void open_devnull_stdio(void)
 
 void get_hardware_name(char *hardware, unsigned int *revision)
 {
-    char data[1024];
+    char data[4096];
     int fd, n;
     char *x, *hw, *rev;
 
     fd = open("/proc/cpuinfo", O_RDONLY);
     if (fd < 0) return;
 
-    n = read(fd, data, 1023);
+    n = read(fd, data, sizeof(data) - 1);
     close(fd);
     if (n < 0) return;
 
