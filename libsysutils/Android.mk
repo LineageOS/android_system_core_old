@@ -16,7 +16,6 @@ common_src_files :=                           \
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= $(common_src_files)
 LOCAL_MODULE:= libsysutils
-LOCAL_C_INCLUDES := $(KERNEL_HEADERS)
 LOCAL_CFLAGS := -Werror
 LOCAL_SHARED_LIBRARIES := libcutils liblog
 include $(BUILD_SHARED_LIBRARY)
@@ -24,7 +23,6 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= $(common_src_files)
 LOCAL_MODULE:= libsysutils
-LOCAL_C_INCLUDES := $(KERNEL_HEADERS)
 LOCAL_CFLAGS := -Werror
 include $(BUILD_STATIC_LIBRARY)
 
