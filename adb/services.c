@@ -77,7 +77,7 @@ void restart_root_service(int fd, void *cookie)
             return;
         }
 
-        property_get("persist.sys.root_access", value, "1");
+        property_get("persist.sys.root_access", value, "0");
         property_get("ro.build.type", build_type, "");
         property_get("ro.cm.version", cm_version, "");
 
