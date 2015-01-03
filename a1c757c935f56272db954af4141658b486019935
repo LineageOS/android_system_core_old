@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_c0d6a0c4",
+        "filename": "libutils/RefBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 4550
+      },
+      "writtenOn": "2015-01-03T04:07:58Z",
+      "side": 1,
+      "message": "As you see, the unused are already commented out.",
+      "revId": "a1c757c935f56272db954af4141658b486019935",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
