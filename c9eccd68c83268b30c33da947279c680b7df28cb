@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa08908_4f301b02",
+        "filename": "rootdir/ueventd.rc",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1053
+      },
+      "writtenOn": "2015-01-04T14:48:13Z",
+      "side": 1,
+      "message": "Is this line duplicated intentionally?",
+      "revId": "c9eccd68c83268b30c33da947279c680b7df28cb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
