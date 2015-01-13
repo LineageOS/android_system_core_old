@@ -60,7 +60,9 @@ LOCAL_STATIC_LIBRARIES := \
 	libc \
 	libselinux \
 	libmincrypt \
-	libext4_utils_static
+	libext4_utils_static \
+	libext2_blkid \
+	libext2_uuid
 
 LOCAL_ADDITIONAL_DEPENDENCIES += $(LOCAL_PATH)/Android.mk
 ifneq ($(strip $(TARGET_PLATFORM_DEVICE_BASE)),)
