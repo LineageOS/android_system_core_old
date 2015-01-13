@@ -35,6 +35,7 @@
 #include <cutils/partition_utils.h>
 #include <cutils/properties.h>
 #include <logwrap/logwrap.h>
+#include <blkid/blkid.h>
 
 #include "mincrypt/rsa.h"
 #include "mincrypt/sha.h"
@@ -97,6 +98,15 @@ static void check_fs(char *blk_device, char *fs_type, char *target)
         "-y",
         blk_device
     };
+
+    char *detected_fs_type = blkid_get_tag_value(NULL, "TYPE", blk_device);
+
+    if (detected_fs_type && strcmp(fs_type, detected_fs_type) != 0) {
+        INFO("%s: Detected %s filesystem on %s but attempting to fsck with %s\n",
+             __func__, detected_fs_type, blk_device, fs_type);
+        INFO("%s: Assuming %s and performing the check...", __func__, detected_fs_type);
+        fs_type = detected_fs_type;
+    }
 
     /* Check for the types of filesystems we know how to check */
     if (!strcmp(fs_type, "ext2") || !strcmp(fs_type, "ext3") || !strcmp(fs_type, "ext4")) {
