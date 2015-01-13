@@ -35,6 +35,7 @@
 #include <cutils/partition_utils.h>
 #include <cutils/properties.h>
 #include <logwrap/logwrap.h>
+#include <blkid/blkid.h>
 
 #include "mincrypt/rsa.h"
 #include "mincrypt/sha.h"
@@ -86,7 +87,7 @@ static int wait_for_file(const char *filename, int timeout)
     return ret;
 }
 
-static void check_fs(char *blk_device, char *fs_type, char *target)
+static void check_fs(char *blk_device, char *target)
 {
     int status;
     int ret;
@@ -97,6 +98,8 @@ static void check_fs(char *blk_device, char *fs_type, char *target)
         "-y",
         blk_device
     };
+
+    char *fs_type = blkid_get_tag_value(NULL, "TYPE", blk_device);
 
     /* Check for the types of filesystems we know how to check */
     if (!strcmp(fs_type, "ext2") || !strcmp(fs_type, "ext3") || !strcmp(fs_type, "ext4")) {
@@ -286,8 +289,7 @@ static int mount_with_alternatives(struct fstab *fstab, int start_idx, int *end_
             }
 
             if (fstab->recs[i].fs_mgr_flags & MF_CHECK) {
-                check_fs(fstab->recs[i].blk_device, fstab->recs[i].fs_type,
-                         fstab->recs[i].mount_point);
+                check_fs(fstab->recs[i].blk_device, fstab->recs[i].mount_point);
             }
             if (!__mount(fstab->recs[i].blk_device, fstab->recs[i].mount_point, &fstab->recs[i])) {
                 *attempted_idx = i;
@@ -464,8 +466,7 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
         }
 
         if (fstab->recs[i].fs_mgr_flags & MF_CHECK) {
-            check_fs(n_blk_device, fstab->recs[i].fs_type,
-                     fstab->recs[i].mount_point);
+            check_fs(n_blk_device, fstab->recs[i].mount_point);
         }
 
         if ((fstab->recs[i].fs_mgr_flags & MF_VERIFY) &&
