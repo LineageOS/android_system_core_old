@@ -35,6 +35,7 @@
 #include <cutils/partition_utils.h>
 #include <cutils/properties.h>
 #include <logwrap/logwrap.h>
+#include <blkid/blkid.h>
 
 #include "mincrypt/rsa.h"
 #include "mincrypt/sha.h"
@@ -328,6 +329,7 @@ int fs_mgr_mount_all(struct fstab *fstab)
     int mret = -1;
     int mount_errno = 0;
     int attempted_idx = -1;
+    char *detected_fs_type;
 
     if (!fstab) {
         return -1;
@@ -343,6 +345,12 @@ int fs_mgr_mount_all(struct fstab *fstab)
         if (!strcmp(fstab->recs[i].fs_type, "swap") ||
             !strcmp(fstab->recs[i].fs_type, "emmc") ||
             !strcmp(fstab->recs[i].fs_type, "mtd")) {
+            continue;
+        }
+
+        /* Skip partitions that we KNOW are wrong */
+        detected_fs_type = blkid_get_tag_value(NULL, "TYPE", blk_device);
+        if (detected_fs_type && strcmp(fstab->recs[i].fs_type, detected_fs_type) != 0) {
             continue;
         }
 
