@@ -34,6 +34,24 @@
       "revId": "ba2083f0d03dd93ccb3494ad62674f2c0c16f3fe",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a9d85d2_cf5f1474",
+        "filename": "fs_mgr/fs_mgr.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2015-01-17T14:27:03Z",
+      "side": 1,
+      "message": "The problem is, fs_mgr isn\u0027t using blkid to detect when mounting. AOSP\u0027s implementation iterates through fstab and just blindly attempts to mount things. If check is in fs_mgr flags, it will blindly attempt (before the blind mount) to check as well (the issue I mentioned to you earlier on IRC happens).\n\nA good bit of refactoring would be in store if we wanted to go that route. My original patches were intended to slip in as easy as possible and not rewrite a bunch of stuff, but if that\u0027s how we want to go, I\u0027d be glad to work on it.",
+      "parentUuid": "5a9d85d2_2f6a181b",
+      "revId": "ba2083f0d03dd93ccb3494ad62674f2c0c16f3fe",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
