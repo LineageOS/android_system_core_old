@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fad55976_cdeb9daf",
+        "filename": "fs_mgr/fs_mgr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2015-01-21T10:46:53Z",
+      "side": 1,
+      "message": "But that would cause us to mount with the wrong filesystem type\u0027s mount flags.\n\nIf anything, when we detect a different filesystem type than what we are expecting, we should gtfo.",
+      "parentUuid": "fad55976_ed8141fd",
+      "revId": "4f3d2da28cb1398872dcbbe3860ccda4eaa86f1e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fad55976_cd86fd12",
         "filename": "fs_mgr/fs_mgr.c",
         "patchSetId": 6
