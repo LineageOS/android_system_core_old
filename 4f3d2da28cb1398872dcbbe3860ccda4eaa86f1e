@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "fad55976_8d99a522",
+        "filename": "fs_mgr/fs_mgr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-01-21T11:49:07Z",
+      "side": 1,
+      "message": "Correct answer I guess is to fix detection, approximately like: if blkid(partition) !\u003d current fs_type, read fstab for another partition entry.\n\nI don\u0027t like the idea of modifying the check_fs function to handle this.",
+      "parentUuid": "fad55976_cdeb9daf",
+      "revId": "4f3d2da28cb1398872dcbbe3860ccda4eaa86f1e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fad55976_cd86fd12",
         "filename": "fs_mgr/fs_mgr.c",
         "patchSetId": 6
