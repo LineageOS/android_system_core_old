@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fad55976_4d904ded",
+        "filename": "fs_mgr/fs_mgr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 8640
+      },
+      "writtenOn": "2015-01-21T12:06:27Z",
+      "side": 1,
+      "message": "Why not just change this to if (!strcmp(fdetected_s_type,",
+      "revId": "4f3d2da28cb1398872dcbbe3860ccda4eaa86f1e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fad55976_adbbc974",
+        "filename": "fs_mgr/fs_mgr.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 8640
+      },
+      "writtenOn": "2015-01-21T12:06:27Z",
+      "side": 1,
+      "message": "Why not just change this to if (!strcmp(fdetected_s_type,",
+      "revId": "4f3d2da28cb1398872dcbbe3860ccda4eaa86f1e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fad55976_ed8141fd",
         "filename": "fs_mgr/fs_mgr.c",
         "patchSetId": 6
