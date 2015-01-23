@@ -95,9 +95,6 @@ int android_reboot(int cmd, int flags UNUSED, const char *arg)
     int ret = 0;
     int reason = -1;
 
-    sync();
-    remount_ro();
-
 #ifdef RECOVERY_PRE_COMMAND
     if (cmd == (int) ANDROID_RB_RESTART2) {
         if (arg && strlen(arg) > 0) {
@@ -107,6 +104,9 @@ int android_reboot(int cmd, int flags UNUSED, const char *arg)
         }
     }
 #endif
+
+    sync();
+    remount_ro();
 
     switch (cmd) {
         case ANDROID_RB_RESTART:
