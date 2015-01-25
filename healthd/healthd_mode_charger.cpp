@@ -221,7 +221,7 @@ static int set_tricolor_led(int on, int color)
             fd = open(leds[i].path, O_RDWR);
             if (fd < 0) {
                 LOGE("Could not open red led node\n");
-                goto cleanup;
+                continue;
             }
             if (on)
                 snprintf(buffer, sizeof(int), "%d\n", 255);
@@ -230,7 +230,6 @@ static int set_tricolor_led(int on, int color)
 
             if (write(fd, buffer, strlen(buffer)) < 0)
                 LOGE("Could not write to led node\n");
-cleanup:
             if (fd >= 0)
                 close(fd);
         }
