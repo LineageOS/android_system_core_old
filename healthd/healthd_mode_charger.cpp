@@ -220,7 +220,7 @@ static int set_tricolor_led(int on, int color)
         if ((color & leds[i].color) && (access(leds[i].path, R_OK | W_OK) == 0)) {
             fd = open(leds[i].path, O_RDWR);
             if (fd < 0) {
-                LOGE("Could not open red led node\n");
+                LOGE("Could not open led node %d\n", i);
                 continue;
             }
             if (on)
