@@ -282,15 +282,13 @@ static int set_backlight_on(void)
     fd = open(BACKLIGHT_PATH, O_RDWR);
     if (fd < 0) {
         LOGE("Could not open backlight node : %s\n", strerror(errno));
-        goto cleanup;
+        return 0;
     }
     LOGV("Enabling backlight\n");
     snprintf(buffer, sizeof(buffer), "%d\n", BACKLIGHT_ON_LEVEL);
     if (write(fd, buffer,strlen(buffer)) < 0) {
         LOGE("Could not write to backlight node : %s\n", strerror(errno));
-        goto cleanup;
     }
-cleanup:
     if (fd >= 0)
         close(fd);
 
