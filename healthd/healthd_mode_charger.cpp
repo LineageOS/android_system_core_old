@@ -252,7 +252,7 @@ static int set_battery_soc_leds(int soc)
     static int old_color = 0;
 
     for (i = 0; i < (int)ARRAY_SIZE(soc_leds); i++) {
-        if (soc < soc_leds[i].soc)
+        if (soc <= soc_leds[i].soc)
             break;
     }
     color = soc_leds[i].color;
