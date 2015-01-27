@@ -363,8 +363,13 @@ int fs_mgr_mount_all(struct fstab *fstab)
 
         /* Skip fstab entries for partitions that we KNOW are wrong */
         detected_fs_type = blkid_get_tag_value(NULL, "TYPE", fstab->recs[i].blk_device);
-        if (detected_fs_type && strcmp(fstab->recs[i].fs_type, detected_fs_type) != 0) {
-            continue;
+        if (detected_fs_type) {
+            int compare_len = strlen(detected_fs_type);
+            /* ext formats are mutually compatible by design */
+            if (!strncmp(detected_fs_type,"ext",3) && compare_len == 4)
+                compare_len = 3;
+            if (strncmp(fstab->recs[i].fs_type, detected_fs_type, compare_len) != 0)
+                continue;
         }
 
         int last_idx_inspected;
