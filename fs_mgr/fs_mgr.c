@@ -363,9 +363,19 @@ int fs_mgr_mount_all(struct fstab *fstab)
 
         /* Skip fstab entries for partitions that we KNOW are wrong */
         detected_fs_type = blkid_get_tag_value(NULL, "TYPE", fstab->recs[i].blk_device);
+        bool skip = false;
         if (detected_fs_type && strcmp(fstab->recs[i].fs_type, detected_fs_type) != 0) {
-            continue;
+            /* Allow ext2/3/4 to mount as ext4 */
+            if (!((strcmp(detected_fs_type, "ext2") == 0 ||
+                            strcmp(detected_fs_type, "ext3") == 0 ||
+                            strcmp(detected_fs_type, "ext4") == 0) &&
+                        strcmp(fstab->recs[i].fs_type, "ext4"))) {
+                skip = true;
+            }
         }
+
+        if (skip)
+            continue;
 
         int last_idx_inspected;
         mret = mount_with_alternatives(fstab, i, &last_idx_inspected, &attempted_idx);
