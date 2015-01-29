@@ -10,7 +10,9 @@ common_static_libraries := \
     libmincrypt \
     libcrypto_static \
     libext4_utils_static \
-    libsquashfs_utils
+    libsquashfs_utils \
+	libext2_blkid \
+	libext2_uuid
 
 include $(CLEAR_VARS)
 LOCAL_CLANG := true
@@ -26,9 +28,12 @@ LOCAL_C_INCLUDES := \
     system/vold \
     system/extras/ext4_utils \
     external/openssl/include \
-    bootable/recovery
+    bootable/recovery \
+    external/e2fsprogs/lib
+
 LOCAL_MODULE:= libfs_mgr
 LOCAL_STATIC_LIBRARIES := $(common_static_libraries)
+LOCAL_C_INCLUDES += system/extras/ext4_utils system/extras/squashfs_utils external/e2fsprogs/lib
 LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/include
 LOCAL_CFLAGS := -Werror
 ifneq (,$(filter userdebug,$(TARGET_BUILD_VARIANT)))
