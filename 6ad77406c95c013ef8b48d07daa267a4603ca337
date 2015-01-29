@@ -16,6 +16,24 @@
       "revId": "6ad77406c95c013ef8b48d07daa267a4603ca337",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fad55976_6768babb",
+        "filename": "uncrypt/uncrypt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5503
+      },
+      "writtenOn": "2015-01-29T10:43:41Z",
+      "side": 1,
+      "message": "Certainly the code could be improved.  But this is just a backport from upstream L code to provide an upgrade path for encrypted users.  The focus is on getting it functional and stable, not necessarily pretty and efficient.  We might look into submitting patches to upstream AOSP master if it makes sense.",
+      "parentUuid": "fad55976_a74bd258",
+      "revId": "6ad77406c95c013ef8b48d07daa267a4603ca337",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
