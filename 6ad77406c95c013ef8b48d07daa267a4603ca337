@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fad55976_a74bd258",
+        "filename": "uncrypt/uncrypt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 12461
+      },
+      "writtenOn": "2015-01-29T10:37:46Z",
+      "side": 1,
+      "message": "Instead of opening the file twice, may I suggest the following construct?\n\nFILE* f \u003d fopen(RECOVERY_COMMAND_FILE, \"r\");\nif (f \u003d\u003d NULL) { \n\twhile (fgets(temp, sizeof(temp), f)) {\n\tprintf(\"read: %s\", temp);\n\tif (strncmp(temp, \"--update_package\u003d\", strlen(\"--update_package\u003d\")) \u003d\u003d 0) {\n\t\tfn \u003d strdup(temp + strlen(\"--update_package\u003d\"));\n\t\tstrcpy(temp, \"--update_package\u003d@\" CACHE_BLOCK_MAP \"\\n\");\n\t\t}\n\t\tfputs(temp, fo);\n\t}\n\tfclose{f};\n\t\n\tif (fn) {\n\t\tchar* newline \u003d strchr(fn, \u0027\\n\u0027);\n\t\tif (newline) *newline \u003d 0;\n\t}\n}\nelse\n{\n\treturn fn;\n}\n\nThis avoids having several file openings, closings and return statements...",
+      "revId": "6ad77406c95c013ef8b48d07daa267a4603ca337",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
