@@ -239,7 +239,9 @@ int adb_main(int is_daemon, int server_port)
     // descriptor will always be open.
     adbd_cloexec_auth_socket();
 
-    if (ALLOW_ADBD_NO_AUTH && property_get_bool("ro.adb.secure", 0) == 0) {
+    // Override auth in factory test mode
+    if ((ALLOW_ADBD_NO_AUTH && property_get_bool("ro.adb.secure", 0) == 0) ||
+            (property_get_bool("ro.boot.ftm", 0) == 1)) {
         auth_required = false;
     }
 
