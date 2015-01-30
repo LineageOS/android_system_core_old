@@ -1326,8 +1326,12 @@ int adb_main(int is_daemon, int server_port)
         exit(1);
     }
 #else
-    property_get("ro.adb.secure", value, "0");
-    auth_enabled = !strcmp(value, "1");
+    // Override auth in factory test mode
+    property_get("ro.boot.ftm", value, "0");
+    if (!strcmp(value, "0")) {
+        property_get("ro.adb.secure", value, "0");
+        auth_enabled = !strcmp(value, "1");
+    }
     if (auth_enabled)
         adb_auth_init();
 
