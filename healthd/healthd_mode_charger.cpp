@@ -489,6 +489,7 @@ static void draw_battery(struct charger *charger)
     }
 }
 
+#ifdef CHARGER_SHOW_PERCENTAGE
 #define STR_LEN    64
 static void draw_capacity(struct charger *charger)
 {
@@ -503,6 +504,7 @@ static void draw_capacity(struct charger *charger)
     android_green();
     gr_text(x, y, cap_str, 0);
 }
+#endif
 
 static void redraw_screen(struct charger *charger)
 {
@@ -515,7 +517,9 @@ static void redraw_screen(struct charger *charger)
         draw_unknown(charger);
     } else {
         draw_battery(charger);
+#ifdef CHARGER_SHOW_PERCENTAGE
         draw_capacity(charger);
+#endif
     }
     gr_flip();
 }
