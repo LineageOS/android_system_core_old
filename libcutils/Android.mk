@@ -118,6 +118,10 @@ LOCAL_SRC_FILES := $(commonSources) \
         trace.c \
         uevent.c \
 
+ifneq ($(TARGET_NEED_CUTILS_LIST_SYMBOLS),)
+    LOCAL_SRC_FILES += list.c
+endif
+
 LOCAL_SRC_FILES_arm += \
         arch-arm/memset32.S \
 
