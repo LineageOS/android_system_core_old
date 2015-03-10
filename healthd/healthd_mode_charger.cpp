@@ -82,6 +82,9 @@ char *locale;
 #ifndef BLUE_LED_PATH
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
 #endif
+#ifndef UPDATE_LED_PATH
+#define UPDATE_LED_PATH         "/sys/class/leds/red/update"
+#endif
 #ifndef BACKLIGHT_PATH
 #define BACKLIGHT_PATH          "/sys/class/leds/lcd-backlight/brightness"
 #endif
@@ -240,6 +243,14 @@ static int set_tricolor_led(int on, int color)
                 LOGE("Could not write to led node\n");
             close(fd);
         }
+    }
+
+    if ((fd = open(UPDATE_LED_PATH, O_RDWR)) >= 0) {
+        snprintf(buffer, sizeof(buffer), "%d\n", 1);
+
+        if (write(fd, buffer, strlen(buffer)) < 0)
+            LOGE("Could not write to led node\n");
+        close(fd);
     }
 
     return 0;
