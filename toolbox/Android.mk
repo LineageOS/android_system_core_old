@@ -177,6 +177,7 @@ OUR_TOOLS := \
     renice \
     restart \
     restorecon \
+    prlimit \
     rmmod \
     route \
     runcon \
