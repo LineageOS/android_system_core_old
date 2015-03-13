@@ -78,6 +78,8 @@ ifneq ($(strip $(TARGET_PROP_PATH_FACTORY)),)
 LOCAL_CFLAGS += -DOVERRIDE_PROP_PATH_FACTORY=\"$(TARGET_PROP_PATH_FACTORY)\"
 endif
 
+LOCAL_C_INCLUDES += external/zlib
+
 include $(BUILD_EXECUTABLE)
 
 # Make a symlink from /sbin/ueventd and /sbin/watchdogd to /init
