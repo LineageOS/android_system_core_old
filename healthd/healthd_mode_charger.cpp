@@ -137,50 +137,11 @@ struct charger {
     gr_surface surf_unknown;
 };
 
-static struct frame batt_anim_frames[] = {
-    {
-        .disp_time = 750,
-        .min_capacity = 0,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 20,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 40,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 60,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 80,
-        .level_only = true,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = BATTERY_FULL_THRESH,
-        .level_only = false,
-        .surface = NULL,
-    },
-};
-
 static struct animation battery_animation = {
     .run = false,
-    .frames = batt_anim_frames,
+    .frames = NULL,
     .cur_frame = 0,
-    .num_frames = ARRAY_SIZE(batt_anim_frames),
+    .num_frames = 0,
     .cur_cycle = 0,
     .num_cycles = 3,
     .capacity = 0,
@@ -935,13 +896,14 @@ void healthd_mode_charger_init(struct healthd_config* /*config*/)
         LOGE("Cannot load battery_scale image\n");
         charger->batt_anim->num_frames = 0;
         charger->batt_anim->num_cycles = 1;
-    } else if (scale_count != charger->batt_anim->num_frames) {
-        LOGE("battery_scale image has unexpected frame count (%d, expected %d)\n",
-             scale_count, charger->batt_anim->num_frames);
-        charger->batt_anim->num_frames = 0;
-        charger->batt_anim->num_cycles = 1;
     } else {
+        charger->batt_anim->frames = new frame[scale_count];
+        charger->batt_anim->num_frames = scale_count;
+        int disp_time = 3500/(scale_count-1);
         for (i = 0; i < charger->batt_anim->num_frames; i++) {
+            charger->batt_anim->frames[i].disp_time = disp_time,
+            charger->batt_anim->frames[i].min_capacity = 100/(scale_count-1) * i,
+            charger->batt_anim->frames[i].level_only = false,
             charger->batt_anim->frames[i].surface = scale_frames[i];
         }
     }
