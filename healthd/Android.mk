@@ -47,9 +47,7 @@ ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
 LOCAL_CFLAGS += -DCHARGER_ENABLE_SUSPEND
 endif
 
-ifeq ($(strip $(BOARD_CHARGER_SHOW_PERCENTAGE)),true)
 LOCAL_CFLAGS += -DCHARGER_SHOW_PERCENTAGE
-endif
 
 LOCAL_C_INCLUDES := $(call project-path-for,recovery)
 
@@ -82,7 +80,7 @@ endef
 
 _img_modules :=
 _images :=
-$(foreach _img, $(call find-subdir-subdir-files, "images", "*.png"), \
+$(foreach _img, $(call find-subdir-subdir-files, "images/$(PRODUCT_AAPT_PREF_CONFIG)", "*.png"), \
   $(eval $(call _add-charger-image,$(_img))))
 
 include $(CLEAR_VARS)

@@ -134,53 +134,25 @@ struct charger {
     struct key_state keys[KEY_MAX + 1];
 
     struct animation *batt_anim;
+    struct animation *percent;
     gr_surface surf_unknown;
-};
-
-static struct frame batt_anim_frames[] = {
-    {
-        .disp_time = 750,
-        .min_capacity = 0,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 20,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 40,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 60,
-        .level_only = false,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = 80,
-        .level_only = true,
-        .surface = NULL,
-    },
-    {
-        .disp_time = 750,
-        .min_capacity = BATTERY_FULL_THRESH,
-        .level_only = false,
-        .surface = NULL,
-    },
 };
 
 static struct animation battery_animation = {
     .run = false,
-    .frames = batt_anim_frames,
+    .frames = NULL,
     .cur_frame = 0,
-    .num_frames = ARRAY_SIZE(batt_anim_frames),
+    .num_frames = 0,
+    .cur_cycle = 0,
+    .num_cycles = 3,
+    .capacity = 0,
+};
+
+static struct animation battery_percent = {
+    .run = false,
+    .frames = NULL,
+    .cur_frame = 0,
+    .num_frames = 0,
     .cur_cycle = 0,
     .num_cycles = 3,
     .capacity = 0,
@@ -490,19 +462,21 @@ static void draw_battery(struct charger *charger)
 }
 
 #ifdef CHARGER_SHOW_PERCENTAGE
-#define STR_LEN    64
 static void draw_capacity(struct charger *charger)
 {
-    char cap_str[STR_LEN];
-    int x, y;
-    int str_len_px;
+    struct animation *percent = charger->percent;
+    struct frame *frame = &percent->frames[percent->cur_frame];
+    struct frame *batt_frame = &charger->batt_anim->frames[0];
 
-    snprintf(cap_str, (STR_LEN - 1), "%d%%", charger->batt_anim->capacity);
-    str_len_px = gr_measure(cap_str);
-    x = (gr_fb_width() - str_len_px) / 2;
-    y = (gr_fb_height() + char_height) / 2;
-    android_green();
-    gr_text(x, y, cap_str, 0);
+    if (percent->num_frames != 0) {
+		int w = gr_get_width(frame->surface);
+		int h = gr_get_height(frame->surface);
+		int offset = gr_get_height(batt_frame->surface);
+		int x = (gr_fb_width() - w) / 2 ;
+		int y = (gr_fb_height() + offset) / 2;
+
+		gr_blit(frame->surface, 0, 0, w, h, x, y);
+    }
 }
 #endif
 
@@ -595,7 +569,7 @@ static void update_screen_state(struct charger *charger, int64_t now)
                     break;
             }
             batt_anim->cur_frame = i - 1;
-
+            charger->percent->cur_frame = i -1;
             /* show the first frame for twice as long */
             disp_time = batt_anim->frames[batt_anim->cur_frame].disp_time * 2;
         }
@@ -927,22 +901,29 @@ void healthd_mode_charger_init(struct healthd_config* /*config*/)
     }
 
     charger->batt_anim = &battery_animation;
+    charger->percent = &battery_percent;
 
     gr_surface* scale_frames;
+    gr_surface* percent_frames;
     int scale_count;
     ret = res_create_multi_display_surface("charger/battery_scale", &scale_count, &scale_frames);
+    ret = res_create_multi_display_surface("charger/battery_percent", &scale_count, &percent_frames);
     if (ret < 0) {
         LOGE("Cannot load battery_scale image\n");
         charger->batt_anim->num_frames = 0;
         charger->batt_anim->num_cycles = 1;
-    } else if (scale_count != charger->batt_anim->num_frames) {
-        LOGE("battery_scale image has unexpected frame count (%d, expected %d)\n",
-             scale_count, charger->batt_anim->num_frames);
-        charger->batt_anim->num_frames = 0;
-        charger->batt_anim->num_cycles = 1;
+        charger->percent->num_frames = 0;
     } else {
+        charger->batt_anim->frames = new frame[scale_count];
+        charger->batt_anim->num_frames = scale_count;
+        charger->percent->frames = new frame[scale_count];
+        charger->percent->num_frames = scale_count;
         for (i = 0; i < charger->batt_anim->num_frames; i++) {
+            charger->batt_anim->frames[i].disp_time = 500,
+            charger->batt_anim->frames[i].min_capacity = 100/(scale_count-1) * i,
+            charger->batt_anim->frames[i].level_only = false,
             charger->batt_anim->frames[i].surface = scale_frames[i];
+            charger->percent->frames[i].surface = percent_frames[i];
         }
     }
 
