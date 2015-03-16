@@ -82,7 +82,7 @@ endef
 
 _img_modules :=
 _images :=
-$(foreach _img, $(call find-subdir-subdir-files, "images", "*.png"), \
+$(foreach _img, $(call find-subdir-subdir-files, "images/$(PRODUCT_AAPT_PREF_CONFIG)", "*.png"), \
   $(eval $(call _add-charger-image,$(_img))))
 
 include $(CLEAR_VARS)
