@@ -203,7 +203,7 @@ ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
 OUR_TOOLS += r
 endif
 
-OUR_TOOLS += setfattr
+OUR_TOOLS += setfattr getfattr
 
 ALL_TOOLS = $(BSD_TOOLS) $(OUR_TOOLS)
 

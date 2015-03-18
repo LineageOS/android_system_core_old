@@ -3,28 +3,28 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-extern int setxattr(const char *, const char *, const void *, size_t, int);
+extern int getxattr(const char *, const char *, void *, size_t);
 
 static int usage(const char *s)
 {
-    fprintf(stderr, "Usage: %s -n name -v value pathname\n", s);
+    fprintf(stderr, "Usage: %s -n name pathname\n", s);
     fprintf(stderr, "  -n name      name of the extended attribute to set\n");
-    fprintf(stderr, "  -v value     new value of the attribute\n");
     fprintf(stderr, "  -h           display this help and exit\n");
 
     exit(10);
 }
 
-int setfattr_main(int argc, char **argv)
+int getfattr_main(int argc, char **argv)
 {
     int i;
     char *name = NULL;
-    char *valuestr = NULL;
+    char value[256];
+    size_t valuelen = 0;
 
     for (;;) {
         int ret;
 
-        ret = getopt(argc, argv, "hn:v:");
+        ret = getopt(argc, argv, "hn:");
 
         if (ret < 0)
             break;
@@ -36,17 +36,19 @@ int setfattr_main(int argc, char **argv)
             case 'n':
                 name = optarg;
                 break;
-            case 'v':
-                valuestr = optarg;
-                break;
         }
     }
 
-    if (!name || !valuestr || optind == argc)
+    if (!name || optind == argc)
         usage(argv[0]);
 
-    for (i = optind ; i < argc ; i++)
-        setxattr(argv[i], name, valuestr, strlen(valuestr), 0);
+    for (i = optind ; i < argc ; i++) {
+        memset(value, 0, sizeof(value));
+        valuelen = getxattr(argv[i], name, value, sizeof(value)-1);
+        if (valuelen > 0) {
+            printf("%s: %s=%s\n", argv[i], name, value);
+        }
+    }
 
     return 0;
 }
