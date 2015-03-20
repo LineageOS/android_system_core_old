@@ -272,7 +272,7 @@ static int set_backlight_on(void)
 
     if (access(BACKLIGHT_PATH, R_OK | W_OK) != 0)
     {
-        LOGI("Backlight control not support\n");
+        LOGW("Backlight control not support\n");
         return 0;
     }
 
@@ -905,7 +905,7 @@ void healthd_mode_charger_init(struct healthd_config* config)
         ret = read_file_int(CHARGING_ENABLED_PATH, &charging_enabled);
         if (!ret && !charging_enabled) {
             /* if charging is disabled, reboot and exit power off charging */
-            LOGI("android charging is disabled, exit!\n");
+            LOGW("android charging is disabled, exit!\n");
             android_reboot(ANDROID_RB_RESTART, 0, 0);
         }
     }
