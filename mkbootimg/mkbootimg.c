@@ -61,7 +61,7 @@ int usage(void)
             "       --kernel <filename>\n"
             "       --ramdisk <filename>\n"
             "       [ --second <2ndbootloader-filename> ]\n"
-            "       [ --cmdline <kernel-commandline> ]\n"
+            "       [ --cmdline <filename>|<kernel-commandline> ]\n"
             "       [ --board <boardname> ]\n"
             "       [ --base <address> ]\n"
             "       [ --pagesize <pagesize> ]\n"
@@ -201,6 +201,16 @@ int main(int argc, char **argv)
     strcpy((char *) hdr.name, board);
 
     memcpy(hdr.magic, BOOT_MAGIC, BOOT_MAGIC_SIZE);
+
+    if (access(cmdline, R_OK) == 0) {
+        cmdline = load_file(cmdline, 0);
+        if (cmdline == 0) {
+            fprintf(stderr,"error: could not load cmdline '%s'\n", cmdline);
+            return 1;
+        }
+        if (cmdline[strlen(cmdline) - 1] == '\n')
+            cmdline[strlen(cmdline) - 1] = 0;
+    }
 
     cmdlen = strlen(cmdline);
     if(cmdlen > (BOOT_ARGS_SIZE + BOOT_EXTRA_ARGS_SIZE - 2)) {
