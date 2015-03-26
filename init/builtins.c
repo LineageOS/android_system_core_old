@@ -48,6 +48,7 @@
 #include "log.h"
 
 #include <private/android_filesystem_config.h>
+extern const char *ENV[];
 
 int add_environment(const char *name, const char *value);
 
@@ -301,10 +302,13 @@ int do_exec(int nargs, char **args)
     {
         char tmp[32];
         int fd, sz;
-        get_property_workspace(&fd, &sz);
-        sprintf(tmp, "%d,%d", dup(fd), sz);
-        setenv("ANDROID_PROPERTY_WORKSPACE", tmp, 1);
-        execve(par[0], par, environ);
+        if (properties_inited()) {
+            get_property_workspace(&fd, &sz);
+            sprintf(tmp, "%d,%d", dup(fd), sz);
+            add_environment("ANDROID_PROPERTY_WORKSPACE", tmp);
+        }
+
+        execve(par[0], par, (char **) ENV);
         exit(0);
     }
     else
