@@ -38,6 +38,7 @@ int do_write(int nargs, char **args);
 int do_copy(int nargs, char **args);
 int do_chown(int nargs, char **args);
 int do_chmod(int nargs, char **args);
+int do_log(int nargs, char **args);
 int do_loglevel(int nargs, char **args);
 int do_load_persist_props(int nargs, char **args);
 int do_load_all_props(int nargs, char **args);
@@ -103,6 +104,7 @@ enum {
     KEYWORD(copy,        COMMAND, 2, do_copy)
     KEYWORD(chown,       COMMAND, 2, do_chown)
     KEYWORD(chmod,       COMMAND, 2, do_chmod)
+    KEYWORD(log,         COMMAND, 1, do_log)
     KEYWORD(loglevel,    COMMAND, 1, do_loglevel)
     KEYWORD(load_persist_props,    COMMAND, 0, do_load_persist_props)
     KEYWORD(load_all_props,        COMMAND, 0, do_load_all_props)
