@@ -954,6 +954,14 @@ int do_setsebool(int nargs, char **args) {
     return 0;
 }
 
+int do_log(int nargs, char **args) {
+    int i;
+    for (i = 1; i < nargs; i++) {
+        ERROR("%s", args[i]);
+    }
+    return 0;
+}
+
 int do_loglevel(int nargs, char **args) {
     int log_level;
     char log_level_str[PROP_VALUE_MAX] = "";
