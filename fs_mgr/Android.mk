@@ -12,7 +12,7 @@ common_static_libraries := \
     libext4_utils_static \
     libsquashfs_utils \
 	libext2_blkid \
-	libext2_uuid
+	libext2_uuid_static
 
 include $(CLEAR_VARS)
 LOCAL_CLANG := true

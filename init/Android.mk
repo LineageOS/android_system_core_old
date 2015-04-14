@@ -107,7 +107,7 @@ LOCAL_STATIC_LIBRARIES := \
     libmincrypt \
     libcrypto_static \
     libext2_blkid \
-    libext2_uuid \
+    libext2_uuid_static \
     libc++_static \
     libdl \
     libsparse_static \
