@@ -54,6 +54,7 @@ LOCAL_STATIC_LIBRARIES := \
     libzipfile \
     libunz \
     libext4_utils_host \
+    liblz4-host \
     libsparse_host \
     libz
 
