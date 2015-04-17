@@ -55,7 +55,8 @@ LOCAL_STATIC_LIBRARIES := \
     libunz \
     libext4_utils_host \
     libsparse_host \
-    libz
+    libz \
+    liblz4-host
 
 ifneq ($(HOST_OS),windows)
 LOCAL_STATIC_LIBRARIES += libselinux
