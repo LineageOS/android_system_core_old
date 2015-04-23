@@ -597,6 +597,9 @@ bool NetlinkEvent::decode(char *buffer, int size, int format) {
 
 const char *NetlinkEvent::findParam(const char *paramName) {
     size_t len = strlen(paramName);
+    if (len == 0) {
+      return NULL;
+    }
     for (int i = 0; i < NL_PARAMS_MAX && mParams[i] != NULL; ++i) {
         const char *ptr = mParams[i] + len;
         if (!strncmp(mParams[i], paramName, len) && *ptr == '=')
