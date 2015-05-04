@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba84c18e_636c5c9d",
+        "filename": "fs_mgr/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-05-04T05:01:31Z",
+      "side": 0,
+      "message": "Unnecessary newline removal.",
+      "revId": "354483f0260f531cd884c7fecb5c139702527841",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
