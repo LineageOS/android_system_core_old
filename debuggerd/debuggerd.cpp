@@ -75,6 +75,8 @@ static void wait_for_user_action(const debugger_request_t &request) {
         "* and start gdbclient:\n"
         "*\n"
         "*     gdbclient %s :5039 %d\n"
+        "* or\n"
+        "*     dddclient %s :5039 %d\n"
         "*\n"
         "* Wait for gdb to start, then press the VOLUME DOWN key\n"
         "* to let the process continue crashing.\n"
@@ -278,7 +280,15 @@ static bool should_attach_gdb(debugger_request_t* request) {
     char value[PROPERTY_VALUE_MAX];
     property_get("debug.db.uid", value, "-1");
     int debug_uid = atoi(value);
-    return debug_uid >= 0 && request->uid <= (uid_t)debug_uid;
+    if (debug_uid >= 0 && request->uid <= (uid_t)debug_uid) {
+	return true;
+    } else {
+        /* External docs say to use 10,000 but more is likely needed; be helpfull. */
+        if (request->uid > (uid_t)debug_uid) {
+            ALOGE("%s: request->uid:%d > property debug.db.uid:%d; NOT waiting for gdb.",
+                       request->uid,                 debug_uid);
+	}
+    }
   }
   return false;
 }
