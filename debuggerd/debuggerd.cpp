@@ -75,6 +75,8 @@ static void wait_for_user_action(const debugger_request_t &request) {
         "* and start gdbclient:\n"
         "*\n"
         "*     gdbclient %s :5039 %d\n"
+        "* or\n"
+        "*     dddclient %s :5039 %d\n"
         "*\n"
         "* Wait for gdb to start, then press the VOLUME DOWN key\n"
         "* to let the process continue crashing.\n"
@@ -274,23 +276,36 @@ static int read_request(int fd, debugger_request_t* out_request) {
 }
 
 static bool should_attach_gdb(debugger_request_t* request) {
+  bool rv;
+
+  ALOGE("%s: request->action:%d == DEBUGGER_ACTION_CRASH:%d)", __func__,
+             request->action,      DEBUGGER_ACTION_CRASH);
+
   if (request->action == DEBUGGER_ACTION_CRASH) {
     char value[PROPERTY_VALUE_MAX];
     property_get("debug.db.uid", value, "-1");
     int debug_uid = atoi(value);
-    return debug_uid >= 0 && request->uid <= (uid_t)debug_uid;
+
+    ALOGE("%s: debug_uid = %d = property_get('debug.db.uid', value, '-1');", __func__, debug_uid);
+    ALOGE("%s: request:%p->uid:%d", __func__, request, request->uid);
+
+    rv = (debug_uid >= 0 && request->uid <= (uid_t)debug_uid);
+
+    ALOGE("%s: return rv:%d", __func__, rv);
+    return rv;
   }
   return false;
 }
 
 static void handle_request(int fd) {
-  ALOGV("handle_request(%d)\n", fd);
+  ALOGE("handle_request(fd:%d)\n", fd);
 
   debugger_request_t request;
   memset(&request, 0, sizeof(request));
   int status = read_request(fd, &request);
+
   if (!status) {
-    ALOGV("BOOM: pid=%d uid=%d gid=%d tid=%d\n",
+    ALOGE("%s: BOOM: pid=%d uid=%d gid=%d tid=%d\n", __func__,
          request.pid, request.uid, request.gid, request.tid);
 
     // At this point, the thread that made the request is blocked in
@@ -308,6 +323,8 @@ static void handle_request(int fd) {
     } else {
       bool detach_failed = false;
       bool attach_gdb = should_attach_gdb(&request);
+      ALOGE("%s: attach_gdb = %d", __func__, attach_gdb);
+	
       if (TEMP_FAILURE_RETRY(write(fd, "\0", 1)) != 1) {
         ALOGE("failed responding to client: %s\n", strerror(errno));
       } else {
