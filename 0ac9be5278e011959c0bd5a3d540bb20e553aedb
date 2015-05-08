@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_6ee51fa7",
+        "filename": "debuggerd/debuggerd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 10621
+      },
+      "writtenOn": "2015-05-08T03:18:19Z",
+      "side": 1,
+      "message": "helpful",
+      "revId": "0ac9be5278e011959c0bd5a3d540bb20e553aedb",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
