@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a89bdaa_945272dc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 9199
+      },
+      "writtenOn": "2015-05-09T06:01:25Z",
+      "side": 1,
+      "message": "CyanogenMod ;)",
+      "revId": "a093541ecd2c4a99d4ff16159e93ef410ac67e0f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
