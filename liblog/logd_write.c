@@ -195,6 +195,11 @@ int __android_log_loggable(int prio, const char *tag)
 }
 #endif
 
+#ifdef HUAWEI_LOG
+void __android_logPower_print(void) {
+}
+#endif
+
 #if !FAKE_LOG_DEVICE
 /* give up, resources too limited */
 static int __write_to_log_null(log_id_t log_fd __unused, struct iovec *vec __unused,
