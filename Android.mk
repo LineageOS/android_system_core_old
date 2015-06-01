@@ -15,4 +15,10 @@
 #
 LOCAL_PATH := $(my-dir)
 
+ifeq ($(call is-vendor-board-platform,QCOM),true)
+	ifneq ($(strip $(AUDIO_FEATURE_ENABLED_INCALL_MUSIC)),false)
+		common_cflags += -DAUDIO_EXTN_INCALL_MUSIC_ENABLED
+	endif
+endif
+
 include $(call first-makefiles-under,$(LOCAL_PATH))

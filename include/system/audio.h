@@ -71,7 +71,7 @@ typedef enum {
     AUDIO_STREAM_REROUTING        = 11, /* For dynamic policy output mixes */
     AUDIO_STREAM_PATCH            = 12, /* For internal audio flinger tracks. Fixed volume */
     AUDIO_STREAM_PUBLIC_CNT       = AUDIO_STREAM_TTS + 1,
-#ifdef QCOM_HARDWARE
+#ifdef AUDIO_EXTN_INCALL_MUSIC_ENABLED
     AUDIO_STREAM_INCALL_MUSIC     = 13,
     AUDIO_STREAM_CNT              = AUDIO_STREAM_INCALL_MUSIC + 1,
 #else
