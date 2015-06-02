@@ -1129,9 +1129,14 @@ int32_t ExtractEntryToFile(ZipArchiveHandle handle,
   // Make sure we have enough space on the volume to extract the compressed
   // entry. Note that the call to ftruncate below will change the file size but
   // will not allocate space on disk.
+  // Note: fallocate is only supported by the following filesystems -
+  // btrfs, ext4, ocfs2, and xfs. Therefore fallocate might fail with
+  // EOPNOTSUPP error when issued in other filesystems.
+  // Hence, check for the return error code before concluding that the
+  // disk does not have enough space.
   if (declared_length > 0) {
     result = TEMP_FAILURE_RETRY(fallocate(fd, 0, current_offset, declared_length));
-    if (result == -1) {
+    if (result == -1 && errno == ENOSPC) {
       ALOGW("Zip: unable to allocate space for file to %" PRId64 ": %s",
             static_cast<int64_t>(declared_length + current_offset), strerror(errno));
       return kIoError;
