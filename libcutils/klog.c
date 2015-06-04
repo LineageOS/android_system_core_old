@@ -25,6 +25,11 @@
 
 #include <cutils/klog.h>
 
+#ifdef AMAZON_LOG
+extern int lab126_log_write(int bufID, int prio, const char *tag, const char *fmt, ...);
+extern int __vitals_log_print(int bufID, int prio, const char *tag, const char *fmt, ...);
+#endif // AMAZON_LOG
+
 static int klog_fd = -1;
 static int klog_level = KLOG_DEFAULT_LEVEL;
 
