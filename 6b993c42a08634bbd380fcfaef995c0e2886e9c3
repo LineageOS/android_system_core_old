@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a8ec9b2_6ff8ab7d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 13108
+      },
+      "writtenOn": "2015-06-05T11:18:28Z",
+      "side": 1,
+      "message": "Sure. I\u0027ll update...",
+      "parentUuid": "7a8ec9b2_0f948735",
+      "revId": "6b993c42a08634bbd380fcfaef995c0e2886e9c3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a8ec9b2_2f99436f",
         "filename": "debuggerd/debuggerd.cpp",
         "patchSetId": 1
