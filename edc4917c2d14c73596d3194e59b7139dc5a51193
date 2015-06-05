@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a8ec9b2_2f5a2384",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-05T12:15:25Z",
+      "side": 1,
+      "message": "s/advise/advice",
+      "revId": "edc4917c2d14c73596d3194e59b7139dc5a51193",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_4f5f6f72",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-05T12:15:25Z",
+      "side": 1,
+      "message": "s/Cynogen/Cyanogen\n\ns/make/made",
+      "revId": "edc4917c2d14c73596d3194e59b7139dc5a51193",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a8ec9b2_6f542b54",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-06-05T12:15:25Z",
+      "side": 1,
+      "message": "This is detailed in the code already.",
+      "revId": "edc4917c2d14c73596d3194e59b7139dc5a51193",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
