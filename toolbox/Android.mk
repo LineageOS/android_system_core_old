@@ -47,7 +47,6 @@ OUR_TOOLS := \
     log \
     ls \
     lsof \
-    mount \
     nandread \
     newfs_msdos \
     ps \
