@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +49,25 @@
 //    batteryTemperaturePath: battery temperature (POWER_SUPPLY_PROP_TEMP)
 //    batteryTechnologyPath: battery technology (POWER_SUPPLY_PROP_TECHNOLOGY)
 //    batteryCurrentNowPath: battery current (POWER_SUPPLY_PROP_CURRENT_NOW)
+//    batteryCurrentAvgPath: battery average (POWER_SUPPLY_PROP_CURRENT_AVG)
 //    batteryChargeCounterPath: battery accumulated charge
 //                                         (POWER_SUPPLY_PROP_CHARGE_COUNTER)
+//
+//    dockBatteryStatusPath: dock charging status (POWER_SUPPLY_PROP_STATUS)
+//    dockBatteryHealthPath: dock battery health (POWER_SUPPLY_PROP_HEALTH)
+//    dockBatteryPresentPath: dock battery present (POWER_SUPPLY_PROP_PRESENT)
+//    dockBatteryCapacityPath: remaining dock capacity (POWER_SUPPLY_PROP_CAPACITY)
+//    dockBatteryVoltagePath: dock battery voltage (POWER_SUPPLY_PROP_VOLTAGE_NOW)
+//    dockBatteryTemperaturePath: dock battery temperature (POWER_SUPPLY_PROP_TEMP)
+//    dockBatteryTechnologyPath: dock battery technology (POWER_SUPPLY_PROP_TECHNOLOGY)
+//    dockBatteryCurrentNowPath: dock battery current (POWER_SUPPLY_PROP_CURRENT_NOW)
+//    dockBatteryCurrentAvgPath: dock battery average (POWER_SUPPLY_PROP_CURRENT_AVG)
+//    dockBatteryChargeCounterPath: dock battery accumulated charge
+//                                         (POWER_SUPPLY_PROP_CHARGE_COUNTER)
+//
+// The dockBatterySupported property indicates whether a dock battery is supported
+// by the device, and whether this module should fetch dock battery values.
+// Defaults is to false.
 
 struct healthd_config {
     int periodic_chores_interval_fast;
@@ -71,6 +89,20 @@ struct healthd_config {
     int (*energyCounter)(int64_t *);
     int boot_min_cap;
     bool (*screen_on)(android::BatteryProperties *props);
+
+    bool dockBatterySupported;
+    android::String8 dockBatteryStatusPath;
+    android::String8 dockBatteryHealthPath;
+    android::String8 dockBatteryPresentPath;
+    android::String8 dockBatteryCapacityPath;
+    android::String8 dockBatteryVoltagePath;
+    android::String8 dockBatteryTemperaturePath;
+    android::String8 dockBatteryTechnologyPath;
+    android::String8 dockBatteryCurrentNowPath;
+    android::String8 dockBatteryCurrentAvgPath;
+    android::String8 dockBatteryChargeCounterPath;
+
+    int (*dockEnergyCounter)(int64_t *);
 };
 
 enum EventWakeup {
@@ -83,6 +115,8 @@ enum EventWakeup {
 int healthd_register_event(int fd, void (*handler)(uint32_t), EventWakeup wakeup = EVENT_NO_WAKEUP_FD);
 void healthd_battery_update();
 android::status_t healthd_get_property(int id,
+    struct android::BatteryProperty *val);
+android::status_t healthd_get_dock_property(int id,
     struct android::BatteryProperty *val);
 void healthd_dump_battery_state(int fd);
 
