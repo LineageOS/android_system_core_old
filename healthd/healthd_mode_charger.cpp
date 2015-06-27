@@ -640,6 +640,7 @@ static void process_key(struct charger *charger, int code, int64_t now)
                 if (property_get_bool("ro.enable_boot_charger_mode", false)) {
                     LOGW("[%" PRId64 "] booting from charger mode\n", now);
                     healthd_board_mode_charger_set_backlight(false);
+                    gr_fb_blank(true);
                     property_set("sys.boot_from_charger_mode", "1");
                 } else {
                     if (charger->batt_anim->capacity >= charger->boot_min_cap) {
