@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,6 +75,10 @@ void BatteryPropertiesRegistrar::unregisterListener(const sp<IBatteryPropertiesL
 
 status_t BatteryPropertiesRegistrar::getProperty(int id, struct BatteryProperty *val) {
     return healthd_get_property(id, val);
+}
+
+status_t BatteryPropertiesRegistrar::getDockProperty(int id, struct BatteryProperty *val) {
+    return healthd_get_dock_property(id, val);
 }
 
 status_t BatteryPropertiesRegistrar::dump(int fd, const Vector<String16>& /*args*/) {
