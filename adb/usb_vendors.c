@@ -187,6 +187,8 @@
 #define VENDOR_ID_VIZIO         0xE040
 // Wacom's USB Vendor ID
 #define VENDOR_ID_WACOM         0x0531
+// Wileyfox's USB Vendor ID
+#define VENDOR_ID_WILEYFOX      0x2970
 // Xiaomi's USB Vendor ID
 #define VENDOR_ID_XIAOMI        0x2717
 // YotaDevices's USB Vendor ID
