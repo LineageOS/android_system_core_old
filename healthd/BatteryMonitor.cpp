@@ -136,6 +136,7 @@ BatteryMonitor::PowerSupplyType BatteryMonitor::readPowerSupplyType(const String
             { "USB_ACA", ANDROID_POWER_SUPPLY_TYPE_AC },
             { "Wireless", ANDROID_POWER_SUPPLY_TYPE_WIRELESS },
             { "Wipower", ANDROID_POWER_SUPPLY_TYPE_WIRELESS },
+            { "USB_HVDCP", ANDROID_POWER_SUPPLY_TYPE_AC },
             { NULL, 0 },
     };
 
