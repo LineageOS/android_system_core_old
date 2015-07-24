@@ -256,6 +256,9 @@ void service_start(struct service *svc, const char *dynamic_args)
 
     NOTICE("starting '%s'\n", svc->name);
 
+    if (properties_inited())
+        notify_service_state(svc->name, "starting");
+
     pid = fork();
 
     if (pid == 0) {
