@@ -68,6 +68,30 @@
       "revId": "830c30745ea52ee6cd7591d195e53540d7cbb37d",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf091321_fe75b9cd",
+        "filename": "liblog/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 5678
+      },
+      "writtenOn": "2015-07-28T03:00:12Z",
+      "side": 1,
+      "message": "I don\u0027t know. Not sure why I used the device model. Should be renamed to HUAWEI_LOG or TARGET_USES_HUAWEI_LOG for consistency.",
+      "parentUuid": "bf091321_dead5532",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 31
+      },
+      "revId": "830c30745ea52ee6cd7591d195e53540d7cbb37d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
