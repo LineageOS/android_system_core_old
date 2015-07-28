@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf091321_3eb7b189",
+        "filename": "include/cutils/huawei.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2015-07-28T02:48:45Z",
+      "side": 1,
+      "message": "blargh",
+      "range": {
+        "startLine": 30,
+        "startChar": 30,
+        "endLine": 30,
+        "endChar": 31
+      },
+      "revId": "830c30745ea52ee6cd7591d195e53540d7cbb37d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf091321_1ebced67",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2015-07-28T02:48:45Z",
+      "side": 1,
+      "message": "the tab inconsistency of this file is weird :p",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 1
+      },
+      "revId": "830c30745ea52ee6cd7591d195e53540d7cbb37d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf091321_dead5532",
+        "filename": "liblog/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2015-07-28T02:48:45Z",
+      "side": 1,
+      "message": "Do other huawei devices need this? Defining by device model seems odd",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 31
+      },
+      "revId": "830c30745ea52ee6cd7591d195e53540d7cbb37d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
