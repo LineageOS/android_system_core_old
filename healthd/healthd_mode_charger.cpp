@@ -255,6 +255,25 @@ static int set_battery_soc_leds(int soc)
         LOGV("soc = %d, set led color 0x%x\n", soc, soc_leds[i].color);
     }
 
+#ifdef SECONDARY_BACKLIGHT_PATH
+    if (access(SECONDARY_BACKLIGHT_PATH, R_OK | W_OK) != 0)
+    {
+        LOGW("Secondary Backlight control not support\n");
+        return 0;
+    }
+
+    fd = open(SECONDARY_BACKLIGHT_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open secondary backlight node : %s\n", strerror(errno));
+        return 0;
+    }
+    LOGV("Enabling secondary backlight\n");
+    if (write(fd, buffer,strlen(buffer)) < 0) {
+        LOGE("Could not write to secondary backlight node : %s\n", strerror(errno));
+    }
+    close(fd);
+#endif
+
     return 0;
 }
 
