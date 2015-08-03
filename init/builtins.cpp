@@ -401,6 +401,7 @@ int do_mount_all(int nargs, char **args)
     int ret = -1;
     int child_ret = -1;
     int status;
+    char boot_mode[PROP_VALUE_MAX] = {0};
     struct fstab *fstab;
 
     if (nargs != 2) {
@@ -450,10 +451,13 @@ int do_mount_all(int nargs, char **args)
         property_set("vold.decrypt", "trigger_default_encryption");
     } else if (ret == FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
         property_set("ro.crypto.state", "unencrypted");
-        /* If fs_mgr determined this is an unencrypted device, then trigger
-         * that action.
+        /* If fs_mgr determined this is an unencrypted device and we are
+         * not booting into ffbm(fast factory boot mode),then trigger
+	 * that action.
          */
-        action_for_each_trigger("nonencrypted", action_add_queue_tail);
+        property_get("ro.bootmode", boot_mode);
+        if (strncmp(boot_mode, "ffbm", 4))
+            action_for_each_trigger("nonencrypted", action_add_queue_tail);
     } else if (ret == FS_MGR_MNTALL_DEV_NEEDS_RECOVERY) {
         /* Setup a wipe via recovery, and reboot into recovery */
         ERROR("fs_mgr_mount_all suggested recovery, so wiping data via recovery.\n");
@@ -468,7 +472,9 @@ int do_mount_all(int nargs, char **args)
 
         // Although encrypted, we have device key, so we do not need to
         // do anything different from the nonencrypted case.
-        action_for_each_trigger("nonencrypted", action_add_queue_tail);
+        property_get("ro.bootmode", boot_mode);
+        if (strncmp(boot_mode, "ffbm", 4))
+            action_for_each_trigger("nonencrypted", action_add_queue_tail);
     } else if (ret == FS_MGR_MNTALL_DEV_NON_DEFAULT_FILE_ENCRYPTED) {
         if (e4crypt_install_keyring()) {
             return -1;
