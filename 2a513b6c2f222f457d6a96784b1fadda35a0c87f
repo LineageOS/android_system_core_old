@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f201791_5b3b9b9b",
+        "filename": "init/devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 953,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-08-18T03:19:10Z",
+      "side": 1,
+      "message": "What\u0027s this value on flounder?",
+      "revId": "2a513b6c2f222f457d6a96784b1fadda35a0c87f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f201791_1b452318",
+        "filename": "init/devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1050,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-08-18T03:19:10Z",
+      "side": 1,
+      "message": "Or is it spinning here?",
+      "revId": "2a513b6c2f222f457d6a96784b1fadda35a0c87f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
