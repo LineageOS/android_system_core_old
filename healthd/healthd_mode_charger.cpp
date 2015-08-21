@@ -244,7 +244,7 @@ static int set_tricolor_led(int on, int color)
     return 0;
 }
 
-static int set_battery_soc_leds(int soc)
+static int set_battery_soc_leds(int soc, bool force)
 {
     int i, color;
     static int old_color = 0;
@@ -254,7 +254,7 @@ static int set_battery_soc_leds(int soc)
             break;
     }
     color = soc_leds[i].color;
-    if (old_color != color) {
+    if (old_color != color || force) {
         set_tricolor_led(0, old_color);
         set_tricolor_led(1, color);
         old_color = color;
@@ -782,6 +782,9 @@ static void handle_input_state(struct charger *charger, int64_t now)
 static void handle_power_supply_state(struct charger *charger, int64_t now)
 {
     static int old_soc = 0;
+    static bool old_connected = false;
+    bool force;
+    int i;
     int soc = 0;
 
     if (!charger->have_battery_state)
@@ -791,12 +794,17 @@ static void handle_power_supply_state(struct charger *charger, int64_t now)
         soc = batt_prop->batteryLevel;
     }
 
-    if (old_soc != soc) {
+    force = charger->charger_connected != old_connected;
+    if (old_soc != soc || force) {
+        old_connected = charger->charger_connected;
         old_soc = soc;
         set_battery_soc_leds(soc);
     }
 
     if (!charger->charger_connected) {
+        for (i = 0; i < (int)ARRAY_SIZE(leds); i++) {
+            set_tricolor_led(0, leds[i].color);
+        }
         request_suspend(false);
         if (charger->next_pwr_check == -1) {
             if (mode == QUICKBOOT) {
