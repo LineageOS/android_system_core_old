@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f1d235d_94a0d9a7",
+        "filename": "liblog/logd_write.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 5678
+      },
+      "writtenOn": "2015-08-27T14:01:19Z",
+      "side": 1,
+      "message": "In C the caller is responsible for removing the parameters from the stack, right? So having an empty parameter list shouldn\u0027t be a problem if the real function expects parameters. Or should we try to figure out the number and size of the parameters?",
+      "revId": "ec2865c980fa2d35e293f71011fd5ccdb9f6559b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
