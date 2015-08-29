@@ -584,7 +584,14 @@ int do_powerctl(int nargs, char **args)
     }
 
     if (command[len] == ',') {
+        char prop_value[PROP_VALUE_MAX] = {0};
         reboot_target = &command[len + 1];
+
+        if ((property_get("init.svc.recovery", prop_value) == 0) &&
+            (strncmp(reboot_target, "keys", 4) == 0)) {
+            ERROR("powerctl: permission denied\n");
+            return -EINVAL;
+        }
     } else if (command[len] == '\0') {
         reboot_target = "";
     } else {
