@@ -492,6 +492,52 @@ static int handle_encryptable(struct fstab *fstab, const struct fstab_rec* rec)
     return FS_MGR_MNTALL_DEV_NOT_ENCRYPTED;
 }
 
+/*
+ * Reads the kernel cmdline to check if MDTP is activated.
+ * When MDTP is activated, kernel cmdline will have the word 'mdtp'.
+ */
+int fs_mgr_is_mdtp_activated()
+{
+      char cmdline[2048];
+      char *ptr;
+      int fd;
+      static int mdtp_activated = 0;
+      static int mdtp_activated_set = 0;
+
+      if (mdtp_activated_set) {
+          return mdtp_activated;
+      }
+
+      fd = open("/proc/cmdline", O_RDONLY);
+      if (fd >= 0) {
+          int n = read(fd, cmdline, sizeof(cmdline) - 1);
+          if (n < 0) n = 0;
+
+          /* get rid of trailing newline, it happens */
+          if (n > 0 && cmdline[n-1] == '\n') n--;
+
+          cmdline[n] = 0;
+          close(fd);
+      } else {
+          cmdline[0] = 0;
+      }
+
+      ptr = cmdline;
+      while (ptr && *ptr) {
+          char *x = strchr(ptr, ' ');
+          if (x != 0) *x++ = 0;
+          if (!strcmp(ptr,"mdtp")) {
+            mdtp_activated = 1;
+            break;
+          }
+          ptr = x;
+      }
+
+      mdtp_activated_set = 1;
+
+      return mdtp_activated;
+}
+
 /* When multiple fstab records share the same mount_point, it will
  * try to mount each one in turn, and ignore any duplicates after a
  * first successful mount.
@@ -547,91 +593,106 @@ int fs_mgr_mount_all(struct fstab *fstab)
                 continue;
             }
         }
-        int last_idx_inspected;
-        int top_idx = i;
 
-        mret = mount_with_alternatives(fstab, i, &last_idx_inspected, &attempted_idx);
-        i = last_idx_inspected;
-        mount_errno = errno;
-
-        /* Deal with encryptability. */
-        if (!mret) {
-            int status = handle_encryptable(fstab, &fstab->recs[attempted_idx]);
-
-            if (status == FS_MGR_MNTALL_FAIL) {
-                /* Fatal error - no point continuing */
-                return status;
-            }
-
-            if (status != FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
-                if (encryptable != FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
-                    // Log and continue
-                    ERROR("Only one encryptable/encrypted partition supported\n");
-                }
-                encryptable = status;
-            }
-
-            /* Success!  Go get the next one */
-            continue;
-        }
-
-        /* mount(2) returned an error, handle the encryptable/formattable case */
-        bool wiped = partition_wiped(fstab->recs[top_idx].blk_device);
-        if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
-            fs_mgr_is_formattable(&fstab->recs[top_idx]) && wiped) {
-            /* top_idx and attempted_idx point at the same partition, but sometimes
-             * at two different lines in the fstab.  Use the top one for formatting
-             * as that is the preferred one.
-             */
-            ERROR("%s(): %s is wiped and %s %s is formattable. Format it.\n", __func__,
-                  fstab->recs[top_idx].blk_device, fstab->recs[top_idx].mount_point,
-                  fstab->recs[top_idx].fs_type);
-            if (fs_mgr_is_encryptable(&fstab->recs[top_idx]) &&
-                strcmp(fstab->recs[top_idx].key_loc, KEY_IN_FOOTER)) {
-                int fd = open(fstab->recs[top_idx].key_loc, O_WRONLY, 0644);
-                if (fd >= 0) {
-                    INFO("%s(): also wipe %s\n", __func__, fstab->recs[top_idx].key_loc);
-                    wipe_block_device(fd, get_file_size(fd));
-                    close(fd);
-                } else {
-                    ERROR("%s(): %s wouldn't open (%s)\n", __func__,
-                          fstab->recs[top_idx].key_loc, strerror(errno));
-                }
-            }
-            if (fs_mgr_do_format(&fstab->recs[top_idx]) == 0) {
-                /* Let's replay the mount actions. */
-                i = top_idx - 1;
+        if (fs_mgr_is_mdtp_activated() && ((fstab->recs[i].fs_mgr_flags & MF_FORCECRYPT) ||
+            device_is_force_encrypted())) {
+            INFO("%s(): mdtp activated, blkdev %s for mount %s type %s expected to be encrypted)\n",
+                 __func__, fstab->recs[i].blk_device, fstab->recs[i].mount_point,
+                 fstab->recs[i].fs_type);
+            if (fs_mgr_do_tmpfs_mount(fstab->recs[i].mount_point) < 0) {
+                ++error_count;
                 continue;
             }
-        }
-        if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
-            fs_mgr_is_encryptable(&fstab->recs[attempted_idx])) {
-            if (wiped) {
-                ERROR("%s(): %s is wiped and %s %s is encryptable. Suggest recovery...\n", __func__,
-                      fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
-                      fstab->recs[attempted_idx].fs_type);
-                encryptable = FS_MGR_MNTALL_DEV_NEEDS_RECOVERY;
+
+            encryptable = FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED;
+
+        } else {
+            int last_idx_inspected;
+            int top_idx = i;
+
+            mret = mount_with_alternatives(fstab, i, &last_idx_inspected, &attempted_idx);
+            i = last_idx_inspected;
+            mount_errno = errno;
+
+            /* Deal with encryptability. */
+            if (!mret) {
+                int status = handle_encryptable(fstab, &fstab->recs[attempted_idx]);
+
+                if (status == FS_MGR_MNTALL_FAIL) {
+                    /* Fatal error - no point continuing */
+                    return status;
+                }
+
+                if (status != FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
+                    if (encryptable != FS_MGR_MNTALL_DEV_NOT_ENCRYPTED) {
+                        // Log and continue
+                        ERROR("Only one encryptable/encrypted partition supported\n");
+                    }
+                    encryptable = status;
+                }
+
+                /* Success!  Go get the next one */
                 continue;
-            } else {
-                /* Need to mount a tmpfs at this mountpoint for now, and set
-                 * properties that vold will query later for decrypting
+            }
+
+            /* mount(2) returned an error, handle the encryptable/formattable case */
+            bool wiped = partition_wiped(fstab->recs[top_idx].blk_device);
+            if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
+                fs_mgr_is_formattable(&fstab->recs[top_idx]) && wiped) {
+                /* top_idx and attempted_idx point at the same partition, but sometimes
+                 * at two different lines in the fstab.  Use the top one for formatting
+                 * as that is the preferred one.
                  */
-                ERROR("%s(): possibly an encryptable blkdev %s for mount %s type %s )\n", __func__,
-                      fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
-                      fstab->recs[attempted_idx].fs_type);
-                if (fs_mgr_do_tmpfs_mount(fstab->recs[attempted_idx].mount_point) < 0) {
-                    ++error_count;
+                ERROR("%s(): %s is wiped and %s %s is formattable. Format it.\n", __func__,
+                      fstab->recs[top_idx].blk_device, fstab->recs[top_idx].mount_point,
+                      fstab->recs[top_idx].fs_type);
+                if (fs_mgr_is_encryptable(&fstab->recs[top_idx]) &&
+                    strcmp(fstab->recs[top_idx].key_loc, KEY_IN_FOOTER)) {
+                    int fd = open(fstab->recs[top_idx].key_loc, O_WRONLY, 0644);
+                    if (fd >= 0) {
+                        INFO("%s(): also wipe %s\n", __func__, fstab->recs[top_idx].key_loc);
+                        wipe_block_device(fd, get_file_size(fd));
+                        close(fd);
+                    } else {
+                        ERROR("%s(): %s wouldn't open (%s)\n", __func__,
+                              fstab->recs[top_idx].key_loc, strerror(errno));
+                    }
+                }
+                if (fs_mgr_do_format(&fstab->recs[top_idx]) == 0) {
+                    /* Let's replay the mount actions. */
+                    i = top_idx - 1;
                     continue;
                 }
             }
-            encryptable = FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED;
-        } else {
-            ERROR("Failed to mount an un-encryptable or wiped partition on"
-                   "%s at %s options: %s error: %s\n",
-                   fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
-                   fstab->recs[attempted_idx].fs_options, strerror(mount_errno));
-            ++error_count;
-            continue;
+            if (mret && mount_errno != EBUSY && mount_errno != EACCES &&
+                fs_mgr_is_encryptable(&fstab->recs[attempted_idx])) {
+                if (wiped) {
+                    ERROR("%s(): %s is wiped and %s %s is encryptable. Suggest recovery...\n", __func__,
+                          fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
+                          fstab->recs[attempted_idx].fs_type);
+                    encryptable = FS_MGR_MNTALL_DEV_NEEDS_RECOVERY;
+                    continue;
+                } else {
+                    /* Need to mount a tmpfs at this mountpoint for now, and set
+                     * properties that vold will query later for decrypting
+                     */
+                    ERROR("%s(): possibly an encryptable blkdev %s for mount %s type %s )\n", __func__,
+                          fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
+                          fstab->recs[attempted_idx].fs_type);
+                    if (fs_mgr_do_tmpfs_mount(fstab->recs[attempted_idx].mount_point) < 0) {
+                        ++error_count;
+                        continue;
+                    }
+                }
+                encryptable = FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED;
+            } else {
+                ERROR("Failed to mount an un-encryptable or wiped partition on"
+                       "%s at %s options: %s error: %s\n",
+                       fstab->recs[attempted_idx].blk_device, fstab->recs[attempted_idx].mount_point,
+                       fstab->recs[attempted_idx].fs_options, strerror(mount_errno));
+                ++error_count;
+                continue;
+            }
         }
     }
 
