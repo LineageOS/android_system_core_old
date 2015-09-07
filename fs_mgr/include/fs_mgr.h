@@ -73,6 +73,7 @@ struct fstab_rec {
     int swap_prio;
     unsigned int zram_size;
     unsigned int file_encryption_mode;
+    unsigned int zram_streams;
 };
 
 // Callback function for verity status

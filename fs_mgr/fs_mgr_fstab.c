@@ -33,6 +33,7 @@ struct fs_mgr_flag_values {
     int swap_prio;
     unsigned int zram_size;
     unsigned int file_encryption_mode;
+    unsigned int zram_streams;
 };
 
 struct flag_list {
@@ -79,6 +80,7 @@ static struct flag_list fs_mgr_flags[] = {
     { "slotselect",  MF_SLOTSELECT },
     { "nofail",      MF_NOFAIL },
     { "latemount",   MF_LATEMOUNT },
+    { "zramstreams=",MF_ZRAMSTREAMS },
     { "defaults",    0 },
     { 0,             0 },
 };
@@ -120,6 +122,7 @@ static int parse_flags(char *flags, struct flag_list *fl,
         memset(flag_vals, 0, sizeof(*flag_vals));
         flag_vals->partnum = -1;
         flag_vals->swap_prio = -1; /* negative means it wasn't specified. */
+        flag_vals->zram_streams = 1;
     }
 
     /* initialize fs_options to the null string */
@@ -212,6 +215,8 @@ static int parse_flags(char *flags, struct flag_list *fl,
                         flag_vals->zram_size = calculate_zram_size(val);
                     else
                         flag_vals->zram_size = val;
+                } else if ((fl[i].flag == MF_ZRAMSTREAMS) && flag_vals) {
+                    flag_vals->zram_streams = strtoll(strchr(p, '=') + 1, NULL, 0);
                 }
                 break;
             }
@@ -364,6 +369,7 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
         fstab->recs[cnt].swap_prio = flag_vals.swap_prio;
         fstab->recs[cnt].zram_size = flag_vals.zram_size;
         fstab->recs[cnt].file_encryption_mode = flag_vals.file_encryption_mode;
+        fstab->recs[cnt].zram_streams = flag_vals.zram_streams;
         cnt++;
     }
     /* If an A/B partition, modify block device to be the real block device */

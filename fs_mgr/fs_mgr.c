@@ -61,6 +61,7 @@
 #define FSCK_LOG_FILE   "/dev/fscklogs/log"
 
 #define ZRAM_CONF_DEV   "/sys/block/zram0/disksize"
+#define ZRAM_STREAMS    "/sys/block/zram0/max_comp_streams"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 
@@ -895,6 +896,14 @@ int fs_mgr_swapon_all(struct fstab *fstab)
              * we can assume the device number is 0.
              */
             FILE *zram_fp;
+
+            /* The stream count parameter is only available on new kernels.
+             * It must be set before the disk size. */
+            zram_fp = fopen(ZRAM_STREAMS, "r+");
+            if (zram_fp) {
+                fprintf(zram_fp, "%d\n", fstab->recs[i].zram_streams);
+                fclose(zram_fp);
+            }
 
             zram_fp = fopen(ZRAM_CONF_DEV, "r+");
             if (zram_fp == NULL) {
