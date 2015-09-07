@@ -71,6 +71,8 @@
 
 using namespace std::literals::string_literals;
 
+using android::base::StringPrintf;
+
 #define chmod DO_NOT_USE_CHMOD_USE_FCHMODAT_SYMLINK_NOFOLLOW
 
 static constexpr std::chrono::nanoseconds kCommandRetryTimeout = 5s;
@@ -133,24 +135,44 @@ static int do_class_start(const std::vector<std::string>& args) {
          */
     ServiceManager::GetInstance().
         ForEachServiceInClass(args[1], [] (Service* s) { s->StartIfNotDisabled(); });
+
+    std::string prop_name = StringPrintf("class_start:%s", args[1].c_str());
+    if (prop_name.length() < PROP_NAME_MAX) {
+        ActionManager::GetInstance().QueueEventTrigger(prop_name);
+    }
     return 0;
 }
 
 static int do_class_stop(const std::vector<std::string>& args) {
     ServiceManager::GetInstance().
         ForEachServiceInClass(args[1], [] (Service* s) { s->Stop(); });
+
+    std::string prop_name = StringPrintf("class_stop:%s", args[1].c_str());
+    if (prop_name.length() < PROP_NAME_MAX) {
+        ActionManager::GetInstance().QueueEventTrigger(prop_name);
+    }
     return 0;
 }
 
 static int do_class_reset(const std::vector<std::string>& args) {
     ServiceManager::GetInstance().
         ForEachServiceInClass(args[1], [] (Service* s) { s->Reset(); });
+
+    std::string prop_name = StringPrintf("class_reset:%s", args[1].c_str());
+    if (prop_name.length() < PROP_NAME_MAX) {
+        ActionManager::GetInstance().QueueEventTrigger(prop_name);
+    }
     return 0;
 }
 
 static int do_class_restart(const std::vector<std::string>& args) {
     ServiceManager::GetInstance().
         ForEachServiceInClass(args[1], [] (Service* s) { s->Restart(); });
+
+    std::string prop_name = StringPrintf("class_restart:%s", args[1].c_str());
+    if (prop_name.length() < PROP_NAME_MAX) {
+        ActionManager::GetInstance().QueueEventTrigger(prop_name);
+    }
     return 0;
 }
 
