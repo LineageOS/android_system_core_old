@@ -56,6 +56,7 @@ struct fstab_rec {
     int partnum;
     int swap_prio;
     unsigned int zram_size;
+    unsigned int zram_streams;
 };
 
 struct fstab *fs_mgr_read_fstab(const char *fstab_path);
