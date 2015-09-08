@@ -75,7 +75,7 @@ LOCAL_LDFLAGS_linux := -ldl -rdynamic -Wl,-rpath,.
 LOCAL_REQUIRED_MODULES_linux := libf2fs_fmt_host_dyn
 # The following libf2fs_* are from system/extras/f2fs_utils,
 # and do not use code in external/f2fs-tools.
-LOCAL_STATIC_LIBRARIES_linux += libf2fs_utils_host libf2fs_ioutils_host libf2fs_dlutils_host
+LOCAL_STATIC_LIBRARIES_linux += libf2fs_utils_host libf2fs_dlutils_host
 
 LOCAL_CXX_STL := libc++_static
 
