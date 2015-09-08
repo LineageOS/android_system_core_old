@@ -98,6 +98,7 @@ struct thread_data_t {
             androidSetThreadName(name);
             free(name);
         }
+
         return f(u);
     }
 };
@@ -339,7 +340,7 @@ int androidSetThreadPriority(pid_t tid, int pri)
         errno = lasterr;
     }
 #endif
-    
+
     return rc;
 }
 
@@ -727,7 +728,7 @@ status_t Thread::run(const char* name, int32_t priority, size_t stack)
 
         return UNKNOWN_ERROR;
     }
-    
+
     // Do not refer to mStatus here: The thread is already running (may, in fact
     // already have exited with a valid mStatus result). The NO_ERROR indication
     // here merely indicates successfully starting the thread and does not
