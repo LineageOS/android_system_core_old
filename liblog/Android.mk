@@ -74,10 +74,6 @@ ifeq ($(TARGET_USES_MOTOROLA_LOG),true)
 LIBLOG_CFLAGS := -DMOTOROLA_LOG
 endif
 
-ifeq ($(TARGET_USES_HUAWEI_LOG),true)
-LIBLOG_CFLAGS := -DHUAWEI_LOG
-endif
-
 # Shared and static library for target
 # ========================================================
 include $(CLEAR_VARS)

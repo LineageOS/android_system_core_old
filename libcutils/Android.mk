@@ -71,10 +71,6 @@ ifneq ($(WINDOWS_HOST_ONLY),1)
 
 endif
 
-ifeq ($(TARGET_USES_HUAWEI_APP_INFO),true)
-    commonSources += \
-	huawei.c
-endif
 
 # Static library for host
 # ========================================================
