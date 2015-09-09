@@ -531,6 +531,7 @@ service surfaceflinger /system/bin/surfaceflinger
     class main
     user system
     group graphics drmrpc
+    ioprio rt 6
     onrestart restart zygote
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
