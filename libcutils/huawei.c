@@ -87,3 +87,6 @@ int get_app_info(char* key, char* value) {
  exit:
     return ret;
 }
+
+void isLogEnabled() {
+}
