@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1a1f67_f6727e7c",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-09-10T22:22:42Z",
+      "side": 0,
+      "message": "It will put resources in /res/images if you specify a custom location.",
+      "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
