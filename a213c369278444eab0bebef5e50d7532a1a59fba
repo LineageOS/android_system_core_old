@@ -34,6 +34,24 @@
       "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_f6cefe81",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-09-10T22:34:28Z",
+      "side": 0,
+      "message": "When we added a hook for the CM charger animation, We should have made it a generic hook for any arbitrary charger animation. We should not have made this dependent on a change in a specific charger animation.",
+      "parentUuid": "1f1a1f67_b61ac614",
+      "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
