@@ -52,6 +52,24 @@
       "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_561812d2",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2015-09-10T22:51:43Z",
+      "side": 0,
+      "message": "The reason I moved the path is because the font lib is from recovery mini UI. The default resource path is pointing to res/images. I don\u0027t want to change the recovery mini UI, so I changed charger resource path.",
+      "parentUuid": "1f1a1f67_f6cefe81",
+      "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
