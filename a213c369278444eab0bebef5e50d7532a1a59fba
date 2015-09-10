@@ -16,6 +16,24 @@
       "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f1a1f67_b61ac614",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2015-09-10T22:31:43Z",
+      "side": 0,
+      "message": "This is for CM charger animation. The image path is pointed to /res/images/ in CM charger.",
+      "parentUuid": "1f1a1f67_f6727e7c",
+      "revId": "a213c369278444eab0bebef5e50d7532a1a59fba",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
