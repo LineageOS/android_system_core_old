@@ -56,21 +56,43 @@ static int mapSysfsString(const char* str,
 }
 
 int BatteryMonitor::getBatteryStatus(const char* status) {
-    int ret;
-    struct sysfsStringEnumMap batteryStatusMap[] = {
-        { "Unknown", BATTERY_STATUS_UNKNOWN },
-        { "Charging", BATTERY_STATUS_CHARGING },
-        { "Discharging", BATTERY_STATUS_DISCHARGING },
-        { "Not charging", BATTERY_STATUS_NOT_CHARGING },
-        { "Full", BATTERY_STATUS_FULL },
-        { NULL, 0 },
-    };
+    int ret = HEALTHD_MAP_CONTINUE_SEARCH;
 
-    ret = mapSysfsString(status, batteryStatusMap);
+    if (mHealthdConfig->mapBatteryStatusString)
+        ret = mHealthdConfig->mapBatteryStatusString(status);
+
+    if (ret == HEALTHD_MAP_CONTINUE_SEARCH) {
+        struct sysfsStringEnumMap batteryStatusMap[] = {
+            { "Unknown", BATTERY_STATUS_UNKNOWN },
+            { "Charging", BATTERY_STATUS_CHARGING },
+            { "Discharging", BATTERY_STATUS_DISCHARGING },
+            { "Not charging", BATTERY_STATUS_NOT_CHARGING },
+            { "Full", BATTERY_STATUS_FULL },
+            { NULL, 0 },
+            };
+
+        ret = mapSysfsString(status, batteryStatusMap);
+    }
+
     if (ret < 0) {
         KLOG_WARNING(LOG_TAG, "Unknown battery status '%s'\n", status);
         ret = BATTERY_STATUS_UNKNOWN;
     }
+
+    return ret;
+}
+
+int BatteryMonitor::getBatteryChargeRate(const char* charge_rate) {
+    int ret = HEALTHD_MAP_CONTINUE_SEARCH;
+
+    if (mHealthdConfig->mapChargeRateString)
+        ret = mHealthdConfig->mapChargeRateString(charge_rate);
+
+    if (ret == HEALTHD_MAP_CONTINUE_SEARCH)
+        ret = BATTERY_CHARGE_RATE_UNKNOWN;
+
+    if (ret < 0)
+        ret = BATTERY_CHARGE_RATE_UNKNOWN;
 
     return ret;
 }
@@ -186,6 +208,7 @@ bool BatteryMonitor::update(void) {
     props.chargerWirelessOnline = false;
     props.chargerDockAcOnline = false;
     props.batteryStatus = BATTERY_STATUS_UNKNOWN;
+    props.batteryChargeRate = BATTERY_CHARGE_RATE_UNKNOWN;
     props.batteryHealth = BATTERY_HEALTH_UNKNOWN;
     props.dockBatteryStatus = BATTERY_STATUS_UNKNOWN;
     props.dockBatteryHealth = BATTERY_HEALTH_UNKNOWN;
@@ -207,6 +230,10 @@ bool BatteryMonitor::update(void) {
     const int SIZE = 128;
     char buf[SIZE];
     String8 btech;
+
+    if (!mHealthdConfig->batteryChargeRatePath.isEmpty())
+        if (readFromFile(mHealthdConfig->batteryChargeRatePath, buf, SIZE) > 0)
+            props.batteryChargeRate = getBatteryChargeRate(buf);
 
     if (readFromFile(mHealthdConfig->batteryStatusPath, buf, SIZE) > 0)
         props.batteryStatus = getBatteryStatus(buf);
