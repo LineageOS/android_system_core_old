@@ -55,7 +55,7 @@ static int mapSysfsString(const char* str,
     return -1;
 }
 
-int BatteryMonitor::getBatteryStatus(const char* status) {
+int BatteryMonitor::getBatteryStatus(const char* status, const char *chargeType) {
     int ret;
     struct sysfsStringEnumMap batteryStatusMap[] = {
         { "Unknown", BATTERY_STATUS_UNKNOWN },
@@ -63,6 +63,12 @@ int BatteryMonitor::getBatteryStatus(const char* status) {
         { "Discharging", BATTERY_STATUS_DISCHARGING },
         { "Not charging", BATTERY_STATUS_NOT_CHARGING },
         { "Full", BATTERY_STATUS_FULL },
+        { "Quick charging", BATTERY_STATUS_QUICK_CHARGING },
+        { "Not Quick charging", BATTERY_STATUS_CHARGING },
+        { NULL, 0 },
+    };
+    struct sysfsStringEnumMap chargeTypeMap[] = {
+        { "Fast", 1 },
         { NULL, 0 },
     };
 
@@ -71,6 +77,9 @@ int BatteryMonitor::getBatteryStatus(const char* status) {
         KLOG_WARNING(LOG_TAG, "Unknown battery status '%s'\n", status);
         ret = BATTERY_STATUS_UNKNOWN;
     }
+
+    if (ret == BATTERY_STATUS_CHARGING && mapSysfsString(chargeType, chargeTypeMap) > 0)
+        ret = BATTERY_STATUS_QUICK_CHARGING;
 
     return ret;
 }
@@ -206,10 +215,14 @@ bool BatteryMonitor::update(void) {
 
     const int SIZE = 128;
     char buf[SIZE];
+    char chargeType[SIZE];
     String8 btech;
 
+    if (readFromFile(mHealthdConfig->batteryChargeTypePath, chargeType, SIZE) <= 0)
+        chargeType[0] = '\0';
+
     if (readFromFile(mHealthdConfig->batteryStatusPath, buf, SIZE) > 0)
-        props.batteryStatus = getBatteryStatus(buf);
+        props.batteryStatus = getBatteryStatus(buf, chargeType);
 
     if (readFromFile(mHealthdConfig->batteryHealthPath, buf, SIZE) > 0)
         props.batteryHealth = getBatteryHealth(buf);
@@ -234,7 +247,7 @@ bool BatteryMonitor::update(void) {
             getIntField(mHealthdConfig->dockBatteryTemperaturePath);
 
         if (readFromFile(mHealthdConfig->dockBatteryStatusPath, buf, SIZE) > 0)
-            props.dockBatteryStatus = getBatteryStatus(buf);
+            props.dockBatteryStatus = getBatteryStatus(buf, chargeType);
 
         if (readFromFile(mHealthdConfig->dockBatteryHealthPath, buf, SIZE) > 0)
             props.dockBatteryHealth = getBatteryHealth(buf);
@@ -591,6 +604,14 @@ void BatteryMonitor::init(struct healthd_config *hc) {
                                       name);
                     if (access(path, R_OK) == 0)
                         mHealthdConfig->batteryStatusPath = path;
+                }
+
+                if (mHealthdConfig->batteryChargeTypePath.isEmpty()) {
+                    path.clear();
+                    path.appendFormat("%s/%s/charge_type", POWER_SUPPLY_SYSFS_PATH,
+                                      name);
+                    if (access(path, R_OK) == 0)
+                        mHealthdConfig->batteryChargeTypePath = path;
                 }
 
                 if (mHealthdConfig->batteryHealthPath.isEmpty()) {

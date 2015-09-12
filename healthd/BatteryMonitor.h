@@ -55,7 +55,7 @@ class BatteryMonitor {
     int mBatteryFixedTemperature;
     struct BatteryProperties props;
 
-    int getBatteryStatus(const char* status);
+    int getBatteryStatus(const char* status, const char *chargeType);
     int getBatteryHealth(const char* status);
     int readFromFile(const String8& path, char* buf, size_t size);
     PowerSupplyType readPowerSupplyType(const String8& path);
