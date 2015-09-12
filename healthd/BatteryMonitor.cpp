@@ -56,21 +56,51 @@ static int mapSysfsString(const char* str,
 }
 
 int BatteryMonitor::getBatteryStatus(const char* status) {
-    int ret;
-    struct sysfsStringEnumMap batteryStatusMap[] = {
-        { "Unknown", BATTERY_STATUS_UNKNOWN },
-        { "Charging", BATTERY_STATUS_CHARGING },
-        { "Discharging", BATTERY_STATUS_DISCHARGING },
-        { "Not charging", BATTERY_STATUS_NOT_CHARGING },
-        { "Full", BATTERY_STATUS_FULL },
-        { NULL, 0 },
-    };
+    int ret = HEALTHD_MAP_CONTINUE_SEARCH;
 
-    ret = mapSysfsString(status, batteryStatusMap);
+    if (mHealthdConfig->mapBatteryStatusString)
+        ret = mHealthdConfig->mapBatteryStatusString(status);
+
+    if (ret == HEALTHD_MAP_CONTINUE_SEARCH) {
+        struct sysfsStringEnumMap batteryStatusMap[] = {
+            { "Unknown", BATTERY_STATUS_UNKNOWN },
+            { "Charging", BATTERY_STATUS_CHARGING },
+            { "Discharging", BATTERY_STATUS_DISCHARGING },
+            { "Not charging", BATTERY_STATUS_NOT_CHARGING },
+            { "Full", BATTERY_STATUS_FULL },
+            { NULL, 0 },
+            };
+
+        ret = mapSysfsString(status, batteryStatusMap);
+    }
+
     if (ret < 0) {
         KLOG_WARNING(LOG_TAG, "Unknown battery status '%s'\n", status);
         ret = BATTERY_STATUS_UNKNOWN;
     }
+
+    return ret;
+}
+
+int BatteryMonitor::getBatteryChargeType(const char* chargeType) {
+    int ret = HEALTHD_MAP_CONTINUE_SEARCH;
+
+    if (mHealthdConfig->mapChargeTypeString)
+        ret = mHealthdConfig->mapChargeTypeString(chargeType);
+
+    if (ret == HEALTHD_MAP_CONTINUE_SEARCH) {
+        struct sysfsStringEnumMap chargeTypeMap[] = {
+            { "Unknown", BATTERY_CHARGE_TYPE_UNKNOWN },
+            { "Fast", BATTERY_CHARGE_TYPE_FAST_CHARGING },
+            { "Turbo", BATTERY_CHARGE_TYPE_FAST_CHARGING },
+            { NULL, 0 },
+        };
+
+        ret = mapSysfsString(chargeType, chargeTypeMap);
+    }
+
+    if (ret < 0)
+        ret = BATTERY_CHARGE_TYPE_UNKNOWN;
 
     return ret;
 }
@@ -186,6 +216,7 @@ bool BatteryMonitor::update(void) {
     props.chargerWirelessOnline = false;
     props.chargerDockAcOnline = false;
     props.batteryStatus = BATTERY_STATUS_UNKNOWN;
+    props.batteryChargeType = BATTERY_CHARGE_TYPE_UNKNOWN;
     props.batteryHealth = BATTERY_HEALTH_UNKNOWN;
     props.dockBatteryStatus = BATTERY_STATUS_UNKNOWN;
     props.dockBatteryHealth = BATTERY_HEALTH_UNKNOWN;
@@ -207,6 +238,9 @@ bool BatteryMonitor::update(void) {
     const int SIZE = 128;
     char buf[SIZE];
     String8 btech;
+
+    if (readFromFile(mHealthdConfig->batteryChargeTypePath, buf, SIZE) > 0)
+        props.batteryChargeType = getBatteryChargeType(buf);
 
     if (readFromFile(mHealthdConfig->batteryStatusPath, buf, SIZE) > 0)
         props.batteryStatus = getBatteryStatus(buf);
@@ -591,6 +625,14 @@ void BatteryMonitor::init(struct healthd_config *hc) {
                                       name);
                     if (access(path, R_OK) == 0)
                         mHealthdConfig->batteryStatusPath = path;
+                }
+
+                if (mHealthdConfig->batteryChargeTypePath.isEmpty()) {
+                    path.clear();
+                    path.appendFormat("%s/%s/charge_type", POWER_SUPPLY_SYSFS_PATH,
+                                      name);
+                    if (access(path, R_OK) == 0)
+                        mHealthdConfig->batteryChargeTypePath = path;
                 }
 
                 if (mHealthdConfig->batteryHealthPath.isEmpty()) {
