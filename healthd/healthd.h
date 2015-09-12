@@ -74,6 +74,7 @@ struct healthd_config {
     int periodic_chores_interval_slow;
 
     android::String8 batteryStatusPath;
+    android::String8 batteryChargeTypePath;
     android::String8 batteryHealthPath;
     android::String8 batteryPresentPath;
     android::String8 batteryCapacityPath;

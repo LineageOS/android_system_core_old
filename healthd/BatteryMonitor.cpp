@@ -75,6 +75,22 @@ int BatteryMonitor::getBatteryStatus(const char* status) {
     return ret;
 }
 
+int BatteryMonitor::getBatteryChargeType(const char* chargeType) {
+    int ret;
+    struct sysfsStringEnumMap chargeTypeMap[] = {
+        { "Unknown", BATTERY_CHARGE_TYPE_UNKNOWN },
+        { "Fast", BATTERY_CHARGE_TYPE_FAST_CHARGING },
+        { "Turbo", BATTERY_CHARGE_TYPE_FAST_CHARGING },
+        { NULL, 0 },
+    };
+
+    ret = mapSysfsString(chargeType, chargeTypeMap);
+    if (ret < 0)
+        ret = BATTERY_CHARGE_TYPE_UNKNOWN;
+
+    return ret;
+}
+
 int BatteryMonitor::getBatteryHealth(const char* status) {
     int ret;
     struct sysfsStringEnumMap batteryHealthMap[] = {
@@ -186,6 +202,7 @@ bool BatteryMonitor::update(void) {
     props.chargerWirelessOnline = false;
     props.chargerDockAcOnline = false;
     props.batteryStatus = BATTERY_STATUS_UNKNOWN;
+    props.batteryChargeType = BATTERY_CHARGE_TYPE_UNKNOWN;
     props.batteryHealth = BATTERY_HEALTH_UNKNOWN;
     props.dockBatteryStatus = BATTERY_STATUS_UNKNOWN;
     props.dockBatteryHealth = BATTERY_HEALTH_UNKNOWN;
@@ -207,6 +224,9 @@ bool BatteryMonitor::update(void) {
     const int SIZE = 128;
     char buf[SIZE];
     String8 btech;
+
+    if (readFromFile(mHealthdConfig->batteryChargeTypePath, buf, SIZE) > 0)
+        props.batteryChargeType = getBatteryChargeType(buf);
 
     if (readFromFile(mHealthdConfig->batteryStatusPath, buf, SIZE) > 0)
         props.batteryStatus = getBatteryStatus(buf);
@@ -591,6 +611,14 @@ void BatteryMonitor::init(struct healthd_config *hc) {
                                       name);
                     if (access(path, R_OK) == 0)
                         mHealthdConfig->batteryStatusPath = path;
+                }
+
+                if (mHealthdConfig->batteryChargeTypePath.isEmpty()) {
+                    path.clear();
+                    path.appendFormat("%s/%s/charge_type", POWER_SUPPLY_SYSFS_PATH,
+                                      name);
+                    if (access(path, R_OK) == 0)
+                        mHealthdConfig->batteryChargeTypePath = path;
                 }
 
                 if (mHealthdConfig->batteryHealthPath.isEmpty()) {
