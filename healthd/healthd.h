@@ -74,6 +74,7 @@ struct healthd_config {
     int periodic_chores_interval_slow;
 
     android::String8 batteryStatusPath;
+    android::String8 batteryChargeTypePath;
     android::String8 batteryHealthPath;
     android::String8 batteryPresentPath;
     android::String8 batteryCapacityPath;
@@ -100,6 +101,16 @@ struct healthd_config {
     android::String8 dockBatteryChargeCounterPath;
 
     int (*dockEnergyCounter)(int64_t *);
+
+    /* Provide extensions for the string to int mappings.  Returning a value
+     * >= 0 will use that value, a negative number is an error code and
+     * the special value HEALTHD_MAP_CONTINUE_SEARCH will fall back to the
+     * built-in mapping.
+     */
+    #define HEALTHD_MAP_CONTINUE_SEARCH INT_MAX
+
+    int (*mapBatteryStatusString)(const char *status);
+    int (*mapChargeTypeString)(const char *charge_type);
 };
 
 // Global helper functions

@@ -52,6 +52,7 @@ static struct healthd_config healthd_config = {
     .periodic_chores_interval_fast = DEFAULT_PERIODIC_CHORES_INTERVAL_FAST,
     .periodic_chores_interval_slow = DEFAULT_PERIODIC_CHORES_INTERVAL_SLOW,
     .batteryStatusPath = String8(String8::kEmptyString),
+    .batteryChargeTypePath = String8(String8::kEmptyString),
     .batteryHealthPath = String8(String8::kEmptyString),
     .batteryPresentPath = String8(String8::kEmptyString),
     .batteryCapacityPath = String8(String8::kEmptyString),
@@ -75,6 +76,8 @@ static struct healthd_config healthd_config = {
     .dockBatteryCurrentAvgPath = String8(String8::kEmptyString),
     .dockBatteryChargeCounterPath = String8(String8::kEmptyString),
     .dockEnergyCounter = NULL,
+    .mapBatteryStatusString = NULL,
+    .mapChargeTypeString = NULL,
 };
 
 static int eventct;
