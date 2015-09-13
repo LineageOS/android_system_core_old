@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f1a1f67_a8c5bf5d",
+        "filename": "libutils/Threads.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-09-13T09:40:18Z",
+      "side": 0,
+      "message": "Don\u0027t needs this whitespace change.",
+      "revId": "4a9957cdbfeb28bb9c3a5c765fd927dcb8832a20",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
