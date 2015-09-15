@@ -93,23 +93,6 @@ int __android_log_dev_available(void)
     return (g_log_status == kLogAvailable);
 }
 
-#ifdef HTCLOG
-signed int __htclog_read_masks(char *buf __unused, signed int len __unused)
-{
-    return 0;
-}
-
-int __htclog_init_mask(const char *a1 __unused, unsigned int a2 __unused, int a3 __unused)
-{
-    return 0;
-}
-
-int __htclog_print_private(int a1 __unused, const char *a2 __unused, const char *fmt __unused, ...)
-{
-    return 0;
-}
-#endif
-
 #ifdef MOTOROLA_LOG
 /* Fallback when there is neither log.tag.<tag> nor log.tag.DEFAULT.
  * this is compile-time defaulted to "info". The log startup code
