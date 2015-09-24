@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3967d1_e0d86c80",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2015-09-24T19:39:15Z",
+      "side": 1,
+      "message": "\u0027Fast\u0027 actually is returned for slow charging as well. I had the same thinko ;)",
+      "revId": "93fa424a5ee2751ce5410c8b38add7b6c8ae43a9",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df3967d1_c0e5683a",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2015-09-24T19:39:15Z",
+      "side": 1,
+      "message": "For the Oppo case, this isn\u0027t yet sufficient: We\u0027d need two charge type nodes for it: \u0027fastcharger\u0027 and \u0027charge_type\u0027, where the latter is valid if the former returns \u00270\u0027.\n\nOr am I overthinking it in that the other charge_type values (none, trickle) are irrelevant for our use cases anyway?",
+      "revId": "93fa424a5ee2751ce5410c8b38add7b6c8ae43a9",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
