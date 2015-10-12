@@ -1099,6 +1099,9 @@ int main(int argc, char** argv) {
     char bootmode[PROP_VALUE_MAX];
     if (property_get("ro.bootmode", bootmode) > 0 && strcmp(bootmode, "charger") == 0) {
         action_for_each_trigger("charger", action_add_queue_tail);
+    } else if (strncmp(bootmode, "ffbm", 4) == 0) {
+        KLOG_ERROR("Booting into ffbm mode\n");
+        action_for_each_trigger("ffbm", action_add_queue_tail);
     } else {
         action_for_each_trigger("late-init", action_add_queue_tail);
     }
