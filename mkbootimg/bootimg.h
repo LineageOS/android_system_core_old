@@ -44,7 +44,7 @@ struct boot_img_hdr
     uint32_t tags_addr;    /* physical addr for kernel tags */
     uint32_t page_size;    /* flash page size we assume */
     uint32_t dt_size;      /* device tree in bytes */
-    uint32_t unused[2];    /* future expansion: should be 0 */
+    uint32_t unused;       /* future expansion: should be 0 */
 
     uint8_t name[BOOT_NAME_SIZE]; /* asciiz product name */
 
