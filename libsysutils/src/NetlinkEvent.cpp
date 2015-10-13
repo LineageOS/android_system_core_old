@@ -584,6 +584,10 @@ bool NetlinkEvent::parseAsciiNetlinkMessage(char *buffer, int size) {
         }
         s += strlen(s) + 1;
     }
+    if(findParam("ALERT_NAME") !=NULL ) {
+        mSubsystem = strdup("qlog");
+        mAction = NlActionChange;
+    }
     return true;
 }
 
@@ -606,6 +610,6 @@ const char *NetlinkEvent::findParam(const char *paramName) {
             return ++ptr;
     }
 
-    SLOGE("NetlinkEvent::FindParam(): Parameter '%s' not found", paramName);
+    SLOGV("NetlinkEvent::FindParam(): Parameter '%s' not found", paramName);
     return NULL;
 }
