@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f287b81_3bfa0742",
+        "filename": "include/private/android_filesystem_config.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-10-15T23:58:20Z",
+      "side": 1,
+      "message": "This is a duplicate of line 181",
+      "revId": "e272291d553000ccede42057d0042eddf2bced77",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f287b81_1b950be5",
+        "filename": "include/system/graphics.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-10-15T23:58:20Z",
+      "side": 1,
+      "message": "What commit introduced these previously?",
+      "revId": "e272291d553000ccede42057d0042eddf2bced77",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
