@@ -857,7 +857,7 @@ static int queue_property_triggers_action(int nargs, char **args)
 }
 
 #if BOOTCHART
-static int bootchart_init_action(int nargs, char **args)
+int bootchart_init_action(int nargs, char **args)
 {
     bootchart_count = bootchart_init();
     if (bootchart_count < 0) {
@@ -1145,11 +1145,6 @@ int main(int argc, char **argv)
     }
     /* run all property triggers based on current state of the properties */
     queue_builtin_action(queue_property_triggers_action, "queue_property_triggers");
-
-
-#if BOOTCHART
-    queue_builtin_action(bootchart_init_action, "bootchart_init");
-#endif
 
     for(;;) {
         int nr, i, timeout = -1;

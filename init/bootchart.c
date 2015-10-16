@@ -32,6 +32,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <selinux/android.h>
 #include "bootchart.h"
 
 #define VERSION         "0.8"
@@ -332,6 +333,7 @@ int   bootchart_init( void )
     count = (timeout*1000 + BOOTCHART_POLLING_MS-1)/BOOTCHART_POLLING_MS;
 
     do {ret=mkdir(LOG_ROOT,0755);}while (ret < 0 && errno == EINTR);
+    selinux_android_restorecon(LOG_ROOT, 0);
 
     file_buff_open(log_stat,  LOG_STAT);
     file_buff_open(log_procs, LOG_PROCS);
