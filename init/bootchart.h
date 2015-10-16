@@ -26,6 +26,7 @@
 extern int   bootchart_init(void);
 extern int   bootchart_step(void);
 extern void  bootchart_finish(void);
+extern int   bootchart_init_action(int nargs, char **args);
 
 # define BOOTCHART_POLLING_MS   200   /* polling period in ms */
 # define BOOTCHART_DEFAULT_TIME_SEC    (2*60)  /* default polling time in seconds */
