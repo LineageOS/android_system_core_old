@@ -87,6 +87,8 @@ LOCAL_CFLAGS := -Werror $(liblog_cflags)
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 
+LOCAL_WHOLE_STATIC_LIBRARIES += $(BOARD_PROVIDES_LOG_STATIC_LIBS)
+
 include $(BUILD_SHARED_LIBRARY)
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
