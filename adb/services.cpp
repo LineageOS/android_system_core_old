@@ -83,8 +83,7 @@ void restart_root_service(int fd, void *cookie) {
         property_get("ro.cm.version", cm_version, "");
 
         if (strlen(cm_version) > 0 && strcmp(build_type, "eng") != 0 && (atoi(value) & 2) != 2) {
-            snprintf(buf, sizeof(buf), "root access is disabled by system setting - enable in settings -> development options\n");
-            writex(fd, buf, strlen(buf));
+            WriteFdExactly(fd, "root access is disabled by system setting - enable in settings -> development options\n");
             adb_close(fd);
             return;
         }
