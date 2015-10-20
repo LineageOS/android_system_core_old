@@ -18,6 +18,7 @@
 #define _INIT_PROPERTY_H
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <sys/system_properties.h>
 
 extern void property_init(void);
