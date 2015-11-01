@@ -58,6 +58,7 @@ endif
 LOCAL_MODULE := liblog
 LOCAL_SRC_FILES := $(liblog_host_sources)
 LOCAL_CFLAGS := -DFAKE_LOG_DEVICE=1 -Werror $(liblog_cflags)
+LOCAL_CLANG := true
 LOCAL_MULTILIB := both
 include $(BUILD_HOST_STATIC_LIBRARY)
 
@@ -67,6 +68,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES := liblog
 ifeq ($(strip $(HOST_OS)),linux)
 LOCAL_LDLIBS := -lrt
 endif
+LOCAL_CLANG := true
 LOCAL_MULTILIB := both
 include $(BUILD_HOST_SHARED_LIBRARY)
 
@@ -77,6 +79,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := liblog
 LOCAL_SRC_FILES := $(liblog_target_sources)
 LOCAL_CFLAGS := -Werror $(liblog_cflags)
+LOCAL_CLANG := true
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -87,6 +90,7 @@ LOCAL_CFLAGS := -Werror $(liblog_cflags)
 # TODO: This is to work around b/19059885. Remove after root cause is fixed
 LOCAL_LDFLAGS_arm := -Wl,--hash-style=both
 
+LOCAL_CLANG := true
 include $(BUILD_SHARED_LIBRARY)
 
 include $(call first-makefiles-under,$(LOCAL_PATH))
