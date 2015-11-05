@@ -877,7 +877,7 @@ static void selinux_init_all_handles(void)
 enum selinux_enforcing_status { SELINUX_DISABLED, SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
 static selinux_enforcing_status selinux_status_from_cmdline() {
-    selinux_enforcing_status status = SELINUX_ENFORCING;
+    selinux_enforcing_status status = SELINUX_PERMISSIVE;
 
     std::function<void(char*,bool)> fn = [&](char* name, bool in_qemu) {
         char *value = strchr(name, '=');
