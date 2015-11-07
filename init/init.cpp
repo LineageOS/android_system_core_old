@@ -1125,7 +1125,7 @@ int main(int argc, char** argv) {
 
     // Don't mount filesystems or start core system services in charger mode.
     char bootmode[PROP_VALUE_MAX];
-    if ((property_get("ro.bootmode", bootmode) > 0 && strcmp(bootmode, "charger") == 0 &&
+    if (((property_get("ro.bootmode", bootmode) > 0 && strcmp(bootmode, "charger") == 0) ||
          strcmp(battchg_pause, BOARD_CHARGING_CMDLINE_VALUE) == 0)
                || charging_mode_booting()) {
         action_for_each_trigger("charger", action_add_queue_tail);
