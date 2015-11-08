@@ -12,6 +12,7 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
 	healthd.cpp \
+	healthd_board_default.cpp \
 	healthd_mode_android.cpp \
 	healthd_mode_charger.cpp \
 	BatteryMonitor.cpp \
