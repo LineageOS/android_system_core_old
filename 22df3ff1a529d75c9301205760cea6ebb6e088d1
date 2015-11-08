@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f2f7f8d_ffec70f4",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-11-08T03:38:09Z",
+      "side": 1,
+      "message": "This should be in the set_backlight function.",
+      "revId": "22df3ff1a529d75c9301205760cea6ebb6e088d1",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
