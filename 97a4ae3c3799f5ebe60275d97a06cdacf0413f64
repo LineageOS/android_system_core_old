@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f2f7f8d_7e94f98b",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-11-10T04:10:04Z",
+      "side": 1,
+      "message": "Aren\u0027t you just expected to use this static lib?",
+      "revId": "97a4ae3c3799f5ebe60275d97a06cdacf0413f64",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
