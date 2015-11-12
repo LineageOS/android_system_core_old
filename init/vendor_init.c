@@ -35,3 +35,9 @@ __attribute__ ((weak))
 void vendor_load_properties()
 {
 }
+
+__attribute__ ((weak))
+int vendor_handle_control_message(const char *msg, const char *arg)
+{
+    return -ENOSYS;
+}
