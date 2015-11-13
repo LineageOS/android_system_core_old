@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1f2f7f8d_64f0e268",
+        "filename": "init/init.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-11-13T02:07:36Z",
+      "side": 1,
+      "message": "Could do this also to minimize the diff:\n\nif (vendor_handle_control_message(msg, arg))\n\nreturn;\n\nI do have questions about the expected control flow though. Is the vendor function expected to take over all of the functionality here, or is it just an extension to this function? Also, in case of vendor function failure, don\u0027t you still want the remainder of the function to run?",
+      "revId": "e5d561431c17a4cf6f254773c364882ec1482180",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
