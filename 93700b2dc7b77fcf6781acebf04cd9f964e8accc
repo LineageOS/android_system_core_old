@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f4e5783_3acb45a6",
+        "filename": "init/devices.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 13881
+      },
+      "writtenOn": "2015-11-23T03:13:40Z",
+      "side": 1,
+      "message": "The original path had an additional check so that it was\nif (booting || (access(\"/system/etc/firmware\", F_OK) !\u003d 0) {\n\nThat might be the issue. I have to head out now so I haven\u0027t had time to test this change, but I\u0027ll do it later.",
+      "revId": "93700b2dc7b77fcf6781acebf04cd9f964e8accc",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
