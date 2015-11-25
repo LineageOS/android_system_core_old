@@ -66,7 +66,6 @@ endif
 
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
-    external/zlib \
     system/extras/ext4_utils \
     system/core/mkbootimg
 
