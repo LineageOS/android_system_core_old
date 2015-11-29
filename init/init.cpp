@@ -363,7 +363,9 @@ static void export_kernel_boot_props() {
         { "ro.boot.baseband",   "ro.baseband",   "unknown", },
         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
         { "ro.boot.hardware",   "ro.hardware",   "unknown", },
+#ifndef IGNORE_RO_BOOT_REVISION
         { "ro.boot.revision",   "ro.revision",   "0", },
+#endif
     };
     for (size_t i = 0; i < ARRAY_SIZE(prop_map); i++) {
         std::string value = property_get(prop_map[i].src_prop);
