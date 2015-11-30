@@ -81,9 +81,6 @@ char *locale;
 #ifndef BLUE_LED_PATH
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
 #endif
-#ifndef BACKLIGHT_PATH
-#define BACKLIGHT_PATH          "/sys/class/leds/lcd-backlight/brightness"
-#endif
 
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGW(x...) do { KLOG_WARNING("charger", x); } while (0)
@@ -257,53 +254,6 @@ static int set_battery_soc_leds(int soc)
         old_color = color;
         LOGV("soc = %d, set led color 0x%x\n", soc, soc_leds[i].color);
     }
-
-    return 0;
-}
-
-#define BACKLIGHT_ON_LEVEL    100
-static int set_backlight(bool on)
-{
-    int fd;
-    char buffer[10];
-
-    if (access(BACKLIGHT_PATH, R_OK | W_OK) != 0)
-    {
-        LOGW("Backlight control not support\n");
-        return 0;
-    }
-
-    memset(buffer, '\0', sizeof(buffer));
-    fd = open(BACKLIGHT_PATH, O_RDWR);
-    if (fd < 0) {
-        LOGE("Could not open backlight node : %s\n", strerror(errno));
-        return 0;
-    }
-    LOGV("Enabling backlight\n");
-    snprintf(buffer, sizeof(buffer), "%d\n", on ? BACKLIGHT_ON_LEVEL : 0);
-    if (write(fd, buffer,strlen(buffer)) < 0) {
-        LOGE("Could not write to backlight node : %s\n", strerror(errno));
-    }
-    close(fd);
-
-#ifdef SECONDARY_BACKLIGHT_PATH
-    if (access(SECONDARY_BACKLIGHT_PATH, R_OK | W_OK) != 0)
-    {
-        LOGW("Secondary Backlight control not support\n");
-        return 0;
-    }
-
-    fd = open(SECONDARY_BACKLIGHT_PATH, O_RDWR);
-    if (fd < 0) {
-        LOGE("Could not open secondary backlight node : %s\n", strerror(errno));
-        return 0;
-    }
-    LOGV("Enabling secondary backlight\n");
-    if (write(fd, buffer,strlen(buffer)) < 0) {
-        LOGE("Could not write to secondary backlight node : %s\n", strerror(errno));
-    }
-    close(fd);
-#endif
 
     return 0;
 }
@@ -501,7 +451,6 @@ static void update_screen_state(struct charger *charger, int64_t now)
         gr_font_size(&char_width, &char_height);
 
 #ifndef CHARGER_DISABLE_INIT_BLANK
-        set_backlight(false);
         healthd_board_mode_charger_set_backlight(false);
         gr_fb_blank(true);
 #endif
@@ -512,7 +461,6 @@ static void update_screen_state(struct charger *charger, int64_t now)
     if (batt_anim->cur_cycle == batt_anim->num_cycles) {
         reset_animation(batt_anim);
         charger->next_screen_transition = -1;
-        set_backlight(false);
         healthd_board_mode_charger_set_backlight(false);
         gr_fb_blank(true);
         LOGV("[%" PRId64 "] animation done\n", now);
@@ -547,7 +495,6 @@ static void update_screen_state(struct charger *charger, int64_t now)
     /* unblank the screen on first cycle */
     if (batt_anim->cur_cycle == 0) {
         gr_fb_blank(false);
-        set_backlight(true);
         healthd_board_mode_charger_set_backlight(true);
     }
 
@@ -662,7 +609,6 @@ static void process_key(struct charger *charger, int code, int64_t now)
                 if (property_get_bool("ro.enable_boot_charger_mode", false)) {
                     LOGW("[%" PRId64 "] booting from charger mode\n", now);
                     set_backlight(false);
-                    healthd_board_mode_charger_set_backlight(false);
                     gr_fb_blank(true);
                     property_set("sys.boot_from_charger_mode", "1");
                 } else {
@@ -693,7 +639,6 @@ static void process_key(struct charger *charger, int code, int64_t now)
                 } else {
                     reset_animation(batt_anim);
                     charger->next_screen_transition = -1;
-                    set_backlight(false);
                     healthd_board_mode_charger_set_backlight(false);
                     gr_fb_blank(true);
                     if (charger->charger_connected)
