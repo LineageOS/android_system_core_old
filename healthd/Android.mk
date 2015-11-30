@@ -6,7 +6,8 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS := -Werror
 
-HEALTHD_CHARGER_DEFINES := BACKLIGHT_PATH
+HEALTHD_CHARGER_DEFINES := BACKLIGHT_PATH \
+    SECONDARY_BACKLIGHT_PATH
 
 $(foreach healthd_charger_define,$(HEALTHD_CHARGER_DEFINES), \
   $(if $($(healthd_charger_define)), \

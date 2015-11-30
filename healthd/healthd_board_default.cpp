@@ -73,6 +73,26 @@ void healthd_board_mode_charger_set_backlight(bool on)
         LOGE("Could not write to backlight node : %s\n", strerror(errno));
     }
     close(fd);
+
+#ifdef SECONDARY_BACKLIGHT_PATH
+    if (access(SECONDARY_BACKLIGHT_PATH, R_OK | W_OK) != 0)
+    {
+        LOGW("Secondary Backlight control not support\n");
+        return;
+    }
+
+    fd = open(SECONDARY_BACKLIGHT_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open secondary backlight node : %s\n", strerror(errno));
+        return;
+    }
+    LOGV("Enabling secondary backlight\n");
+    if (write(fd, buffer,strlen(buffer)) < 0) {
+        LOGE("Could not write to secondary backlight node : %s\n", strerror(errno));
+        return;
+    }
+    close(fd);
+#endif
 }
 
 void healthd_board_mode_charger_init()
