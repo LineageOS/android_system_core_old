@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf8cb3f7_c0a79e4f",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-01T00:42:46Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this stuff go below?",
+      "revId": "3d0bdf9a2065f9895581863a0b19d005954eb9ef",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_60625219",
+        "filename": "healthd/healthd_board_default.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-01T00:42:46Z",
+      "side": 1,
+      "message": "This isn\u0027t the right place to put the implementation.",
+      "revId": "3d0bdf9a2065f9895581863a0b19d005954eb9ef",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_40714ee0",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-01T00:42:46Z",
+      "side": 1,
+      "message": "Isn\u0027t this from another unrelated commit?",
+      "revId": "3d0bdf9a2065f9895581863a0b19d005954eb9ef",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
