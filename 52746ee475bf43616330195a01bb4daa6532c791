@@ -16,6 +16,24 @@
       "revId": "52746ee475bf43616330195a01bb4daa6532c791",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_86c0ce52",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-01T07:46:19Z",
+      "side": 0,
+      "message": "It\u0027s pretty easy to copy the rules here with a custom target to your device repo.",
+      "parentUuid": "bf8cb3f7_6636eab7",
+      "revId": "52746ee475bf43616330195a01bb4daa6532c791",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
