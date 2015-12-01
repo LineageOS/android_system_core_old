@@ -33,6 +33,24 @@
       "revId": "5029693a0c8c6793e5306333af09d6604761c9c2",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_832f60f5",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2015-12-01T03:50:55Z",
+      "side": 0,
+      "message": "It was removed in this commit, but yes, I prefer having it : https://github.com/CyanogenMod/android_system_core/commit/74b61ddd59d8ffcbae2706b0dd8e9a260e1f4c3f",
+      "parentUuid": "bf8cb3f7_80675626",
+      "revId": "5029693a0c8c6793e5306333af09d6604761c9c2",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
