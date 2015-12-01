@@ -16,6 +16,24 @@
       "revId": "ffed2febf3d88d8f24db19972dbbdcec40fc181c",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_632d7c45",
+        "filename": "healthd/healthd_board_default.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2015-12-01T02:56:47Z",
+      "side": 1,
+      "message": "Absolutely agree but wanted to preserve the same logic as BACKLIGHT_PATH.",
+      "parentUuid": "bf8cb3f7_00aee62d",
+      "revId": "ffed2febf3d88d8f24db19972dbbdcec40fc181c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
