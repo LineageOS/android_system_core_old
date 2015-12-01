@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf8cb3f7_6636eab7",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2015-12-01T07:16:48Z",
+      "side": 0,
+      "message": "Ok for the healthd_mode_charger.cpp but the resources have to stay, some devices do use it.",
+      "revId": "52746ee475bf43616330195a01bb4daa6532c791",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
