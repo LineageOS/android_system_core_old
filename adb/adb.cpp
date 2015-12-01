@@ -54,8 +54,6 @@ int HOST = 0;
 
 #if !ADB_HOST
 const char *adb_device_banner = "device";
-
-int recovery_mode = 0;
 #endif
 
 void fatal(const char *fmt, ...)
@@ -196,8 +194,6 @@ void adb_trace_init() {
 
 #if !ADB_HOST
     start_device_log();
-
-    recovery_mode = (strcmp(adb_device_banner, "recovery") == 0);
 #endif
 }
 
