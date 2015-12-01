@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf8cb3f7_00aee62d",
+        "filename": "healthd/healthd_board_default.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-01T00:43:09Z",
+      "side": 1,
+      "message": "I suppose you don\u0027t _really_ need this check, since the open call will fail if the path doesn\u0027t exist anyway.",
+      "revId": "ffed2febf3d88d8f24db19972dbbdcec40fc181c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
