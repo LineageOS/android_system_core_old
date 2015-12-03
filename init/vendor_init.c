@@ -28,6 +28,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "vendor_init.h"
+#include <errno.h>
 
 /* init vendor override stubs */
 
