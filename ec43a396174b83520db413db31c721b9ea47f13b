@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf8cb3f7_3db548ef",
+        "filename": "init/init.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-04T00:50:09Z",
+      "side": 1,
+      "message": "Maybe you want\n\nif (!vendor_handle_control_message(msg, arg)) return;\n\nsince return code of 0 usually denotes success, while a failure would continue through to execute the rest of this function.",
+      "revId": "ec43a396174b83520db413db31c721b9ea47f13b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf8cb3f7_1dcc0488",
+        "filename": "init/vendor_init.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2015-12-04T00:50:09Z",
+      "side": 1,
+      "message": "If you assume an actual implementation will return 0 on success, you should have this dummy implementation return something like -ENOSYS.",
+      "revId": "ec43a396174b83520db413db31c721b9ea47f13b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
