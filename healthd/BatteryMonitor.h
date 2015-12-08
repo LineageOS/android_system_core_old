@@ -51,6 +51,7 @@ class BatteryMonitor {
     Vector<String8> mChargerNames;
     bool mBatteryDevicePresent;
     bool mDockBatteryDevicePresent;
+    bool mAlwaysPluggedDevice;
     int mBatteryFixedCapacity;
     int mBatteryFixedTemperature;
     struct BatteryProperties props;
