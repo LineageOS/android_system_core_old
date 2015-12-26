@@ -30,8 +30,6 @@
 #define LOG_TAG "iosched_policy"
 #include <cutils/log.h>
 
-#define __android_unused __attribute__((__unused__))
-
 #ifdef HAVE_ANDROID_OS
 #include <linux/ioprio.h>
 #include <sys/syscall.h>
@@ -40,19 +38,8 @@
 static int __rtio_cgroup_supported = -1;
 static pthread_once_t __rtio_init_once = PTHREAD_ONCE_INIT;
 
-extern int ioprio_set(int which, int who, int ioprio);
-
-enum {
-    WHO_PROCESS = 1,
-    WHO_PGRP,
-    WHO_USER,
-};
-
-#define CLASS_SHIFT 13
-#define IOPRIO_NORM 4
-
 int android_set_ioprio(int pid, IoSchedClass clazz, int ioprio) {
-    if (ioprio_set(WHO_PROCESS, pid, ioprio | (clazz << CLASS_SHIFT))) {
+    if (syscall(SYS_ioprio_set, IOPRIO_WHO_PROCESS, pid, ioprio | (clazz << IOPRIO_CLASS_SHIFT))) {
         return -1;
     }
     return 0;
@@ -61,11 +48,11 @@ int android_set_ioprio(int pid, IoSchedClass clazz, int ioprio) {
 int android_get_ioprio(int pid, IoSchedClass *clazz, int *ioprio) {
     int rc;
 
-    if ((rc = ioprio_get(WHO_PROCESS, pid)) < 0) {
+    if ((rc = syscall(SYS_ioprio_get, IOPRIO_WHO_PROCESS, pid)) < 0) {
         return -1;
     }
 
-    *clazz = (rc >> CLASS_SHIFT);
+    *clazz = (rc >> IOPRIO_CLASS_SHIFT);
     *ioprio = (rc & 0xff);
     return 0;
 }
@@ -132,17 +119,17 @@ int android_set_rt_ioprio(int tid, int rt) {
 }
 
 #else
-int android_set_ioprio(int pid __android_unused, IoSchedClass clazz __android_unused, int ioprio __android_unused) {
+int android_set_ioprio(int pid, IoSchedClass clazz, int ioprio) {
     return 0;
 }
 
-int android_get_ioprio(int pid __android_unused, IoSchedClass *clazz, int *ioprio) {
+int android_get_ioprio(int pid, IoSchedClass *clazz, int *ioprio) {
     *clazz = IoSchedClass_NONE;
     *ioprio = 0;
     return 0;
 }
 
-int android_set_rt_ioprio(int tid __android_unused, int rt __android_unused)
+int android_set_rt_ioprio(int tid, int rt)
 {
     return 0;
 }
