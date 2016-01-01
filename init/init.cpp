@@ -63,6 +63,7 @@
 #include "util.h"
 #include "ueventd.h"
 #include "watchdogd.h"
+#include "vendor_init.h"
 
 struct selabel_handle *sehandle;
 struct selabel_handle *sehandle_prop;
@@ -535,6 +536,9 @@ static void msg_restart(const char *name)
 
 void handle_control_message(const char *msg, const char *arg)
 {
+    if (!vendor_handle_control_message(msg, arg))
+        return;
+
     if (!strcmp(msg,"start")) {
         msg_start(arg);
     } else if (!strcmp(msg,"stop")) {
