@@ -68,6 +68,7 @@
 #include "ueventd.h"
 #include "util.h"
 #include "watchdogd.h"
+#include "vendor_init.h"
 
 using namespace std::string_literals;
 
@@ -207,6 +208,9 @@ static void restart_processes()
 }
 
 void handle_control_message(const std::string& msg, const std::string& name) {
+    if (!vendor_handle_control_message(msg, name))
+        return;
+
     Service* svc = ServiceManager::GetInstance().FindServiceByName(name);
     if (svc == nullptr) {
         LOG(ERROR) << "no such service '" << name << "'";
