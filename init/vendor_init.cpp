@@ -28,10 +28,17 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "vendor_init.h"
+#include <errno.h>
 
 /* init vendor override stubs */
 
 __attribute__ ((weak))
 void vendor_load_properties()
 {
+}
+
+__attribute__ ((weak))
+int vendor_handle_control_message(const std::string& msg, const std::string& name) {
+{
+    return -ENOSYS;
 }
