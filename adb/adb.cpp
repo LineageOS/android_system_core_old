@@ -726,15 +726,15 @@ int handle_forward_request(const char* service, transport_type ttype, char* seri
         int createForward = strncmp(service, "kill", 4);
         int no_rebind = 0;
 
-        local = strchr(service, ':') + 1;
+        local = (char*) strchr(service, ':') + 1;
 
         // Handle forward:norebind:<local>... here
         if (createForward && !strncmp(local, "norebind:", 9)) {
             no_rebind = 1;
-            local = strchr(local, ':') + 1;
+            local = (char*) strchr(local, ':') + 1;
         }
 
-        remote = strchr(local,';');
+        remote = (char*) strchr(local,';');
 
         if (createForward) {
             // Check forward: parameter format: '<local>;<remote>'

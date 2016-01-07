@@ -502,12 +502,12 @@ static __inline__ void  adb_sysdeps_init(void)
 
 static __inline__ char*  adb_dirstart(const char*  path)
 {
-    return strchr(path, '/');
+    return (char*) strrchr(path, '/');
 }
 
 static __inline__ char*  adb_dirstop(const char*  path)
 {
-    return strrchr(path, '/');
+    return (char*) strrchr(path, '/');
 }
 
 static __inline__  int  adb_is_absolute_host_path( const char*  path )
