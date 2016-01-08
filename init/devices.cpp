@@ -774,6 +774,21 @@ static int load_firmware(int fw_fd, int loading_fd, int data_fd)
         return -1;
     len_to_copy = st.st_size;
 
+    if (S_ISBLK(st.st_mode)) {
+        //File points to a block device. Need to calculate it's size
+        //manually
+        len_to_copy = lseek64(fw_fd, 0, SEEK_END);
+        if (len_to_copy < 0) {
+            ERROR("Failed to get size of blk device partition: %s\n",
+                             strerror(errno));
+            return -1;
+        }
+        if (lseek64(fw_fd, 0, SEEK_SET) < 0) {
+            ERROR("Failed to set r/w offset for blk device partition: %s\n",
+                             strerror(errno));
+            return -1;
+        }
+    }
     write(loading_fd, "1", 1);  /* start transfer */
 
     while (len_to_copy > 0) {
