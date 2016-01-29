@@ -206,6 +206,7 @@ int match_fastboot_with_serial(usb_ifc_info *info, const char *local_serial)
        (info->dev_vendor != 0x0bb4) &&  // HTC
        (info->dev_vendor != 0x0421) &&  // Nokia
        (info->dev_vendor != 0x1ebf) &&  // Coolpad
+       (info->dev_vendor != 0x2b4c) &&  // Zuk
        (info->dev_vendor != 0x2a96))    // MMX
             return -1;
     if(info->ifc_class != 0xff) return -1;
