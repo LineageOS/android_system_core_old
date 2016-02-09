@@ -329,6 +329,7 @@ void usage(void)
             "                                           default: 2048\n"
             "  -S <size>[K|M|G]                         automatically sparse files greater\n"
             "                                           than size.  0 to disable\n"
+            "  -R                                       reboot device (e.g. after flash)\n"
         );
 }
 
@@ -1027,13 +1028,14 @@ int main(int argc, char **argv)
         {"help", no_argument, 0, 'h'},
         {"unbuffered", no_argument, 0, 0},
         {"version", no_argument, 0, 0},
+        {"reboot", no_argument, 0, 'R'},
         {0, 0, 0, 0}
     };
 
     serial = getenv("ANDROID_SERIAL");
 
     while (1) {
-        c = getopt_long(argc, argv, "wub:k:n:r:t:s:S:lp:c:i:m:h", longopts, &longindex);
+        c = getopt_long(argc, argv, "wub:k:n:r:t:s:S:lp:c:i:m:hR", longopts, &longindex);
         if (c < 0) {
             break;
         }
@@ -1073,6 +1075,9 @@ int main(int argc, char **argv)
             break;
         case 'r':
             ramdisk_offset = strtoul(optarg, 0, 16);
+            break;
+        case 'R':
+            wants_reboot = 1;
             break;
         case 't':
             tags_offset = strtoul(optarg, 0, 16);
