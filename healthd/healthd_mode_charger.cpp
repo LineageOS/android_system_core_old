@@ -47,6 +47,7 @@
 #include "minui/minui.h"
 
 #include "healthd.h"
+#include "healthd_msm.h"
 
 char *locale;
 
@@ -801,6 +802,7 @@ void healthd_mode_charger_init(struct healthd_config* config)
     dump_last_kmsg();
 
     LOGW("--------------- STARTING CHARGER MODE ---------------\n");
+    power_off_alarm_init();
 
     healthd_board_mode_charger_init();
 
