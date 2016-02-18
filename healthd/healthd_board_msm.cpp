@@ -34,7 +34,7 @@
 #include <linux/android_alarm.h>
 #include <linux/rtc.h>
 
-#include "healthd_msm.h"
+#include <healthd.h>
 
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGI(x...) do { KLOG_INFO("charger", x); } while (0)
@@ -201,7 +201,7 @@ err:
     return NULL;
 }
 
-void power_off_alarm_init(void)
+void healthd_board_init(struct healthd_config*)
 {
     pthread_t tid;
     int rc;
@@ -213,4 +213,30 @@ void power_off_alarm_init(void)
         if (rc < 0)
             LOGE("Create alarm thread failed\n");
     }
+}
+
+int healthd_board_battery_update(struct android::BatteryProperties*)
+{
+    // return 0 to log periodic polled battery status to kernel log
+    return 1;
+}
+
+void healthd_board_mode_charger_draw_battery(struct android::BatteryProperties*)
+{
+
+}
+
+void healthd_board_mode_charger_battery_update(struct android::BatteryProperties*)
+{
+
+}
+
+void healthd_board_mode_charger_set_backlight(bool)
+{
+
+}
+
+void healthd_board_mode_charger_init()
+{
+
 }
