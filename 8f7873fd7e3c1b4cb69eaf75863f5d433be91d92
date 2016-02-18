@@ -159,6 +159,24 @@
       "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_d3cbc51b",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2016-02-18T03:38:47Z",
+      "side": 1,
+      "message": "Not sure what you mean.",
+      "parentUuid": "ffb9cba7_735bf986",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
