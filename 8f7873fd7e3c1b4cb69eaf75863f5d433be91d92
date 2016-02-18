@@ -123,6 +123,24 @@
       "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_13739d17",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2016-02-18T03:30:54Z",
+      "side": 1,
+      "message": "The alarm code only depends on /dev/rtc0 and /dev/alarm. That should work on other platforms too.",
+      "parentUuid": "ffb9cba7_b313b1b8",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
