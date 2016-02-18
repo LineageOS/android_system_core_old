@@ -105,6 +105,24 @@
       "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_336ca135",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-18T03:29:43Z",
+      "side": 1,
+      "message": "You could, but in that case you\u0027d want to implement this in a more generic way. You\u0027d want to add hooks to the libhealthd HAL instead.",
+      "parentUuid": "ffb9cba7_93122db1",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
