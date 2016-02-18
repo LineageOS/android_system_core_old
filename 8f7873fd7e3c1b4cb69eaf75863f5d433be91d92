@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_f347e9bb",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2016-02-18T03:20:30Z",
+      "side": 1,
+      "message": "cm charger doesn\u0027t use default healthd_board lib.",
+      "parentUuid": "ffb9cba7_33cb4154",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_f3ab6972",
         "filename": "healthd/healthd_mode_charger.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-02-18T03:12:04Z",
       "side": 1,
       "message": "Why do you want to move this?",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_333ee129",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 10346
+      },
+      "writtenOn": "2016-02-18T03:20:30Z",
+      "side": 1,
+      "message": "The healthd_board_init is not called since cm has different healthd_board_init implementation. It\u0027s proper to make the charging mode alarm wakeup a generic feature for all devices. So I moved power_off_alarm_init() here.",
+      "parentUuid": "ffb9cba7_f3ab6972",
       "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
