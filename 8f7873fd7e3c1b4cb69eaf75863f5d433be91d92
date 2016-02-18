@@ -247,6 +247,24 @@
       "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_4e240a0e",
+        "filename": "healthd/healthd_msm_alarm.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-18T06:11:06Z",
+      "side": 1,
+      "message": "I thought calling ioctl didn\u0027t require write permissions?",
+      "parentUuid": "ffb9cba7_0e6a927f",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
