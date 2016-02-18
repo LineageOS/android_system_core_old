@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffb9cba7_33cb4154",
+        "filename": "healthd/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-18T03:12:04Z",
+      "side": 1,
+      "message": "Why do you want to build this outside the HAL static lib?",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_f3ab6972",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-18T03:12:04Z",
+      "side": 1,
+      "message": "Why do you want to move this?",
+      "revId": "8f7873fd7e3c1b4cb69eaf75863f5d433be91d92",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
