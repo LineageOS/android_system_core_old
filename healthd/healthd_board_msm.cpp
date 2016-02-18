@@ -61,7 +61,7 @@ static int alarm_get_time(enum alarm_time_type time_type,
     if (!secs)
         return -1;
 
-    fd = open("/dev/rtc0", O_RDWR);
+    fd = open("/dev/rtc0", O_RDONLY);
     if (fd < 0) {
         LOGE("Can't open rtc devfs node\n");
         return -1;
@@ -118,7 +118,7 @@ static int alarm_set_reboot_time_and_wait(time_t secs)
     int rc, fd;
     struct timespec ts;
 
-    fd = open("/dev/alarm", O_RDWR);
+    fd = open("/dev/alarm", O_RDONLY);
     if (fd < 0) {
         LOGE("Can't open alarm devfs node\n");
         goto err;
