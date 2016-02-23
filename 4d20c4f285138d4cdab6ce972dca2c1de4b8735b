@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_63ab19d6",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2016-02-23T23:39:03Z",
+      "side": 1,
+      "message": "No, there is no need for timerfd to support poweroff alarm in order for this feature to works. It just use timerfd to wait for next alarm (while the device is awake in charging mode) and trigger a reboot. BOARD_HAVE_TIMERFD_POWEROFF_ALARM feature is not needed.",
+      "parentUuid": "ffb9cba7_d0788df9",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_f07d91e7",
         "filename": "healthd/healthd_board_msm.cpp",
         "patchSetId": 1
