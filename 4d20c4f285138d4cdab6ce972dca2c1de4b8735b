@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffb9cba7_908215c8",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-23T08:18:48Z",
+      "side": 1,
+      "message": "Indentation is off here, you could also do a poll on the fd instead.",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_7069a123",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-23T08:18:48Z",
+      "side": 1,
+      "message": "You can merge the close and return here with the close and return at line 145.",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_d0788df9",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-23T08:18:48Z",
+      "side": 1,
+      "message": "We\u0027re actually requiring timerfd offmode charging devices to opt-in to enabling off mode charging by setting: \n\nBOARD_HAVE_TIMERFD_POWEROFF_ALARM :\u003d true\n\nBecause of that, you don\u0027t need to try opening dev/alarm at runtime, we know at compile time whether the open call will work or not.",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_f07d91e7",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-23T08:18:48Z",
+      "side": 1,
+      "message": "You can ifdef alarm_set_reboot_time_and_wait for timerfd_set_reboot_time_and_wait here.",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
