@@ -32,6 +32,7 @@
 
 #include <pthread.h>
 #include <linux/android_alarm.h>
+#include <sys/timerfd.h>
 #include <linux/rtc.h>
 
 #include <healthd.h>
@@ -113,6 +114,38 @@ static int alarm_is_alm_expired()
             alm_secs <= rtc_secs + ERR_SECS) ? 1 : 0;
 }
 
+static int timerfd_set_reboot_time_and_wait(time_t secs)
+{
+    int fd;
+    int ret = -1;
+    fd = timerfd_create(CLOCK_REALTIME_ALARM, 0);
+    if (fd < 0) {
+        LOGE("Can't open timerfd alarm node\n");
+        goto err_return;
+    }
+
+    struct itimerspec spec;
+    memset(&spec, 0, sizeof(spec));
+    spec.it_value.tv_sec = secs;
+
+    if (timerfd_settime(fd, 0 /* relative */, &spec, NULL)) {
+        LOGE("Can't set timerfd alarm\n");
+        goto err_close;
+    }
+
+    uint64_t unused;
+    if (read(fd, &unused, sizeof(unused)) < 0) {
+       LOGE("Wait alarm error\n");
+       goto err_close;
+    }
+
+    ret = 0;
+err_close:
+    close(fd);
+err_return:
+    return ret;
+}
+
 static int alarm_set_reboot_time_and_wait(time_t secs)
 {
     int rc, fd;
@@ -120,8 +153,8 @@ static int alarm_set_reboot_time_and_wait(time_t secs)
 
     fd = open("/dev/alarm", O_RDWR);
     if (fd < 0) {
-        LOGE("Can't open alarm devfs node\n");
-        goto err;
+        LOGE("Can't open alarm devfs node, trying timerfd\n");
+        return timerfd_set_reboot_time_and_wait(secs);
     }
 
     /* get the elapsed realtime from boot time to now */
