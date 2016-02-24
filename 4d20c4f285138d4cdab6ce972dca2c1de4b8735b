@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_e33b8999",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-24T00:37:01Z",
+      "side": 1,
+      "message": "Wait, I just remembered that the system will check /dev/rtc0 first for any RTC alarms present. (See line 210) You can only ever execute this code if the device supports RTC power off alarms to begin with. In this case you might as well ifdef then, because this code is only ever meant for the power off alarm case.",
+      "parentUuid": "ffb9cba7_23bc4104",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_f07d91e7",
         "filename": "healthd/healthd_board_msm.cpp",
         "patchSetId": 1
