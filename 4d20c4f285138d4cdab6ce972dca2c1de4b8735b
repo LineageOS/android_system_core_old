@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_a3d03152",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-02-24T00:15:26Z",
+      "side": 1,
+      "message": "Isn\u0027t that inconsistent behavior? If you\u0027re in charge mode power off alarms work, but if you are actually off, power off alarms don\u0027t work?",
+      "parentUuid": "ffb9cba7_63ab19d6",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_f07d91e7",
         "filename": "healthd/healthd_board_msm.cpp",
         "patchSetId": 1
