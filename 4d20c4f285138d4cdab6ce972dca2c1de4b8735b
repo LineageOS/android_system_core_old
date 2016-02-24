@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ffb9cba7_23bc4104",
+        "filename": "healthd/healthd_board_msm.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 13956
+      },
+      "writtenOn": "2016-02-24T00:31:24Z",
+      "side": 1,
+      "message": "It is behave like that from the beginning when using /dev/alarm.\nThe device may not be support power-off alarm, but /dev/alarm still alarms in charging mode.\nThis patch does not change that behavior.\n\nAnyway, if the hardware does not support power off alarms, nothing we can do. But sacrifice the alarm when in charging if device does not supports power off alarms ?  I don\u0027t think it is a good solution either.",
+      "parentUuid": "ffb9cba7_a3d03152",
+      "revId": "4d20c4f285138d4cdab6ce972dca2c1de4b8735b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffb9cba7_f07d91e7",
         "filename": "healthd/healthd_board_msm.cpp",
         "patchSetId": 1
