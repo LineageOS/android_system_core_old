@@ -39,6 +39,7 @@ commonSources := \
 	sched_policy.c \
 	iosched_policy.c \
 	str_parms.c \
+	huawei_log.c
 
 # some files must not be compiled when building against Mingw
 # they correspond to features not used by our host development tools
