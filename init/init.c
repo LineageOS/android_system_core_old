@@ -73,9 +73,15 @@ static int   bootchart_count;
 #define BOARD_CHARGING_CMDLINE_VALUE "true"
 #endif
 
+
+#ifndef REGION_CMDLINE_NAME
+#define REGION_CMDLINE_NAME "androidboot.region"
+#endif
+
 static char console[32];
 static char bootmode[32];
 static char hardware[32];
+static char region[32];
 static unsigned revision = 0;
 static char qemu[32];
 static char battchg_pause[32];
@@ -745,6 +751,8 @@ static void import_kernel_nv(char *name, int for_emulator)
         strlcpy(qemu, value, sizeof(qemu));
     } else if (!strcmp(name,BOARD_CHARGING_CMDLINE_NAME)) {
         strlcpy(battchg_pause, value, sizeof(battchg_pause));
+    } else if (!strcmp(name,REGION_CMDLINE_NAME)) {
+        strlcpy(region, value, sizeof(region));
     } else if (!strncmp(name, "androidboot.", 12) && name_len > 12) {
         const char *boot_prop_name = name + 12;
         char prop[PROP_NAME_MAX];
@@ -794,6 +802,9 @@ static void export_kernel_boot_props(void)
     if (ret)
         strlcpy(hardware, tmp, sizeof(hardware));
     property_set("ro.hardware", hardware);
+
+    /* set the region property */
+    property_set("ro.region", region);
 
     snprintf(tmp, PROP_VALUE_MAX, "%d", revision);
     property_set("ro.revision", tmp);
