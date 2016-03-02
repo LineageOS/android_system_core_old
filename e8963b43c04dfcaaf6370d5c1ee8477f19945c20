@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffb9cba7_de5bb084",
+        "filename": "init/init.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-02T08:19:48Z",
+      "side": 1,
+      "message": "androidboot.$PROPERTYNAME properties are made available as ro.boot.$PROPERTYNAME. Why do you want to special case androidboot.region to be copied into ro.region? Is there some reason you can\u0027t consume ro.boot.reason instead?",
+      "range": {
+        "startLine": 756,
+        "startChar": 0,
+        "endLine": 763,
+        "endChar": 38
+      },
+      "revId": "e8963b43c04dfcaaf6370d5c1ee8477f19945c20",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
