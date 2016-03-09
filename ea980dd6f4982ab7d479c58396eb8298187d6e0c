@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffb9cba7_ef210efd",
+        "filename": "cpio/mkbootfs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-09T08:54:22Z",
+      "side": 1,
+      "message": "I know the \\0 is overkill here, but wanted it to be explicit.",
+      "revId": "ea980dd6f4982ab7d479c58396eb8298187d6e0c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
