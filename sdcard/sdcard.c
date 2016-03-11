@@ -507,6 +507,16 @@ static void derive_permissions_locked(struct fuse* fuse, struct node *parent,
     }
 }
 
+static void derive_permissions_recursive_locked(struct fuse* fuse, struct node *parent) {
+    struct node *node;
+    for (node = parent->child; node; node = node->next) {
+        derive_permissions_locked(fuse, parent, node);
+        if (node->child) {
+            derive_permissions_recursive_locked(fuse, node);
+        }
+    }
+}
+
 /* Kernel has already enforced everything we returned through
  * derive_permissions_locked(), so this is used to lock down access
  * even further, such as enforcing that apps hold sdcard_rw. */
@@ -1145,6 +1155,8 @@ static int handle_rename(struct fuse* fuse, struct fuse_handler* handler,
     res = rename_node_locked(child_node, new_name, new_actual_name);
     if (!res) {
         remove_node_from_parent_locked(child_node);
+        derive_permissions_locked(fuse, new_parent_node, child_node);
+        derive_permissions_recursive_locked(fuse, child_node);
         add_node_to_parent_locked(child_node, new_parent_node);
     }
     goto done;
@@ -1203,11 +1215,11 @@ static int handle_open(struct fuse* fuse, struct fuse_handler* handler,
     out.fh = ptr_to_id(h);
     out.open_flags = 0;
 
-    #ifdef FUSE_SHORTCIRCUIT
-        out.lower_fd = h->fd;
-    #else
-        out.padding = 0;
-    #endif
+#if defined(FUSE_STACKED_IO) || defined(FUSE_SHORTCIRCUIT)
+    out.lower_fd = h->fd;
+#else
+    out.padding = 0;
+#endif
 
     fuse_reply(fuse, hdr->unique, &out, sizeof(out));
     return NO_STATUS;
@@ -1373,11 +1385,11 @@ static int handle_opendir(struct fuse* fuse, struct fuse_handler* handler,
     out.fh = ptr_to_id(h);
     out.open_flags = 0;
 
-    #ifdef FUSE_SHORTCIRCUIT
-        out.lower_fd = -1;
-    #else
-        out.padding = 0;
-    #endif
+#if defined(FUSE_STACKED_IO) || defined(FUSE_SHORTCIRCUIT)
+    out.lower_fd = -1;
+#else
+    out.padding = 0;
+#endif
 
     fuse_reply(fuse, hdr->unique, &out, sizeof(out));
     return NO_STATUS;
@@ -1461,9 +1473,12 @@ static int handle_init(struct fuse* fuse, struct fuse_handler* handler,
     out.max_readahead = req->max_readahead;
     out.flags = FUSE_ATOMIC_O_TRUNC | FUSE_BIG_WRITES;
 
-    #ifdef FUSE_SHORTCIRCUIT
-        out.flags |= FUSE_SHORTCIRCUIT;
-    #endif
+#ifdef FUSE_SHORTCIRCUIT
+     out.flags |= FUSE_SHORTCIRCUIT;
+#endif
+#ifdef FUSE_STACKED_IO
+    out.flags |= FUSE_STACKED_IO;
+#endif
 
     out.max_background = 32;
     out.congestion_threshold = 32;
@@ -1680,6 +1695,10 @@ static int read_package_list(struct fuse_global* global) {
     TRACE("read_package_list: found %zu packages\n",
             hashmapSize(global->package_to_appid));
     fclose(file);
+
+    /* Regenerate ownership details using newly loaded mapping */
+    derive_permissions_recursive_locked(global->fuse_default, &global->root);
+
     pthread_mutex_unlock(&global->lock);
     return 0;
 }
