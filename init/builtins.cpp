@@ -585,6 +585,11 @@ int do_powerctl(int nargs, char **args)
     }
 
     if (strncmp(command, "shutdown", 8) == 0) {
+        char reboot_target_prop[PROP_VALUE_MAX] = {0};
+        if (property_get("init.shutdown_reboot_target", reboot_target_prop) > 0 &&
+                reboot_target_prop[0]) {
+            return android_reboot(ANDROID_RB_RESTART2, 0, reboot_target_prop);
+        }
         cmd = ANDROID_RB_POWEROFF;
         len = 8;
     } else if (strncmp(command, "reboot", 6) == 0) {
