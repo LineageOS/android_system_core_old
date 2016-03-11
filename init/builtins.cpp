@@ -708,6 +708,9 @@ static int do_powerctl(const std::vector<std::string>& args) {
     void (*callback_on_ro_remount)(const struct mntent*) = NULL;
 
     if (strncmp(command, "shutdown", 8) == 0) {
+        if (property_get_bool("init.shutdown_reboots_to_charging", false)) {
+            return android_reboot(ANDROID_RB_RESTART2, 0, "charging");
+        }
         cmd = ANDROID_RB_POWEROFF;
         len = 8;
     } else if (strncmp(command, "reboot", 6) == 0) {
