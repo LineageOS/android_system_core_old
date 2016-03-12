@@ -94,6 +94,30 @@
       "revId": "bb8d28f3c21602867b61aeab3bfd18fdf2f2acf8",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_4081044a",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-12T01:42:48Z",
+      "side": 1,
+      "message": "Oh, I see, this is actually 3 state.\nPresence of the property indicates you need to reboot. Presence of the property \u003d\u003d \"charging\" indicates reboot to charger, and lack of property indicates shutdown?",
+      "parentUuid": "ffb9cba7_a06320dc",
+      "range": {
+        "startLine": 590,
+        "startChar": 16,
+        "endLine": 590,
+        "endChar": 34
+      },
+      "revId": "bb8d28f3c21602867b61aeab3bfd18fdf2f2acf8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
