@@ -70,6 +70,30 @@
       "revId": "bb8d28f3c21602867b61aeab3bfd18fdf2f2acf8",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffb9cba7_a06320dc",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 6351
+      },
+      "writtenOn": "2016-03-12T01:24:58Z",
+      "side": 1,
+      "message": "I didn\u0027t want to hard code \"charging\" into init because that\u0027s pretty kernel dependent and I thought it was cleaner to keep the magic string in the device code and keep init more generic.",
+      "parentUuid": "ffb9cba7_407344b2",
+      "range": {
+        "startLine": 590,
+        "startChar": 16,
+        "endLine": 590,
+        "endChar": 34
+      },
+      "revId": "bb8d28f3c21602867b61aeab3bfd18fdf2f2acf8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
