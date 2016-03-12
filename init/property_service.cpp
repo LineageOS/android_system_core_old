@@ -120,6 +120,33 @@ std::string property_get(const char* name) {
     return value;
 }
 
+bool property_get_bool(const char *key, bool default_value) {
+    if (!key) {
+        return default_value;
+    }
+
+    bool result = default_value;
+    char buf[PROP_VALUE_MAX] = {'\0',};
+
+    int len = __property_get(key, buf);
+    if (len == 1) {
+        char ch = buf[0];
+        if (ch == '0' || ch == 'n') {
+            result = false;
+        } else if (ch == '1' || ch == 'y') {
+            result = true;
+        }
+    } else if (len > 1) {
+         if (!strcmp(buf, "no") || !strcmp(buf, "false") || !strcmp(buf, "off")) {
+            result = false;
+        } else if (!strcmp(buf, "yes") || !strcmp(buf, "true") || !strcmp(buf, "on")) {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
 static void write_persistent_property(const char *name, const char *value)
 {
     char tempPath[PATH_MAX];
