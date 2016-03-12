@@ -28,6 +28,7 @@ extern void start_property_service(void);
 void get_property_workspace(int *fd, int *sz);
 extern int __property_get(const char *name, char *value);
 extern int property_set(const char *name, const char *value);
+extern bool property_get_bool(const char *name, bool def_value);
 extern bool properties_initialized();
 
 #ifndef __clang__
