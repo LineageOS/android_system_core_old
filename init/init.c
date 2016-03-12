@@ -766,6 +766,7 @@ static void export_kernel_boot_props(void)
         { "ro.boot.mode", "ro.bootmode", "unknown", },
         { "ro.boot.baseband", "ro.baseband", "unknown", },
         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
+        { "ro.boot.region", "ro.prebundled.mcc", "", },
     };
 
     for (i = 0; i < ARRAY_SIZE(prop_map); i++) {
