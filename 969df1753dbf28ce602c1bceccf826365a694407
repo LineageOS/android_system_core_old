@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfbec78f_c9ad71eb",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-13T03:28:24Z",
+      "side": 1,
+      "message": "Could use a switch here too.",
+      "range": {
+        "startLine": 164,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 9
+      },
+      "revId": "969df1753dbf28ce602c1bceccf826365a694407",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
