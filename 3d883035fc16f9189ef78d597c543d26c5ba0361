@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_462732b8",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-16T20:15:08Z",
+      "side": 1,
+      "message": "This line doesn\u0027t really seem related, although it is maybe useful to log here.",
+      "revId": "3d883035fc16f9189ef78d597c543d26c5ba0361",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
