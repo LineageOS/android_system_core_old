@@ -131,7 +131,6 @@ static void __initialize(void) {
         __sys_supports_schedgroups = 0;
     }
 
-#ifdef USE_CPUSETS
     if (!access("/dev/cpuset/tasks", F_OK)) {
         __sys_supports_cpusets = 1;
 
@@ -169,8 +168,6 @@ static void __initialize(void) {
     } else {
         __sys_supports_cpusets = 0;
     }
-#endif
-
 }
 
 /*
@@ -283,17 +280,15 @@ int get_sched_policy(int tid, SchedPolicy *policy)
 
 int set_cpuset_policy(int tid, SchedPolicy policy)
 {
+    pthread_once(&the_once, __initialize);
+
     // in the absence of cpusets, use the old sched policy
-#ifndef USE_CPUSETS
-    return set_sched_policy(tid, policy);
-#else
+    if (!__sys_supports_cpusets)
+        return set_sched_policy(tid, policy);
+
     if (tid == 0) {
         tid = gettid();
     }
-    pthread_once(&the_once, __initialize);
-
-    if (!__sys_supports_cpusets)
-        return set_sched_policy(tid, policy);
 
     policy = _policy(policy);
 
@@ -321,7 +316,6 @@ int set_cpuset_policy(int tid, SchedPolicy policy)
     }
 
     return 0;
-#endif
 }
 
 int set_sched_policy(int tid, SchedPolicy policy)
