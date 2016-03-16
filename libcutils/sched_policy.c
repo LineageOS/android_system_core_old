@@ -44,6 +44,7 @@ static inline SchedPolicy _policy(SchedPolicy p)
 #include <sys/prctl.h>
 
 #define POLICY_DEBUG 0
+#define POLICY_DEBUG_NAME 1
 
 // This prctl is only available in Android kernels.
 #define PR_SET_TIMERSLACK_PID 41
@@ -56,6 +57,7 @@ static pthread_once_t the_once = PTHREAD_ONCE_INIT;
 
 static int __sys_supports_schedgroups = -1;
 static int __sys_supports_cpusets = -1;
+static char proc_name[255];
 
 // File descriptors open to /dev/cpuctl/../tasks, setup by initialize, or -1 on error.
 static int bg_cgroup_fd = -1;
@@ -70,7 +72,7 @@ static int fg_cpuset_fd = -1;
 static int add_tid_to_cgroup(int tid, int fd)
 {
     if (fd < 0) {
-        SLOGE("add_tid_to_cgroup failed; fd=%d\n", fd);
+        SLOGE("%s add_tid_to_cgroup failed; fd=%d\n", proc_name, fd);
         errno = EINVAL;
         return -1;
     }
@@ -92,8 +94,22 @@ static int add_tid_to_cgroup(int tid, int fd)
          */
         if (errno == ESRCH)
                 return 0;
-        SLOGW("add_tid_to_cgroup failed to write '%s' (%s); fd=%d\n",
-              ptr, strerror(errno), fd);
+
+        int pfd;
+        char name[255];
+        sprintf(name, "/proc/%s/cmdline", ptr);
+        pfd = open(name, O_RDONLY);
+        if(pfd) {
+            size_t size = read(pfd, name, 255);
+            name[size] = 0;
+            close(pfd);
+        }
+        else {
+            name[0] = 0;
+        }
+
+        SLOGW("%s add_tid_to_cgroup failed to write '%s(%s)' (%s); fd=%d\n",
+              proc_name, ptr, name, strerror(errno), fd);
         errno = EINVAL;
         return -1;
     }
@@ -103,20 +119,41 @@ static int add_tid_to_cgroup(int tid, int fd)
 
 static void __initialize(void) {
     char* filename;
+
+#ifdef POLICY_DEBUG_NAME
+    int pfd, r;
+    int ptid = gettid();
+
+    sprintf(proc_name, "/proc/%d/cmdline", ptid);
+
+    pfd = open(proc_name, O_RDONLY);
+    if (pfd < 0) {
+        r = 0;
+    } else {
+        r = read(pfd, proc_name, 255);
+        close(pfd);
+        if (r < 0)
+            r = 0;
+    }
+    proc_name[r] = 0;
+#else
+    proc_name[0] = 0;
+#endif
+
     if (!access("/dev/cpuctl/tasks", F_OK)) {
         __sys_supports_schedgroups = 1;
 
         filename = "/dev/cpuctl/tasks";
         fg_cgroup_fd = open(filename, O_WRONLY | O_CLOEXEC);
         if (fg_cgroup_fd < 0) {
-            SLOGE("open of %s failed: %s\n", filename, strerror(errno));
+            SLOGE("%s open of %s failed: %s\n", proc_name, filename, strerror(errno));
             __sys_supports_schedgroups = 0;
         }
 
         filename = "/dev/cpuctl/bg_non_interactive/tasks";
         bg_cgroup_fd = open(filename, O_WRONLY | O_CLOEXEC);
         if (bg_cgroup_fd < 0) {
-            SLOGE("open of %s failed: %s\n", filename, strerror(errno));
+            SLOGE("%s open of %s failed: %s\n", proc_name, filename, strerror(errno));
             __sys_supports_schedgroups = 0;
         }
 
@@ -138,21 +175,21 @@ static void __initialize(void) {
         filename = "/dev/cpuset/foreground/tasks";
         fg_cpuset_fd = open(filename, O_WRONLY | O_CLOEXEC);
         if (fg_cpuset_fd < 0) {
-            SLOGE("open of %s failed %s\n", filename, strerror(errno));
+            SLOGE("%s open of %s failed %s\n", proc_name, filename, strerror(errno));
             __sys_supports_cpusets = 0;
         }
 
         filename = "/dev/cpuset/background/tasks";
         bg_cpuset_fd = open(filename, O_WRONLY | O_CLOEXEC);
         if (bg_cpuset_fd < 0) {
-            SLOGE("open of %s failed %s\n", filename, strerror(errno));
+            SLOGE("%s open of %s failed %s\n", proc_name, filename, strerror(errno));
             __sys_supports_cpusets = 0;
         }
 
         filename = "/dev/cpuset/system-background/tasks";
         system_bg_cpuset_fd = open(filename, O_WRONLY | O_CLOEXEC);
         if (system_bg_cpuset_fd < 0) {
-            SLOGE("open of %s failed %s\n", filename, strerror(errno));
+            SLOGE("%s open of %s failed %s\n", proc_name, filename, strerror(errno));
             __sys_supports_cpusets = 0;
         }
 
@@ -193,7 +230,8 @@ static int getSchedulerGroup(int tid, char* buf, size_t bufLen)
 
     snprintf(pathBuf, sizeof(pathBuf), "/proc/%d/cgroup", tid);
     if (!(fp = fopen(pathBuf, "r"))) {
-        SLOGE("Failed to get scheduler group for pid %d\n", tid);
+        SLOGE("%s Failed to get scheduler group for pid %d\n",
+              proc_name, tid);
         return -1;
     }
 
@@ -233,11 +271,11 @@ static int getSchedulerGroup(int tid, char* buf, size_t bufLen)
         return 0;
     }
 
-    SLOGE("Failed to find cpu subsys");
+    SLOGE("%s Failed to find cpu subsys", proc_name);
     fclose(fp);
     return -1;
  out_bad_data:
-    SLOGE("Bad cgroup data {%s}", lineBuf);
+    SLOGE("%s Bad cgroup data {%s}", proc_name, lineBuf);
     fclose(fp);
     return -1;
 #else
