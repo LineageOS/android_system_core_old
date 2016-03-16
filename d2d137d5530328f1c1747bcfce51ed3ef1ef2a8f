@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "9fb8cfa7_2ad0bf50",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-16T19:36:24Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we close(fg_cgroup_fd) and goto exit / return here?\n\nIs it possible that you would use fg_cgroup_fd if bg_cgroup_fd was unavailable?",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_aae26f2e",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-16T19:36:24Z",
+      "side": 1,
+      "message": "Same as comments on line 120",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fb8cfa7_eac14782",
         "filename": "libcutils/sched_policy.c",
         "patchSetId": 2
@@ -13,6 +47,40 @@
       "writtenOn": "2016-03-16T19:35:25Z",
       "side": 1,
       "message": "missing __sys_supports_cpusets \u003d 0; here",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_cadb237b",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-16T19:36:24Z",
+      "side": 1,
+      "message": "add __sys_supports_cpusets \u003d 0; here?\n\nSame as comments on line 120",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_8ae52b3b",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-16T19:36:24Z",
+      "side": 1,
+      "message": "else __sys_supports_cpusets \u003d 0; ?",
       "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
