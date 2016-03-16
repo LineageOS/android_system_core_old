@@ -34,6 +34,24 @@
       "revId": "4cae0b3b46ec32527a708f331571e5a96bb35283",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_a65f060d",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-16T20:33:17Z",
+      "side": 1,
+      "message": "oh, I see what you mean, it should be after the tid check.",
+      "parentUuid": "7faddb67_c66802bc",
+      "revId": "4cae0b3b46ec32527a708f331571e5a96bb35283",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
