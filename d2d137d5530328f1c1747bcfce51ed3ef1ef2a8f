@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "9fb8cfa7_6a6477ba",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-16T19:40:33Z",
+      "side": 1,
+      "message": "Yep, will add closing FDs",
+      "parentUuid": "9fb8cfa7_cadb237b",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fb8cfa7_8ae52b3b",
         "filename": "libcutils/sched_policy.c",
         "patchSetId": 2
@@ -81,6 +99,24 @@
       "writtenOn": "2016-03-16T19:36:24Z",
       "side": 1,
       "message": "else __sys_supports_cpusets \u003d 0; ?",
+      "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fb8cfa7_aa502fd6",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-16T19:40:33Z",
+      "side": 1,
+      "message": "good catch.",
+      "parentUuid": "9fb8cfa7_8ae52b3b",
       "revId": "d2d137d5530328f1c1747bcfce51ed3ef1ef2a8f",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
