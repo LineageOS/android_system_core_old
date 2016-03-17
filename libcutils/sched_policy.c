@@ -44,6 +44,7 @@ static inline SchedPolicy _policy(SchedPolicy p)
 #include <sys/prctl.h>
 
 #define POLICY_DEBUG 0
+#define POLICY_DEBUG_INIT 1
 
 // This prctl is only available in Android kernels.
 #define PR_SET_TIMERSLACK_PID 41
@@ -183,7 +184,26 @@ static void __initialize(void) {
         __sys_supports_cpusets = 0;
     }
 #endif
+#ifdef POLICY_DEBUG_INIT
+    int pfd, r;
+    int ptid = gettid();
 
+    char *name = (char *)calloc(255, sizeof(char));
+    sprintf(name, "/proc/%d/cmdline", ptid);
+
+    pfd = open(name, O_RDONLY);
+    if (pfd < 0) {
+        r = 0;
+    } else {
+        r = read(pfd, name, 255);
+        close(pfd);
+        if (r < 0)
+            r = 0;
+    }
+    name[r] = 0;
+    SLOGI("Scheduling initialized by %s\n", name);
+    free(name);
+#endif
 }
 
 /*
