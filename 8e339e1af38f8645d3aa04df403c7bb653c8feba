@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_6dd1e657",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-18T20:44:05Z",
+      "side": 1,
+      "message": "This change should have been part of the previous commit.  Will fix and rebase.",
+      "revId": "8e339e1af38f8645d3aa04df403c7bb653c8feba",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
