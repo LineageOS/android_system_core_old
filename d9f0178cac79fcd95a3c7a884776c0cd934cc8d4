@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_0d1e320c",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T21:31:29Z",
+      "side": 1,
+      "message": "open sets -1 on error too. This should be a \u003e 0 check. Sorry I didn\u0027t notice this earlier.",
+      "revId": "d9f0178cac79fcd95a3c7a884776c0cd934cc8d4",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
