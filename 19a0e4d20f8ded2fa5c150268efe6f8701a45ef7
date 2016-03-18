@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_8d9f82b3",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T20:22:59Z",
+      "side": 1,
+      "message": "Again, if you initialize proc_name[255] \u003d {0}, you can get away without needing to tack on a 0 at the end of whatever you read/failed to read.",
+      "revId": "19a0e4d20f8ded2fa5c150268efe6f8701a45ef7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
