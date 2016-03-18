@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7faddb67_8d7a2286",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-18T20:15:35Z",
+      "side": 1,
+      "message": "Dropped it and made it always happen.  Perf hit is really low, and benefit is great.",
+      "parentUuid": "7faddb67_4d0d0a36",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7faddb67_1b6c2f07",
         "filename": "libcutils/sched_policy.c",
         "patchSetId": 2
@@ -81,6 +99,24 @@
       "writtenOn": "2016-03-18T19:22:58Z",
       "side": 1,
       "message": "} else {\n\nAlthough you can skip this else block completely if you initialize name to {0}.",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_ad491e61",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-18T20:15:35Z",
+      "side": 1,
+      "message": "This whole block was never supposed to be committed.  It\u0027s gone in the next version.",
+      "parentUuid": "7faddb67_0d0f122f",
       "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
