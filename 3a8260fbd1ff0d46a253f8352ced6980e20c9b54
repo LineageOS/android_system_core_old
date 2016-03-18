@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7faddb67_4d0d0a36",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T19:22:58Z",
+      "side": 1,
+      "message": "Assuming you don\u0027t want this to be on by default? Or alternately you can use the existing POLICY_DEBUG switch.",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7faddb67_1b6c2f07",
         "filename": "libcutils/sched_policy.c",
         "patchSetId": 2
@@ -13,6 +30,57 @@
       "writtenOn": "2016-03-18T18:35:18Z",
       "side": 1,
       "message": "derp, this snuck in.  it\u0027s supposed to be part of a different patch.",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_ed115655",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T19:22:58Z",
+      "side": 1,
+      "message": "if (...)",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_cd181a77",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T19:22:58Z",
+      "side": 1,
+      "message": "May need to handle the error case, an error would return -1 for size, which is problematic because you do name[size] right after.",
+      "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_0d0f122f",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-03-18T19:22:58Z",
+      "side": 1,
+      "message": "} else {\n\nAlthough you can skip this else block completely if you initialize name to {0}.",
       "revId": "3a8260fbd1ff0d46a253f8352ced6980e20c9b54",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
