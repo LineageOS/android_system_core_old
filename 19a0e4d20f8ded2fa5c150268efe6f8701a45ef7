@@ -16,6 +16,24 @@
       "revId": "19a0e4d20f8ded2fa5c150268efe6f8701a45ef7",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_edadd6ea",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 13409
+      },
+      "writtenOn": "2016-03-18T20:28:10Z",
+      "side": 1,
+      "message": "good call, my first iteration malloc\u0027d and free\u0027d this, so this is a remnant from that.",
+      "parentUuid": "7faddb67_8d9f82b3",
+      "revId": "19a0e4d20f8ded2fa5c150268efe6f8701a45ef7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
