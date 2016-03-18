@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "7faddb67_2dcbeea5",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-18T20:45:46Z",
+      "side": 1,
+      "message": "take a look at: \n    system/core/include/cutils/process_name.h",
+      "revId": "19a0e4d20f8ded2fa5c150268efe6f8701a45ef7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_2d7d2e6e",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-03-18T20:45:46Z",
+      "side": 1,
+      "message": "(sizeof(proc_name) - 1) here to ensure it\u0027s null-terminated.",
+      "revId": "19a0e4d20f8ded2fa5c150268efe6f8701a45ef7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7faddb67_8d9f82b3",
         "filename": "libcutils/sched_policy.c",
         "patchSetId": 3
