@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7faddb67_a91ee36d",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 10094
+      },
+      "writtenOn": "2016-03-24T19:57:41Z",
+      "side": 1,
+      "message": "sizeof(proc_name) - 1",
+      "range": {
+        "startLine": 113,
+        "startChar": 29,
+        "endLine": 113,
+        "endChar": 31
+      },
+      "revId": "e3b685f14e04fcc6d52d7e05da75a653539fdc63",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
