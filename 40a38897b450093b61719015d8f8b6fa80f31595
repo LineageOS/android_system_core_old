@@ -16,6 +16,24 @@
       "revId": "40a38897b450093b61719015d8f8b6fa80f31595",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7faddb67_d92c4349",
+        "filename": "libcutils/sched_policy.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 10094
+      },
+      "writtenOn": "2016-03-30T19:29:27Z",
+      "side": 1,
+      "message": "I\u0027d prefer to have an empty string for proc_name than an invalid proc_name printed later.",
+      "parentUuid": "7faddb67_1ec3a1ef",
+      "revId": "40a38897b450093b61719015d8f8b6fa80f31595",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
