@@ -744,26 +744,7 @@ char* engrave_tombstone(pid_t pid, pid_t tid, int signal, int original_si_code,
   log.crashed_tid = tid;
   int fd = -1;
 
-  if ((mkdir(TOMBSTONE_DIR, 0755) == -1) && (errno != EEXIST)) {
-    _LOG(&log, logtype::ERROR, "failed to create %s: %s\n", TOMBSTONE_DIR, strerror(errno));
-  }
-  if(((fd = open(TOMBSTONE_DIR, O_NOFOLLOW|O_RDONLY)) != -1) ||((fd = open(TOMBSTONE_DIR, O_NOFOLLOW|O_WRONLY)) != -1)){
-    if (fchown(fd, AID_SYSTEM, AID_SYSTEM) < 0){
-       _LOG(&log, logtype::ERROR, "failed to change ownership of %s: %s\n", TOMBSTONE_DIR, strerror(errno));
-       close(fd);
-       return NULL;
-    }
-    close(fd);
-  } else {
-    _LOG(&log, logtype::ERROR, "failed to open %s: %s\n", TOMBSTONE_DIR, strerror(errno));
-    return NULL;
-  }
-  char* path = NULL;
-  if (selinux_android_restorecon(TOMBSTONE_DIR, 0) == 0) {
-    path = find_and_open_tombstone(&fd);
-  } else {
-    _LOG(&log, logtype::ERROR, "Failed to restore security context, not writing tombstone.\n");
-  }
+  char* path = find_and_open_tombstone(&fd);
 
   if (fd < 0) {
     _LOG(&log, logtype::ERROR, "Skipping tombstone write, nothing to do.\n");
