@@ -60,6 +60,10 @@ ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
 LOCAL_CFLAGS += -DCHARGER_ENABLE_SUSPEND
 endif
 
+ifeq ($(strip $(BOARD_NO_CHARGER_LED)),true)
+LOCAL_CFLAGS += -DNO_CHARGER_LED
+endif
+
 LOCAL_C_INCLUDES := bootable/recovery
 
 LOCAL_STATIC_LIBRARIES := libbatterymonitor libbatteryservice libbinder libminui libpng libz libutils libcutils liblog libm libc
