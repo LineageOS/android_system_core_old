@@ -183,7 +183,7 @@ enum {
     BLUE_LED = 0x01 << 2,
 };
 
-#ifdef NO_CHARGER_LED
+#ifndef NO_CHARGER_LED
 struct led_ctl {
     int color;
     const char *path;
@@ -213,7 +213,7 @@ static int char_width;
 static int char_height;
 static bool minui_inited;
 
-#ifdef NO_CHARGER_LED
+#ifndef NO_CHARGER_LED
 static int set_tricolor_led(int on, int color)
 {
     int fd, i;
