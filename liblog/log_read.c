@@ -638,7 +638,7 @@ static int android_logger_list_read_pstore(struct logger_list *logger_list,
     memset(log_msg, 0, sizeof(*log_msg));
 
     if (logger_list->sock < 0) {
-        int fd = open("/sys/fs/pstore/pmsg-ramoops-0", O_RDONLY);
+        int fd = open("/sys/fs/pstore/pmsg-ramoops-0", O_RDONLY | O_CLOEXEC);
 
         if (fd < 0) {
             return -errno;

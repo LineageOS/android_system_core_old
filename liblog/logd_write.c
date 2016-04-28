@@ -103,7 +103,7 @@ static int __write_to_log_initialize()
     }
 #else
     if (pstore_fd < 0) {
-        pstore_fd = TEMP_FAILURE_RETRY(open("/dev/pmsg0", O_WRONLY));
+        pstore_fd = TEMP_FAILURE_RETRY(open("/dev/pmsg0", O_WRONLY | O_CLOEXEC));
     }
 
     if (logd_fd < 0) {
