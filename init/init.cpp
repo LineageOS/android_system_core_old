@@ -802,6 +802,8 @@ static void import_kernel_nv(char *name, bool for_emulator)
         cnt = snprintf(prop, sizeof(prop), "ro.boot.%s", boot_prop_name);
         if (cnt < PROP_NAME_MAX)
             property_set(prop, value);
+    } else if (!strcmp(name, "mdss_mdp.panel")) {
+        property_set("ro.device.panel", value);
     }
 }
 
