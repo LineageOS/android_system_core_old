@@ -116,6 +116,7 @@ static void service_start_if_not_disabled(struct service *svc)
 
 static void unmount_and_fsck(const struct mntent *entry)
 {
+#ifndef UMOUNT_AND_FSCK_IS_UNSAFE
     if (strcmp(entry->mnt_type, "f2fs") && strcmp(entry->mnt_type, "ext4"))
         return;
 
@@ -173,6 +174,7 @@ static void unmount_and_fsck(const struct mntent *entry)
         android_fork_execvp_ext(ARRAY_SIZE(ext4_argv), (char **)ext4_argv,
                                 &st, true, LOG_KLOG, true, NULL);
     }
+#endif
 }
 
 int do_class_start(int nargs, char **args)
