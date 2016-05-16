@@ -128,6 +128,7 @@ done:
     return ret;
 }
 
+#ifndef UMOUNT_AND_FSCK_IS_UNSAFE
 // Turn off backlight while we are performing power down cleanup activities.
 static void turnOffBacklight() {
     static const char off[] = "0";
@@ -153,6 +154,7 @@ static void turnOffBacklight() {
         android::base::WriteStringToFile(off, fileName);
     }
 }
+#endif
 
 static int wipe_data_via_recovery(const std::string& reason) {
     const std::vector<std::string> options = {"--wipe_data", std::string() + "--reason=" + reason};
@@ -166,6 +168,7 @@ static int wipe_data_via_recovery(const std::string& reason) {
 }
 
 static void unmount_and_fsck(const struct mntent *entry) {
+#ifndef UMOUNT_AND_FSCK_IS_UNSAFE
     if (strcmp(entry->mnt_type, "f2fs") && strcmp(entry->mnt_type, "ext4"))
         return;
 
@@ -240,6 +243,7 @@ static void unmount_and_fsck(const struct mntent *entry) {
         android_fork_execvp_ext(ARRAY_SIZE(ext4_argv), (char **)ext4_argv,
                                 &st, true, LOG_KLOG, true, NULL, NULL, 0);
     }
+#endif
 }
 
 static int do_class_start(const std::vector<std::string>& args) {
