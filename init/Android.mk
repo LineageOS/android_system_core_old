@@ -56,6 +56,10 @@ LOCAL_SRC_FILES:= \
     watchdogd.cpp \
     vendor_init.cpp
 
+ifneq ($(TARGET_INIT_UMOUNT_AND_FSCK_IS_UNSAFE),)
+LOCAL_CFLAGS += -DUMOUNT_AND_FSCK_IS_UNSAFE
+endif
+
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
     system/core/mkbootimg
