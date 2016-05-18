@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5faad753_2b5e19e6",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-05-18T18:20:15Z",
+      "side": 1,
+      "message": "I wonder if there\u0027s a way to add service to some sort of \u0027critical service\u0027 list. Maybe with a custom service_stop function?",
+      "revId": "516d6913dc5acd695581b3999fab0b5192353022",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
