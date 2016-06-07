@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5faad753_89992b7a",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-06-07T15:23:04Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be non-zero if you have a battery? Otherwise you may want to fix your kernel.",
+      "range": {
+        "startLine": 844,
+        "startChar": 9,
+        "endLine": 844,
+        "endChar": 22
+      },
+      "revId": "18fee7d2b18fe922b1f10a13321198a3e155262a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
