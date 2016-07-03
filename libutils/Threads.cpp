@@ -24,6 +24,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#ifdef ADD_LEGACY_ANDROID_GET_TID_SYMBOL
+#include <cutils/threads.h>
+#endif
+
 #if !defined(_WIN32)
 # include <pthread.h>
 # include <sched.h>
@@ -300,6 +304,13 @@ void androidSetCreateThreadFunc(android_create_thread_fn func)
 {
     gCreateThreadFn = func;
 }
+
+#ifdef ADD_LEGACY_ANDROID_GET_TID_SYMBOL
+pid_t androidGetTid()
+{
+    return gettid();
+}
+#endif
 
 #ifdef HAVE_ANDROID_OS
 int androidSetThreadPriority(pid_t tid, int pri)
