@@ -82,6 +82,10 @@ char *locale;
 #define BLUE_LED_PATH           "/sys/class/leds/blue/brightness"
 #endif
 
+#ifndef BLINK_PATH
+#define BLINK_PATH              "/sys/class/leds/red/device/blink"
+#endif
+
 #define LOGE(x...) do { KLOG_ERROR("charger", x); } while (0)
 #define LOGW(x...) do { KLOG_WARNING("charger", x); } while (0)
 #define LOGV(x...) do { KLOG_DEBUG("charger", x); } while (0)
@@ -214,6 +218,26 @@ static int char_height;
 static bool minui_inited;
 
 #ifndef NO_CHARGER_LED
+static int set_blink(int val)
+{
+    int fd;
+    char buffer[10];
+
+    fd = open(BLINK_PATH, O_RDWR);
+    if (fd < 0) {
+        LOGE("Could not open blink file\n");
+        return -1;
+    }
+    snprintf(buffer, sizeof(buffer), "%d\n", val);
+    if (write(fd, buffer, strlen(buffer)) < 0) {
+        LOGE("Could not write to blink file\n");
+        close(fd);
+        return -1;
+    }
+    close(fd);
+    return 0;
+}
+
 static int set_tricolor_led(int on, int color)
 {
     int fd, i;
@@ -257,6 +281,9 @@ static int set_battery_soc_leds(int soc)
         old_color = color;
         LOGV("soc = %d, set led color 0x%x\n", soc, soc_leds[i].color);
     }
+
+    /* This is required to commit the changes to hardware */
+    set_blink(0);
 
     return 0;
 }
