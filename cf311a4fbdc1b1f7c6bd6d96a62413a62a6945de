@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_99dc9d19",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-07-05T19:51:00Z",
+      "side": 1,
+      "message": "expand the subject line a little more?",
+      "range": {
+        "startLine": 7,
+        "startChar": 9,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "cf311a4fbdc1b1f7c6bd6d96a62413a62a6945de",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_99057d7d",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 14090
+      },
+      "writtenOn": "2016-07-05T19:51:00Z",
+      "side": 1,
+      "message": "I would leave a comment here about this as this function has a new side affect now.",
+      "revId": "cf311a4fbdc1b1f7c6bd6d96a62413a62a6945de",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
