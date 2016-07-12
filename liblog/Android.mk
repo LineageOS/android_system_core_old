@@ -79,6 +79,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := liblog
 LOCAL_SRC_FILES := $(liblog_target_sources)
 LOCAL_CFLAGS := -Werror $(liblog_cflags)
+LOCAL_WHOLE_STATIC_LIBRARIES := $(BOARD_PROVIDES_LOG_STATIC_LIBS)
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
