@@ -27,6 +27,7 @@
 
 #include <android-base/file.h>
 #include <android-base/strings.h>
+#include <cutils/properties.h>
 #include <cutils/sched_policy.h>
 #include <cutils/sockets.h>
 #include <log/event_tag_map.h>
@@ -70,12 +71,15 @@ namespace android {
 /* Global Variables */
 
 static const char * g_outputFileName;
+static const char * g_outputPartitionName = NULL;
 // 0 means "no log rotation"
 static size_t g_logRotateSizeKBytes;
 // 0 means "unbounded"
 static size_t g_maxRotatedLogs = DEFAULT_MAX_ROTATED_LOGS;
 static int g_outFD = -1;
+static int g_logDumpFD = -1;
 static size_t g_outByteCount;
+static size_t g_outByteCountOfLogDump;
 static int g_printBinary;
 static int g_devCount;                              // >1 means multiple
 static pcrecpp::RE* g_regex;
@@ -83,6 +87,8 @@ static pcrecpp::RE* g_regex;
 static size_t g_maxCount;
 static size_t g_printCount;
 static bool g_printItAnyways;
+static bool g_logDumpEnabled;
+static size_t g_logDumpEndPosition = 0;
 
 // if showHelp is set, newline required in fmt statement to transition to usage
 __noreturn static void logcat_panic(bool showHelp, const char *fmt, ...) __printflike(2,3);
@@ -151,6 +157,35 @@ void printBinary(struct log_msg *buf)
     TEMP_FAILURE_RETRY(write(g_outFD, buf, size));
 }
 
+static void checkAndRotateLogDump(size_t logLength)
+{
+    if (g_outByteCountOfLogDump + logLength >= g_logDumpEndPosition) {
+        lseek(g_logDumpFD, 0, SEEK_SET);
+        g_outByteCountOfLogDump = 0;
+    }
+}
+
+static void writeEntryToLogDump(AndroidLogEntry *entry)
+{
+    int bytesWrittenToLogDump = 0;
+    char defaultBuffer[512];
+    size_t logLength;
+
+    // Get logLength
+    android_log_formatLogLine(g_logformat, defaultBuffer,sizeof(defaultBuffer), entry, &logLength);
+
+    // Check if the to-be-inserted log exceeds the available buffer size; And rotate if needed.
+    checkAndRotateLogDump(logLength);
+
+    bytesWrittenToLogDump = android_log_printLogLine(g_logformat, g_logDumpFD, entry);
+
+    if (bytesWrittenToLogDump < 0) {
+        logcat_panic(false, "output error");
+    }
+
+    g_outByteCountOfLogDump += bytesWrittenToLogDump;
+}
+
 static bool regexOk(const AndroidLogEntry& entry)
 {
     if (!g_regex) {
@@ -191,6 +226,10 @@ static void processBuffer(log_device_t* dev, struct log_msg *buf)
     }
 
     if (android_log_shouldPrintLine(g_logformat, entry.tag, entry.priority)) {
+        if (g_logDumpEnabled) {
+            writeEntryToLogDump(&entry);
+        }
+
         bool match = regexOk(entry);
 
         g_printCount += match;
@@ -223,6 +262,14 @@ static void maybePrintStart(log_device_t* dev, bool printDividers) {
             snprintf(buf, sizeof(buf), "--------- %s %s\n",
                      dev->printed ? "switch to" : "beginning of",
                      dev->device);
+            if (g_logDumpEnabled) {
+                checkAndRotateLogDump(strlen(buf));
+                int bytesWrittenToLogDump = write(g_logDumpFD, buf, strlen(buf));
+                if (bytesWrittenToLogDump < 0) {
+                    logcat_panic(false, "output error");
+                }
+                g_outByteCountOfLogDump += bytesWrittenToLogDump;
+            }
             if (write(g_outFD, buf, strlen(buf)) < 0) {
                 logcat_panic(false, "output error");
             }
@@ -233,6 +280,29 @@ static void maybePrintStart(log_device_t* dev, bool printDividers) {
 
 static void setupOutput()
 {
+    if (g_logDumpEnabled) {
+        if (g_outputPartitionName == NULL) {
+            property_set("ctl.stop","logdumpd");
+            logcat_panic(false, "partition name is null");
+        }
+
+        struct stat statbuf;
+        if (stat(g_outputPartitionName, &statbuf) == -1) {
+            property_set("ctl.stop","logdumpd");
+            logcat_panic(false, "Couldn't stat output partition\n");
+        }
+
+        g_logDumpFD = openLogFile (g_outputPartitionName);
+        if (g_logDumpFD < 0) {
+            property_set("ctl.stop","logdumpd");
+            logcat_panic(false, "Can't open output partition");
+        }
+
+        //save end of partition to be used later for log rotation
+        g_logDumpEndPosition = lseek(g_logDumpFD, 0, SEEK_END);
+        //set back file offset to the beginning
+        lseek(g_logDumpFD, 0, SEEK_SET);
+    }
 
     if (g_outputFileName == NULL) {
         g_outFD = STDOUT_FILENO;
@@ -605,7 +675,7 @@ int main(int argc, char **argv)
           { NULL,            0,                 NULL,   0 }
         };
 
-        ret = getopt_long(argc, argv, ":cdDLt:T:gG:sQf:r:n:v:b:BSpP:m:e:",
+        ret = getopt_long(argc, argv, ":cdDLt:T:gG:sQf:r:n:v:b:BSpP:m:e:w:",
                           long_options, &option_index);
 
         if (ret < 0) {
@@ -975,6 +1045,11 @@ int main(int argc, char **argv)
 
             case 'S':
                 printStatistics = 1;
+                break;
+
+            case 'w':
+                g_logDumpEnabled = true;
+                g_outputPartitionName = optarg;
                 break;
 
             case ':':
