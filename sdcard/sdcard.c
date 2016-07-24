@@ -41,6 +41,7 @@
 #include <cutils/hashmap.h>
 #include <cutils/log.h>
 #include <cutils/multiuser.h>
+#include <cutils/properties.h>
 
 #include <private/android_filesystem_config.h>
 
@@ -1776,24 +1777,39 @@ static int usage() {
     return 1;
 }
 
-static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask) {
+static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcardfs) {
     char opts[256];
 
-    fuse->fd = open("/dev/fuse", O_RDWR);
-    if (fuse->fd == -1) {
-        ERROR("failed to open fuse device: %s\n", strerror(errno));
-        return -1;
+    if (use_sdcardfs) {
+        fuse->fd = open("/dev/fuse", O_RDWR);
+        if (fuse->fd == -1) {
+            ERROR("failed to open fuse device: %s\n", strerror(errno));
+            return -1;
+        }
     }
 
     umount2(fuse->dest_path, MNT_DETACH);
 
-    snprintf(opts, sizeof(opts),
-            "fd=%i,rootmode=40000,default_permissions,allow_other,user_id=%d,group_id=%d",
-            fuse->fd, fuse->global->uid, fuse->global->gid);
-    if (mount("/dev/fuse", fuse->dest_path, "fuse", MS_NOSUID | MS_NODEV | MS_NOEXEC |
-            MS_NOATIME, opts) != 0) {
-        ERROR("failed to mount fuse filesystem: %s\n", strerror(errno));
-        return -1;
+    if (use_sdcardfs) {
+        snprintf(opts, sizeof(opts),
+                "%sfsuid=%d,fsgid=%d,userid=%d,gid=%d,mask=%04o,reserved_mb=20",
+                (fuse->global->multi_user ? "multiuser," : ""),
+                fuse->global->uid, fuse->global->gid,
+                fuse->global->root.userid, gid, mask);
+        if (mount(fuse->global->source_path, fuse->dest_path, "sdcardfs",
+                    MS_NOSUID | MS_NODEV | MS_NOEXEC | MS_NOATIME, opts) != 0) {
+            ERROR("failed to mount sdcardfs filesystem: %s\n",  strerror(errno));
+            return -1;
+        }
+    } else {
+        snprintf(opts, sizeof(opts),
+                "fd=%i,rootmode=40000,default_permissions,allow_other,user_id=%d,group_id=%d",
+                fuse->fd, fuse->global->uid, fuse->global->gid);
+        if (mount("/dev/fuse", fuse->dest_path, "fuse", MS_NOSUID | MS_NODEV | MS_NOEXEC |
+                MS_NOATIME, opts) != 0) {
+            ERROR("failed to mount fuse filesystem: %s\n", strerror(errno));
+            return -1;
+        }
     }
 
     fuse->gid = gid;
@@ -1803,7 +1819,7 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask) {
 }
 
 static void run(const char* source_path, const char* label, uid_t uid,
-        gid_t gid, userid_t userid, bool multi_user, bool full_write) {
+        gid_t gid, userid_t userid, bool multi_user, bool full_write, bool use_sdcardfs) {
     struct fuse_global global;
     struct fuse fuse_default;
     struct fuse fuse_read;
@@ -1875,9 +1891,9 @@ static void run(const char* source_path, const char* label, uid_t uid,
     if (multi_user) {
         /* Multi-user storage is fully isolated per user, so "other"
          * permissions are completely masked off. */
-        if (fuse_setup(&fuse_default, AID_SDCARD_RW, 0006)
-                || fuse_setup(&fuse_read, AID_EVERYBODY, 0027)
-                || fuse_setup(&fuse_write, AID_EVERYBODY, full_write ? 0007 : 0027)) {
+        if (fuse_setup(&fuse_default, AID_SDCARD_RW, 0006, use_sdcardfs)
+                || fuse_setup(&fuse_read, AID_EVERYBODY, 0027, use_sdcardfs)
+                || fuse_setup(&fuse_write, AID_EVERYBODY, full_write ? 0007 : 0027, use_sdcardfs)) {
             ERROR("failed to fuse_setup\n");
             exit(1);
         }
@@ -1885,12 +1901,17 @@ static void run(const char* source_path, const char* label, uid_t uid,
         /* Physical storage is readable by all users on device, but
          * the Android directories are masked off to a single user
          * deep inside attr_from_stat(). */
-        if (fuse_setup(&fuse_default, AID_SDCARD_RW, 0006)
-                || fuse_setup(&fuse_read, AID_EVERYBODY, full_write ? 0027 : 0022)
-                || fuse_setup(&fuse_write, AID_EVERYBODY, full_write ? 0007 : 0022)) {
+        if (fuse_setup(&fuse_default, AID_SDCARD_RW, 0006, use_sdcardfs)
+                || fuse_setup(&fuse_read, AID_EVERYBODY, full_write ? 0027 : 0022, use_sdcardfs)
+                || fuse_setup(&fuse_write, AID_EVERYBODY, full_write ? 0007 : 0022, use_sdcardfs)) {
             ERROR("failed to fuse_setup\n");
             exit(1);
         }
+    }
+
+    // Nothing else for us to do if sdcardfs is in use!
+    if (use_sdcardfs) {
+        exit(0);
     }
 
     /* Drop privs */
@@ -1995,6 +2016,8 @@ int sdcard_main(int argc, char **argv) {
         sleep(1);
     }
 
-    run(source_path, label, uid, gid, userid, multi_user, full_write);
+    bool use_sdcardfs = property_get_bool("ro.sdcardfs.enable", false);
+
+    run(source_path, label, uid, gid, userid, multi_user, full_write, use_sdcardfs);
     return 1;
 }
