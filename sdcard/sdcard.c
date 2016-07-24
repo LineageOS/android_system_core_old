@@ -1780,7 +1780,7 @@ static int usage() {
 static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcardfs) {
     char opts[256];
 
-    if (use_sdcardfs) {
+    if (!use_sdcardfs) {
         fuse->fd = open("/dev/fuse", O_RDWR);
         if (fuse->fd == -1) {
             ERROR("failed to open fuse device: %s\n", strerror(errno));
