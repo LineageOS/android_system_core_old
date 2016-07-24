@@ -1779,14 +1779,17 @@ static int usage() {
 static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask) {
     char opts[256];
 
+#if 0
     fuse->fd = open("/dev/fuse", O_RDWR);
     if (fuse->fd == -1) {
         ERROR("failed to open fuse device: %s\n", strerror(errno));
         return -1;
     }
+#endif
 
     umount2(fuse->dest_path, MNT_DETACH);
 
+#if 0
     snprintf(opts, sizeof(opts),
             "fd=%i,rootmode=40000,default_permissions,allow_other,user_id=%d,group_id=%d",
             fuse->fd, fuse->global->uid, fuse->global->gid);
@@ -1795,7 +1798,18 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask) {
         ERROR("failed to mount fuse filesystem: %s\n", strerror(errno));
         return -1;
     }
-
+#else
+    snprintf(opts, sizeof(opts),
+            "%sfsuid=%d,fsgid=%d,userid=%d,gid=%d,mask=%04o,reserved_mb=20",
+            (fuse->global->multi_user ? "multiuser," : ""),
+            fuse->global->uid, fuse->global->gid,
+            fuse->global->root.userid, gid, mask);
+    if (mount(fuse->global->source_path, fuse->dest_path, "sdcardfs",
+                MS_NOSUID | MS_NODEV | MS_NOEXEC | MS_NOATIME, opts) != 0) {
+        ERROR("failed to mount sdcardfs filesystem: %s\n",  strerror(errno));
+        return -1;
+    }
+#endif
     fuse->gid = gid;
     fuse->mask = mask;
 
@@ -1892,6 +1906,10 @@ static void run(const char* source_path, const char* label, uid_t uid,
             exit(1);
         }
     }
+
+#if 1
+    exit(0);
+#endif
 
     /* Drop privs */
     if (setgroups(sizeof(kGroups) / sizeof(kGroups[0]), kGroups) < 0) {
