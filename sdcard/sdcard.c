@@ -1792,7 +1792,7 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcard
 
     if (use_sdcardfs) {
         snprintf(opts, sizeof(opts),
-                "%sfsuid=%d,fsgid=%d,userid=%d,gid=%d,mask=%04o,reserved_mb=20",
+                "%sfsuid=%u,fsgid=%u,userid=%d,gid=%u,mask=%u,reserved_mb=20",
                 (fuse->global->multi_user ? "multiuser," : ""),
                 fuse->global->uid, fuse->global->gid,
                 fuse->global->root.userid, gid, mask);
@@ -1909,11 +1909,6 @@ static void run(const char* source_path, const char* label, uid_t uid,
         }
     }
 
-    // Nothing else for us to do if sdcardfs is in use!
-    if (use_sdcardfs) {
-        exit(0);
-    }
-
     /* Drop privs */
     if (setgroups(sizeof(kGroups) / sizeof(kGroups[0]), kGroups) < 0) {
         ERROR("cannot setgroups: %s\n", strerror(errno));
@@ -1930,6 +1925,11 @@ static void run(const char* source_path, const char* label, uid_t uid,
 
     if (multi_user) {
         fs_prepare_dir(global.obb_path, 0775, uid, gid);
+    }
+
+    // Nothing else for us to do if sdcardfs is in use!
+    if (use_sdcardfs) {
+        exit(0);
     }
 
     if (pthread_create(&thread_default, NULL, start_handler, &handler_default)
