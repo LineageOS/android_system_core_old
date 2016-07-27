@@ -441,7 +441,7 @@ void open_devnull_stdio(void)
 }
 
 void import_kernel_cmdline(bool in_qemu,
-                           std::function<void(const std::string&, const std::string&, bool)> fn) {
+                           const std::function<void(const std::string&, const std::string&, bool)>& fn) {
     std::string cmdline;
     android::base::ReadFileToString("/proc/cmdline", &cmdline);
 
