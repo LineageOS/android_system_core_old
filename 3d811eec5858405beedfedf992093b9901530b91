@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_8c2bc42e",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2016-07-29T23:28:23Z",
+      "side": 1,
+      "message": "Whitespace",
+      "range": {
+        "startLine": 210,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 28
+      },
+      "revId": "3d811eec5858405beedfedf992093b9901530b91",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fa7e38b_6c28c833",
+        "filename": "sdcard/sdcard.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1782,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2016-07-29T23:28:23Z",
+      "side": 1,
+      "message": "Do not remove the sdcardfs guards",
+      "range": {
+        "startLine": 1782,
+        "startChar": 4,
+        "endLine": 1782,
+        "endChar": 41
+      },
+      "revId": "3d811eec5858405beedfedf992093b9901530b91",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
