@@ -1787,8 +1787,8 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcard
             return -1;
         }
     }
-
     umount2(fuse->dest_path, MNT_DETACH);
+
 
     if (use_sdcardfs) {
         snprintf(opts, sizeof(opts),
@@ -1807,8 +1807,8 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcard
                 fuse->fd, fuse->global->uid, fuse->global->gid);
         if (mount("/dev/fuse", fuse->dest_path, "fuse", MS_NOSUID | MS_NODEV | MS_NOEXEC |
                 MS_NOATIME, opts) != 0) {
-            ERROR("failed to mount fuse filesystem: %s\n", strerror(errno));
-            return -1;
+                ERROR("failed to mount fuse filesystem: %s\n", strerror(errno));
+                return -1;
         }
     }
 
@@ -1819,7 +1819,7 @@ static int fuse_setup(struct fuse* fuse, gid_t gid, mode_t mask, bool use_sdcard
 }
 
 static void run(const char* source_path, const char* label, uid_t uid,
-        gid_t gid, userid_t userid, bool multi_user, bool full_write, bool use_sdcardfs) {
+        gid_t gid, userid_t userid, bool multi_user, bool full_write) {
     struct fuse_global global;
     struct fuse fuse_default;
     struct fuse fuse_read;
@@ -2015,8 +2015,6 @@ int sdcard_main(int argc, char **argv) {
         ERROR("installd fs upgrade not yet complete. Waiting...\n");
         sleep(1);
     }
-
-    bool use_sdcardfs = property_get_bool("ro.sdcardfs.enable", false);
 
     run(source_path, label, uid, gid, userid, multi_user, full_write, use_sdcardfs);
     return 1;
