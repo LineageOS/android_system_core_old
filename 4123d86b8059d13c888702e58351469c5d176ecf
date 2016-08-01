@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_98ea1aaa",
+        "filename": "include/netutils/ifc.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 848
+      },
+      "writtenOn": "2016-08-01T15:41:54Z",
+      "side": 0,
+      "message": "Leave upstream formatting, and whitespace (just causes noise in history).",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 3
+      },
+      "revId": "4123d86b8059d13c888702e58351469c5d176ecf",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
