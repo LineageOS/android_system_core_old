@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa7e38b_f8e46eae",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 4550
+      },
+      "writtenOn": "2016-08-01T19:35:00Z",
+      "side": 1,
+      "message": "Shouldn\u0027t you fix this in your kernel instead?",
+      "revId": "477a63d4248c75b57f3dd2c60bb48b1e759fcb37",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
