@@ -209,10 +209,12 @@ static void *alarm_thread(void *)
     rc = alarm_get_time(ALARM_TIME, &alm_secs);
     if (rc < 0 || !alm_secs)
         goto err;
+    LOGI("RTC Alarm %ld\n", alm_secs);
 
     rc = alarm_get_time(RTC_TIME, &rtc_secs);
     if (rc < 0)
         goto err;
+    LOGI("RTC Clock %ld\n", rtc_secs);
 
     /*
      * calculate the reboot time after which
