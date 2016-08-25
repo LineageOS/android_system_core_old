@@ -126,22 +126,20 @@ bool property_get_bool(const char *key, bool default_value) {
     }
 
     bool result = default_value;
-    char buf[PROP_VALUE_MAX] = {'\0',};
 
-    int len = __property_get(key, buf);
-    if (len == 1) {
-        char ch = buf[0];
-        if (ch == '0' || ch == 'n') {
-            result = false;
-        } else if (ch == '1' || ch == 'y') {
-            result = true;
-        }
-    } else if (len > 1) {
-         if (!strcmp(buf, "no") || !strcmp(buf, "false") || !strcmp(buf, "off")) {
-            result = false;
-        } else if (!strcmp(buf, "yes") || !strcmp(buf, "true") || !strcmp(buf, "on")) {
-            result = true;
-        }
+    std::string string_value = property_get(key);
+    if ((string_value == "0")
+            || (string_value == "n")
+            || (string_value == "no")
+            || (string_value == "false")
+            || (string_value == "off")) {
+        result = false;
+    } else if ((string_value == "1")
+            || (string_value == "y")
+            || (string_value == "yes")
+            || (string_value == "true")
+            || (string_value == "on")) {
+        result = true;
     }
 
     return result;
