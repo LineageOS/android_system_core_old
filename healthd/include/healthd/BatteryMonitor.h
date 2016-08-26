@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +35,9 @@ class BatteryMonitor {
         ANDROID_POWER_SUPPLY_TYPE_AC,
         ANDROID_POWER_SUPPLY_TYPE_USB,
         ANDROID_POWER_SUPPLY_TYPE_WIRELESS,
-        ANDROID_POWER_SUPPLY_TYPE_BATTERY
+        ANDROID_POWER_SUPPLY_TYPE_BATTERY,
+        ANDROID_POWER_SUPPLY_TYPE_DOCK_AC,
+        ANDROID_POWER_SUPPLY_TYPE_DOCK_BATTERY
     };
 
     BatteryMonitor();
@@ -42,12 +45,14 @@ class BatteryMonitor {
     bool update(void);
     int getChargeStatus();
     status_t getProperty(int id, struct BatteryProperty *val);
+    status_t getDockProperty(int id, struct BatteryProperty *val);
     void dumpState(int fd);
 
   private:
     struct healthd_config *mHealthdConfig;
     Vector<String8> mChargerNames;
     bool mBatteryDevicePresent;
+    bool mDockBatteryDevicePresent;
     bool mAlwaysPluggedDevice;
     int mBatteryFixedCapacity;
     int mBatteryFixedTemperature;
