@@ -22,6 +22,30 @@
       "revId": "8e6e2d763b5d4ebfc9e18fb13d6bf9cd044805f4",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_bc5fe73f",
+        "filename": "libutils/SystemClock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 10094
+      },
+      "writtenOn": "2016-08-29T21:16:35Z",
+      "side": 1,
+      "message": "you would end up with something like this in the simple impl:\n\n  void unlock_if_needed(bool needed, pthread_mutex_t *mutex)\n  {\n    if (needed)\n      pthread_mutex_unlock(mutex);\n  }\n\n  unlock_if_needed(need_unlock, \u0026clock_lock);\n\nThe need_unlock is not (and cannot be) global, so it seems messier to wrap it all up.\n\nI could wrap it in a class that unlocks if necessary when falling out of scope.  It\u0027s elegant, but I think it\u0027s a bit overkill.\n\n  class AutoUnLock {\n    public:\n        AutoUnLock(Mutex\u0026 mutex, bool lock \u003d true) :\n            mLock(mutex),\n            mLocked(false)\n        {\n           if (lock) {\n               lock();\n           }\n        }\n        void lock()\n        {\n             if (!mLocked) {\n                 mLock.lock();\n                 mLocked \u003d true;\n             }\n        }\n        void unlock()\n        {\n             if (mLocked) {\n                 mLock.unlock();\n                 mLocked \u003d false;\n             }\n        }\n        ~AutoUnLock()\n        {\n            unlock();\n        }\n    private:\n        Mutex\u0026 mLock;\n        bool mLocked;\n    };\n\n    Mutex clock_lock;\n\n    int64_t elapsedRealtimeNano()\n    {\n        ...\n        AutoUnLock lock(clock_lock);\n        ...\n        if (clock_method \u003c 0) {\n            lock.lock();\n        }\n        ...\n        // automatically unlocks when out of scope\n    }\n\nThis seems like a lot for this one place.",
+      "parentUuid": "1fa4df85_dcae632d",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 17
+      },
+      "revId": "8e6e2d763b5d4ebfc9e18fb13d6bf9cd044805f4",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
