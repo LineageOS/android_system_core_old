@@ -121,9 +121,11 @@ int64_t elapsedRealtimeNano()
 #endif
 
     static int s_fd = -1;
+    bool need_unlock = false;
 
     if (clock_method < 0) {
         pthread_mutex_lock(&clock_lock);
+        need_unlock = true;
     }
 
     if (clock_method < 0 || clock_method == METHOD_IOCTL) {
@@ -143,6 +145,8 @@ int64_t elapsedRealtimeNano()
                 checkTimeStamps(timestamp, &prevTimestamp, &prevMethod, METHOD_IOCTL);
                 if (clock_method < 0) {
                     clock_method = METHOD_IOCTL;
+                }
+                if (need_unlock) {
                     pthread_mutex_unlock(&clock_lock);
                 }
                 return timestamp;
@@ -159,6 +163,8 @@ int64_t elapsedRealtimeNano()
                             METHOD_CLOCK_GETTIME);
             if (clock_method < 0) {
                 clock_method = METHOD_CLOCK_GETTIME;
+            }
+            if (need_unlock) {
                 pthread_mutex_unlock(&clock_lock);
             }
             return timestamp;
@@ -173,6 +179,8 @@ int64_t elapsedRealtimeNano()
                     METHOD_SYSTEMTIME);
     if (clock_method < 0) {
         clock_method = METHOD_SYSTEMTIME;
+    }
+    if (need_unlock) {
         pthread_mutex_unlock(&clock_lock);
     }
     return timestamp;
