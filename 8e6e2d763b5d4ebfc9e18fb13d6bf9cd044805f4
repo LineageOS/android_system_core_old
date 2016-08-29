@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_dcae632d",
+        "filename": "libutils/SystemClock.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 9199
+      },
+      "writtenOn": "2016-08-29T20:48:08Z",
+      "side": 1,
+      "message": "would it make sense to create an unlock function and do the check for need_unlock there rather than duplicating the check in 3 different places?",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 17
+      },
+      "revId": "8e6e2d763b5d4ebfc9e18fb13d6bf9cd044805f4",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
