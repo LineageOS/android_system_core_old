@@ -47,3 +47,23 @@ void healthd_board_mode_charger_init()
 {
 
 }
+
+void healthd_board_mode_charger_draw_battery(struct android::BatteryProperties*)
+{
+
+}
+
+void healthd_board_mode_charger_battery_update(struct android::BatteryProperties*)
+{
+
+}
+
+void healthd_board_mode_charger_set_backlight(bool)
+{
+
+}
+
+void healthd_board_mode_charger_init()
+{
+
+}
