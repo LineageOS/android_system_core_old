@@ -90,6 +90,9 @@ static Result<std::string> ComputeContextFromExecutable(const std::string& servi
         free(new_con);
     }
     if (rc == 0 && computed_context == mycon.get()) {
+        if (selinux_status_getenforce() > 0) {
+            return "";
+        }
         return Error() << "File " << service_path << "(labeled \"" << filecon.get()
                        << "\") has incorrect label or no domain transition from " << mycon.get()
                        << " to another SELinux domain defined. Have you configured your "
