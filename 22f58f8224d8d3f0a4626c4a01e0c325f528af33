@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_6b8679de",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 7880
+      },
+      "writtenOn": "2016-09-05T07:41:29Z",
+      "side": 1,
+      "message": "fix this in the kernel by multiplying the reported value by 1000",
+      "revId": "22f58f8224d8d3f0a4626c4a01e0c325f528af33",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
