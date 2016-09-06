@@ -16,6 +16,23 @@
       "revId": "22f58f8224d8d3f0a4626c4a01e0c325f528af33",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fa4df85_f171f80d",
+        "filename": "init/init.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 68
+      },
+      "writtenOn": "2016-09-06T08:56:22Z",
+      "side": 1,
+      "message": "You don\u0027t need all of them. I suggest getting rid of the ones you don\u0027t use. I.e. rild-mal, rild-mal-at, rild-vsim, that should be enough to get you going.",
+      "revId": "22f58f8224d8d3f0a4626c4a01e0c325f528af33",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
