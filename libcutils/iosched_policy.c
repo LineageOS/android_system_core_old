@@ -58,8 +58,8 @@ int android_get_ioprio(int pid __android_unused, IoSchedClass *clazz, int *iopri
 }
 
 static void __initialize_rtio(void) {
-    if (!access("/sys/fs/cgroup/bfqio/tasks", W_OK) ||
-        !access("/sys/fs/cgroup/bfqio/rt-display/tasks", W_OK)) {
+    if (!access("/dev/bfqio/tasks", W_OK) ||
+        !access("/dev/bfqio/rt-display/tasks", W_OK)) {
         __rtio_cgroup_supported = 1;
     } else {
         __rtio_cgroup_supported = 0;
@@ -75,9 +75,9 @@ int android_set_rt_ioprio(int tid, int rt) {
     }
 
     if (rt) {
-        fd = open("/sys/fs/cgroup/bfqio/rt-display/tasks", O_WRONLY | O_CLOEXEC);
+        fd = open("/dev/bfqio/rt-display/tasks", O_WRONLY | O_CLOEXEC);
     } else {
-        fd = open("/sys/fs/cgroup/bfqio/tasks", O_WRONLY | O_CLOEXEC);
+        fd = open("/dev/bfqio/tasks", O_WRONLY | O_CLOEXEC);
     }
 
     if (fd < 0) {
