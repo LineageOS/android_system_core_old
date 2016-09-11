@@ -114,6 +114,7 @@ enum ConnectionState {
     kCsNoPerm,  // Insufficient permissions to communicate with the device.
     kCsSideload,
     kCsUnauthorized,
+    kCsOnline,
 };
 
 /* A listener is an entity which binds to a local port

@@ -212,7 +212,7 @@ static void help() {
         "scripting:\n"
         "  adb wait-for[-<transport>]-<state>\n"
         "                               - wait for device to be in the given state:\n"
-        "                                 device, recovery, sideload, or bootloader\n"
+        "                                 device, recovery, sideload, online, or bootloader\n"
         "                                 Transport is: usb, local or any [default=any]\n"
         "  adb start-server             - ensure that there is a server running\n"
         "  adb kill-server              - kill the server if it is running\n"
@@ -1082,10 +1082,10 @@ static bool wait_for_device(const char* service, TransportType t, const char* se
     }
 
     if (components[3] != "any" && components[3] != "bootloader" && components[3] != "device" &&
-        components[3] != "recovery" && components[3] != "sideload") {
+        components[3] != "recovery" && components[3] != "sideload" && components[3] != "online") {
         fprintf(stderr,
                 "adb: unknown state %s; "
-                "expected 'any', 'bootloader', 'device', 'recovery', or 'sideload'\n",
+                "expected 'any', 'bootloader', 'device', 'recovery', 'online', or 'sideload'\n",
                 components[3].c_str());
         return false;
     }
