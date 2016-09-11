@@ -183,7 +183,7 @@ static void help() {
         "scripting:\n"
         " wait-for[-TRANSPORT]-STATE\n"
         "     wait for device to be in the given state\n"
-        "     State: device, recovery, sideload, or bootloader\n"
+        "     State: device, recovery, sideload, online or bootloader\n"
         "     Transport: usb, local, or any [default=any]\n"
         " get-state                print offline | bootloader | device\n"
         " get-serialno             print <serial-number>\n"
@@ -1036,10 +1036,10 @@ static bool wait_for_device(const char* service) {
     }
 
     if (components[3] != "any" && components[3] != "bootloader" && components[3] != "device" &&
-        components[3] != "recovery" && components[3] != "sideload") {
+        components[3] != "recovery" && components[3] != "sideload" && components[3] != "online") {
         fprintf(stderr,
                 "adb: unknown state %s; "
-                "expected 'any', 'bootloader', 'device', 'recovery', or 'sideload'\n",
+                "expected 'any', 'bootloader', 'device', 'recovery', 'online', or 'sideload'\n",
                 components[3].c_str());
         return false;
     }

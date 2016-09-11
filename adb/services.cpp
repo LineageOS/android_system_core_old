@@ -372,7 +372,9 @@ static void wait_for_state(int fd, void* data) {
         const char* serial = sinfo->serial.length() ? sinfo->serial.c_str() : NULL;
         atransport* t = acquire_one_transport(sinfo->transport_type, serial, sinfo->transport_id,
                                               &is_ambiguous, &error);
-        if (t != nullptr && (sinfo->state == kCsAny || sinfo->state == t->GetConnectionState())) {
+        if (t != nullptr && (sinfo->state == kCsAny || sinfo->state == t->GetConnectionState() ||
+                    (sinfo->state == kCsOnline && (t->GetConnectionState() == kCsRecovery ||
+                                                   t->GetConnectionState() == kCsDevice)) )) {
             SendOkay(fd);
             break;
         } else if (!is_ambiguous) {
@@ -500,6 +502,8 @@ asocket* host_service_to_socket(const char* name, const char* serial, TransportI
             sinfo->state = kCsBootloader;
         } else if (!strcmp(name, "-any")) {
             sinfo->state = kCsAny;
+        } else if (!strcmp(name, "-online")) {
+            sinfo->state = kCsOnline;
         } else {
             return nullptr;
         }
