@@ -116,6 +116,7 @@ enum ConnectionState {
     kCsNoPerm,  // Insufficient permissions to communicate with the device.
     kCsSideload,
     kCsUnauthorized,
+    kCsOnline,
 };
 
 void print_packet(const char* label, apacket* p);
