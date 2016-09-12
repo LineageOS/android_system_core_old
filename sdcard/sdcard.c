@@ -1221,7 +1221,7 @@ static int handle_open(struct fuse* fuse, struct fuse_handler* handler,
     }
     out.fh = ptr_to_id(h);
     out.open_flags = 0;
-    #ifdef FUSE_SHORTCIRCUIT
+    #if defined(FUSE_SHORTCIRCUIT) || defined(FUSE_STACKED_IO)
         out.lower_fd = h->fd;
     #elif defined FUSE_PASSTHROUGH
         out.passthrough_fd = h->fd;
@@ -1392,7 +1392,7 @@ static int handle_opendir(struct fuse* fuse, struct fuse_handler* handler,
     }
     out.fh = ptr_to_id(h);
     out.open_flags = 0;
-    #ifdef FUSE_SHORTCIRCUIT
+    #if defined(FUSE_SHORTCIRCUIT) || defined(FUSE_STACKED_IO)
         out.lower_fd = -1;
     #elif defined FUSE_PASSTHROUGH
         out.passthrough_fd = -1;
@@ -1481,6 +1481,9 @@ static int handle_init(struct fuse* fuse, struct fuse_handler* handler,
     out.max_readahead = req->max_readahead;
     out.flags = FUSE_ATOMIC_O_TRUNC | FUSE_BIG_WRITES;
 
+    #ifdef FUSE_STACKED_IO
+        out.flags |= FUSE_STACKED_IO;
+    #endif
     #ifdef FUSE_SHORTCIRCUIT
         out.flags |= FUSE_SHORTCIRCUIT;
     #endif
