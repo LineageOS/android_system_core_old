@@ -160,15 +160,19 @@ void handle_control_message(const std::string& msg, const std::string& name) {
 
 static int wait_for_coldboot_done_action(const std::vector<std::string>& args) {
     Timer t;
-
+    int timeout = 0;
+#ifdef COLDBOOT_TIMEOUT_OVERRIDE
+    timeout = COLDBOOT_TIMEOUT_OVERRIDE;
+#else
+    timeout = 5;
+#endif
     NOTICE("Waiting for %s...\n", COLDBOOT_DONE);
     // Any longer than 1s is an unreasonable length of time to delay booting.
     // If you're hitting this timeout, check that you didn't make your
     // sepolicy regular expressions too expensive (http://b/19899875).
-    if (wait_for_file(COLDBOOT_DONE, 5)) {
+    if (wait_for_file(COLDBOOT_DONE, timeout)) {
         ERROR("Timed out waiting for %s\n", COLDBOOT_DONE);
     }
-
     NOTICE("Waiting for %s took %.2fs.\n", COLDBOOT_DONE, t.duration());
     return 0;
 }
@@ -258,15 +262,31 @@ static int keychord_init_action(const std::vector<std::string>& args)
 
 static int console_init_action(const std::vector<std::string>& args)
 {
+    int fd = -1;
     std::string console = property_get("ro.boot.console");
     if (!console.empty()) {
         console_name = "/dev/" + console;
     }
-
-    int fd = open(console_name.c_str(), O_RDWR | O_CLOEXEC);
+    fd = open(console_name.c_str(), O_RDWR | O_CLOEXEC);
+#ifdef CONSOLE_TIMEOUT_SEC
+    int num_console_retries = 0;
+    while ((fd < 0) && num_console_retries++ < CONSOLE_TIMEOUT_SEC) {
+        ERROR("Failed to open console device %s(%s)..Retrying\n",
+                       console_name.c_str(), strerror(errno));
+        sleep(1);
+        fd = open(console_name.c_str(), O_RDWR | O_CLOEXEC);
+    }
     if (fd >= 0)
+        INFO("Console device located");
+#endif
+    if (fd >= 0) {
         have_console = 1;
-    close(fd);
+        close(fd);
+    } else {
+        ERROR("console init failed. Open on Console device %s failed(%s)\n",
+                         console.c_str(), strerror(errno));
+        return 0;
+    }
 
     fd = open("/dev/tty0", O_WRONLY | O_CLOEXEC);
     if (fd >= 0) {
