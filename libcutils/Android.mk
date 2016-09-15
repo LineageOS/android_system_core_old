@@ -70,6 +70,7 @@ LOCAL_SRC_FILES_linux := $(libcutils_nonwindows_sources) $(libcutils_nonwindows_
 LOCAL_SRC_FILES_windows := $(libcutils_windows_host_sources)
 LOCAL_STATIC_LIBRARIES := liblog
 LOCAL_CFLAGS := -Werror -Wall -Wextra
+LOCAL_CFLAGS_darwin := -Wno-deprecated-declarations
 LOCAL_MULTILIB := both
 LOCAL_MODULE_HOST_OS := darwin linux windows
 include $(BUILD_HOST_STATIC_LIBRARY)
@@ -81,6 +82,10 @@ LOCAL_SRC_FILES_darwin := $(libcutils_nonwindows_sources) $(libcutils_nonwindows
 LOCAL_SRC_FILES_linux := $(libcutils_nonwindows_sources) $(libcutils_nonwindows_host_sources)
 LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_CFLAGS := -Werror -Wall -Wextra
+LOCAL_CFLAGS_darwin := -Wno-deprecated-declarations
+ifeq ($(HOST_OS),darwin)
+    LOCAL_CFLAGS += -Wno-deprecated-declarations
+endif
 LOCAL_MULTILIB := both
 include $(BUILD_HOST_SHARED_LIBRARY)
 

@@ -57,6 +57,7 @@ libbase_linux_cppflags := \
 
 libbase_darwin_cppflags := \
     -Wexit-time-destructors \
+    -Wno-deprecated-declarations \
 
 # Device
 # ------------------------------------------------------------------------------
