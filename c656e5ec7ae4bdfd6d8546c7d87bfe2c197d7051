@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa4df85_bb901650",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 12076
+      },
+      "writtenOn": "2016-09-16T10:56:43Z",
+      "side": 1,
+      "message": "Build breaks here: \nsystem/core/init/builtins.cpp:306:44: error: format specifies type \u0027unsigned int *\u0027 but the argument has type \u0027mode_t *\u0027 (aka \u0027unsigned short *\u0027) [-Werror,-Wformat]\n        if (sscanf(args[2].c_str(), \"%ul\", \u0026mode) !\u003d 1) {\n                                     ~~    ^~~~~\n                                     %hu",
+      "revId": "c656e5ec7ae4bdfd6d8546c7d87bfe2c197d7051",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
