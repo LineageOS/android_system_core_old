@@ -303,7 +303,12 @@ static int do_mkdir(const std::vector<std::string>& args) {
     /* mkdir <path> [mode] [owner] [group] */
 
     if (args.size() >= 3) {
-        mode = std::stoul(args[2], 0, 8);
+        unsigned long mode_ul;
+        if (sscanf(args[2].c_str(), "%lo", &mode_ul) != 1) {
+            ERROR("mkdir: invalid mode %s\n", args[2].c_str());
+            return -EINVAL;
+        }
+        mode = (mode_t) mode_ul;
     }
 
     ret = make_dir(args[1].c_str(), mode);
