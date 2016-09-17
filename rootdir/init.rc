@@ -580,7 +580,6 @@ on property:vold.decrypt=trigger_restart_min_framework
     # A/B update verifier that marks a successful boot.
     exec - root -- /system/bin/update_verifier trigger_restart_min_framework
     class_start main
-    start time_daemon
 
 on property:vold.decrypt=trigger_restart_framework
     # A/B update verifier that marks a successful boot.
