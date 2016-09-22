@@ -209,7 +209,8 @@ int match_fastboot_with_serial(usb_ifc_info *info, const char *local_serial)
        (info->dev_vendor != 0x2b4c) &&  // Zuk
        (info->dev_vendor != 0x2a96) &&  // MMX
        (info->dev_vendor != 0x19d2) &&  // ZTE
-       (info->dev_vendor != 0x2c3f))    // Nextbit
+       (info->dev_vendor != 0x2c3f) &&  // Nextbit
+       (info->dev_vendor != 0x1bbb))    // Alcatel
             return -1;
     if(info->ifc_class != 0xff) return -1;
     if(info->ifc_subclass != 0x42) return -1;
