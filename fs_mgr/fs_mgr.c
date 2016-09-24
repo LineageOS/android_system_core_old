@@ -543,12 +543,24 @@ int fs_mgr_mount_all(struct fstab *fstab)
     int mret = -1;
     int mount_errno = 0;
     int attempted_idx = -1;
+    char propbuf[PROPERTY_VALUE_MAX];
+    bool is_ffbm = false;
 
     if (!fstab) {
         return -1;
     }
+    /**get boot mode*/
+    property_get("ro.bootmode", propbuf, "");
+    if (strncmp(propbuf, "ffbm", 4) == 0)
+        is_ffbm = true;
 
     for (i = 0; i < fstab->num_entries; i++) {
+        /* Skip userdata partition in ffbm mode */
+        if (is_ffbm && !strcmp(fstab->recs[i].mount_point, "/data")){
+            INFO("ffbm mode,skip mount userdata");
+            continue;
+        }
+
         /* Don't mount entries that are managed by vold */
         if (fstab->recs[i].fs_mgr_flags & (MF_VOLDMANAGED | MF_RECOVERYONLY)) {
             continue;
