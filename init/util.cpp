@@ -450,6 +450,23 @@ void import_kernel_cmdline(bool in_qemu,
         if (pieces.size() == 2) {
             fn(pieces[0], pieces[1], in_qemu);
         }
+#ifdef PARSE_LEGACY_KERNEL_CMDLINE_BOARDID
+        else if (!strcmp(pieces[0].c_str(), "board_id")) {
+            /* premaca@gmail.com
+             * It is assumed that kernel command parameter will be in X=Y format
+             * however this may not be true for certain parameters
+             * e.g board_id=SXXXXXX1:board_vol=1047620
+             * If we split with delimiter '=', it would become three pieces.
+             * The issue could be with kernels not constructing the string
+             * correctly, but lets fix it here for only board_id
+             *
+             * ** IMPORTANT **
+             * Only the first piece is passed to the application, just to assist
+             * on reading board_id
+             */
+            fn(pieces[0], pieces[1], in_qemu);
+        }
+#endif
     }
 }
 

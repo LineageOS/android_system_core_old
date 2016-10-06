@@ -49,6 +49,10 @@ LOCAL_CLANG := true
 include $(BUILD_HOST_NATIVE_TEST)
 endif
 
+ifeq ($(SYSTEM_PARSE_LEGACY_KERNEL_CMDLINE_BOARDID),true)
+init_options += -DPARSE_LEGACY_KERNEL_CMDLINE_BOARDID=1
+endif
+
 include $(CLEAR_VARS)
 LOCAL_CPPFLAGS := $(init_cflags)
 LOCAL_SRC_FILES:= \
