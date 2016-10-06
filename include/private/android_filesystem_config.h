@@ -88,7 +88,11 @@
 #define AID_WEBSERV       1044  /* webservd process */
 #define AID_DEBUGGERD     1045  /* debuggerd unprivileged user */
 #define AID_MEDIA_CODEC   1046  /* mediacodec process */
+#ifdef TARGET_HAS_LEGACY_CAMERA_HAL1
+#define AID_CAMERASERVER  AID_MEDIA /* cameraserver process */
+#else
 #define AID_CAMERASERVER  1047  /* cameraserver process */
+#endif
 
 #define AID_SHELL         2000  /* adb and debug shell user */
 #define AID_CACHE         2001  /* cache access */
