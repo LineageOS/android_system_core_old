@@ -99,6 +99,10 @@ ifneq ($(TARGET_IGNORE_RO_BOOT_REVISION),)
 LOCAL_CFLAGS += -DIGNORE_RO_BOOT_REVISION
 endif
 
+ifeq ($(KERNEL_HAS_FINIT_MODULE), false)
+LOCAL_CFLAGS += -DNO_FINIT_MODULE
+endif
+
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
     system/extras/ext4_utils \
