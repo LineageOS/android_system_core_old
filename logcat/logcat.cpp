@@ -169,10 +169,17 @@ static void writeEntryToLogDump(AndroidLogEntry *entry)
 {
     int bytesWrittenToLogDump = 0;
     char defaultBuffer[512];
+    char *outBuffer = NULL;
     size_t logLength;
 
     // Get logLength
-    android_log_formatLogLine(g_logformat, defaultBuffer,sizeof(defaultBuffer), entry, &logLength);
+    outBuffer = android_log_formatLogLine(g_logformat, defaultBuffer,
+                                          sizeof(defaultBuffer),
+                                          entry,
+                                          &logLength);
+    if (outBuffer != defaultBuffer) {
+        free(outBuffer);
+    }
 
     // Check if the to-be-inserted log exceeds the available buffer size; And rotate if needed.
     checkAndRotateLogDump(logLength);

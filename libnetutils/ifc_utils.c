@@ -173,8 +173,7 @@ void ifc_close6(void)
 static void ifc_init_ifr(const char *name, struct ifreq *ifr)
 {
     memset(ifr, 0, sizeof(struct ifreq));
-    strncpy(ifr->ifr_name, name, IFNAMSIZ);
-    ifr->ifr_name[IFNAMSIZ - 1] = 0;
+    strlcpy(ifr->ifr_name, name, IFNAMSIZ);
 }
 
 int ifc_get_hwaddr(const char *name, void *ptr)
