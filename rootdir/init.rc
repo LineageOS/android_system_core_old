@@ -238,7 +238,7 @@ on init
     # expecting it to point to /proc/self/fd
     symlink /proc/self/fd /dev/fd
 
-    export DOWNLOAD_CACHE /data/cache
+    export DOWNLOAD_CACHE ${ro.device.cache_dir}
 
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
