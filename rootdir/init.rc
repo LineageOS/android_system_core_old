@@ -242,7 +242,7 @@ on init
     # expecting it to point to /proc/self/fd
     symlink /proc/self/fd /dev/fd
 
-    export DOWNLOAD_CACHE /data/cache
+    export DOWNLOAD_CACHE ${ro.device.cache_dir}
 
     # set RLIMIT_NICE to allow priorities from 19 to -20
     setrlimit 13 40 40
