@@ -541,8 +541,10 @@ static int charging_mode_booting(void) {
     if (f < 0)
         return 0;
 
-    if (1 != read(f, (void *)&cmb,1))
+    if (1 != read(f, (void *)&cmb,1)) {
+        close(f);
         return 0;
+    }
 
     close(f);
     return ('1' == cmb);
