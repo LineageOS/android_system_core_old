@@ -637,7 +637,7 @@ int main(int argc, char** argv) {
     restorecon("/dev/socket");
     restorecon("/dev/__properties__");
     restorecon("/property_contexts");
-    restorecon_recursive("/sys");
+    restorecon("/sys", SELINUX_ANDROID_RESTORECON_RECURSE);
 
     epoll_fd = epoll_create1(EPOLL_CLOEXEC);
     if (epoll_fd == -1) {

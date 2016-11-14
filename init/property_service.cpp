@@ -44,6 +44,7 @@
 #include <sys/mman.h>
 #include <private/android_filesystem_config.h>
 
+#include <selinux/android.h>
 #include <selinux/selinux.h>
 #include <selinux/label.h>
 
@@ -321,7 +322,7 @@ static bool property_set_async(const char* name,
 
 static int restorecon_recursive_async(const char* name, const char* value)
 {
-    return restorecon_recursive(value);
+    return restorecon(value, SELINUX_ANDROID_RESTORECON_RECURSE);
 }
 
 int property_set(const char* name, const char* value) {
