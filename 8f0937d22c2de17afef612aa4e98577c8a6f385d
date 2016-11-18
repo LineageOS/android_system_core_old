@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff2e2bb8_190cbc92",
+        "filename": "rootdir/init.rc",
+        "patchSetId": 1
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 7880
+      },
+      "writtenOn": "2016-11-18T01:55:14Z",
+      "side": 0,
+      "message": "export DOWNLOAD_CACHE ${ro.device.cache_dir} (or a better prop name if there\u0027s one)",
+      "revId": "8f0937d22c2de17afef612aa4e98577c8a6f385d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
