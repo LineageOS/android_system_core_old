@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f681702_edcf0055",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2016-11-26T21:38:14Z",
+      "side": 1,
+      "message": "This doesn\u0027t even apply to this patch anymore...",
+      "revId": "78e19160e7e96fac7b4760f1039185772365738e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f681702_cdccc463",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2016-11-26T21:38:14Z",
+      "side": 1,
+      "message": "Really unecessary. All that matters is the final patch...",
+      "revId": "78e19160e7e96fac7b4760f1039185772365738e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f681702_4d0a748a",
+        "filename": "init/init.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2016-11-26T21:38:14Z",
+      "side": 1,
+      "message": "This logic doesn\u0027t make sense. ifndef MTK_HARDWARE we want 64?",
+      "revId": "78e19160e7e96fac7b4760f1039185772365738e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
