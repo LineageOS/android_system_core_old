@@ -85,7 +85,14 @@ static int have_console;
 static char console_name[PROP_VALUE_MAX] = "/dev/console";
 static time_t process_needs_restart;
 
+// MediaTek platform boot image support (MT6753 & up)
+// xen0n: some MTK services (e.g. ril-daemon-mtk) require very large number
+// of sockets, which can't be contained in 32 entries minus other variables.
+#ifndef MTK_HARDWARE
+static const char *ENV[64];
+#else
 static const char *ENV[32];
+#endif
 
 bool waiting_for_exec = false;
 
