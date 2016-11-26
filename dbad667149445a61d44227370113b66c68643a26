@@ -22,6 +22,41 @@
       "revId": "dbad667149445a61d44227370113b66c68643a26",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f681702_8d5bec2c",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 3962
+      },
+      "writtenOn": "2016-11-26T19:23:59Z",
+      "side": 1,
+      "message": "Yeah just multiply this by 1000 in the kernel",
+      "parentUuid": "5f681702_ed3a60cb",
+      "revId": "dbad667149445a61d44227370113b66c68643a26",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f681702_ad56a805",
+        "filename": "init/init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3962
+      },
+      "writtenOn": "2016-11-26T19:23:59Z",
+      "side": 1,
+      "message": "O_o",
+      "revId": "dbad667149445a61d44227370113b66c68643a26",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
