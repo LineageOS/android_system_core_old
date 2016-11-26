@@ -207,7 +207,11 @@ bool BatteryMonitor::update(void) {
     props.batteryLevel = mBatteryFixedCapacity ?
         mBatteryFixedCapacity :
         getIntField(mHealthdConfig->batteryCapacityPath);
+#ifndef MTK_HARDWARE
     props.batteryVoltage = getIntField(mHealthdConfig->batteryVoltagePath) / 1000;
+#else
+    props.batteryVoltage = getIntField(mHealthdConfig->batteryVoltagePath);
+#endif
 
     props.batteryTemperature = mBatteryFixedTemperature ?
         mBatteryFixedTemperature :
