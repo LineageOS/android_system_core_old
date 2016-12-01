@@ -135,7 +135,17 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libcutils
 # TODO: remove liblog as whole static library, once we don't have prebuilt that requires
 # liblog symbols present in libcutils.
-LOCAL_WHOLE_STATIC_LIBRARIES := libcutils liblog
+LOCAL_WHOLE_STATIC_LIBRARIES := libcutils
+# DONE: devices using old prebuilt files which only link against libcutils and then use the static
+# liblog functions now cause a problem in the zygote whitelist fd check during boot.
+# Prior to doing this check, the android logging fd is closed by calling into liblog __android_close_log()
+# but the fd opened by the static version of liblog in libcutils is never closed, so the whitelist
+# check fails and device stalls in a bootloop due to the resulting zygote crash
+# Devices can set the following board flag to avoid linking the static liblog functions into libcutils
+# and instead the shared lib will be used:
+ifneq ($(BOARD_CANT_USE_STATIC_LIBLOG_IN_LIBCUTILS_BECAUSE_IT_SCREWS_ZYGOTE_WHITELIST),true)
+LOCAL_WHOLE_STATIC_LIBRARIES += liblog
+endif
 LOCAL_SHARED_LIBRARIES := liblog
 ifneq ($(ENABLE_CPUSETS),)
 LOCAL_CFLAGS += -DUSE_CPUSETS
