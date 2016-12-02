@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f681702_9b4cb877",
+        "filename": "libcutils/Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2016-12-02T00:57:32Z",
+      "side": 1,
+      "message": "Let\u0027s make this a bit more concise please...",
+      "range": {
+        "startLine": 147,
+        "startChar": 9,
+        "endLine": 147,
+        "endChar": 85
+      },
+      "revId": "e0abadd5a7805e10920ded717eafc2a024bf9294",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
