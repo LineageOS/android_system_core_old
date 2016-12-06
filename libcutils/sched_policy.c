@@ -66,8 +66,10 @@ static int system_bg_cpuset_fd = -1;
 static int bg_cpuset_fd = -1;
 static int fg_cpuset_fd = -1;
 static int ta_cpuset_fd = -1; // special cpuset for top app
+static int system_bg_schedboost_fd = -1;
 static int bg_schedboost_fd = -1;
 static int fg_schedboost_fd = -1;
+static int ta_schedboost_fd = -1; // special cpuset for top app
 #endif
 
 /* Add tid to the scheduling group defined by the policy */
@@ -136,15 +138,21 @@ static void __initialize(void) {
         system_bg_cpuset_fd = open(filename, O_WRONLY | O_CLOEXEC);
         filename = "/dev/cpuset/top-app/tasks";
         ta_cpuset_fd = open(filename, O_WRONLY | O_CLOEXEC);
+    }
 
 #ifdef USE_SCHEDBOOST
+    if (!access("/dev/stune/tasks", F_OK)) {
         filename = "/dev/stune/foreground/tasks";
         fg_schedboost_fd = open(filename, O_WRONLY | O_CLOEXEC);
-        filename = "/dev/stune/tasks";
+        filename = "/dev/stune/background/tasks";
         bg_schedboost_fd = open(filename, O_WRONLY | O_CLOEXEC);
-#endif
+        filename = "/dev/stune/top-app/tasks";
+        ta_schedboost_fd = open(filename, O_WRONLY | O_CLOEXEC);
+        filename = "/dev/stune/system-background/tasks";
+        system_bg_schedboost_fd = open(filename, O_WRONLY | O_CLOEXEC);
     }
-#endif
+#endif /* USE_SCHEDBOOST */
+#endif /* USE_CPUSETS */
 }
 
 /*
@@ -298,11 +306,11 @@ int set_cpuset_policy(int tid, SchedPolicy policy)
         break;
     case SP_TOP_APP :
         fd = ta_cpuset_fd;
-        boost_fd = fg_schedboost_fd;
+        boost_fd = ta_schedboost_fd;
         break;
     case SP_SYSTEM:
         fd = system_bg_cpuset_fd;
-        boost_fd = bg_schedboost_fd;
+        boost_fd = system_bg_schedboost_fd;
         break;
     default:
         boost_fd = fd = -1;
