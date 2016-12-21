@@ -61,6 +61,8 @@ int wait_for_file(const char *filename, int timeout);
 void open_devnull_stdio(void);
 void import_kernel_cmdline(bool in_qemu,
                            const std::function<void(const std::string&, const std::string&, bool)>&);
+void import_kernel_cmdline_legacy(bool in_qemu,
+                                  const std::function<void(const std::string&, bool)>&);
 int make_dir(const char *path, mode_t mode);
 int restorecon(const char *pathname);
 int restorecon_recursive(const char *pathname);

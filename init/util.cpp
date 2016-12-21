@@ -453,6 +453,16 @@ void import_kernel_cmdline(bool in_qemu,
     }
 }
 
+void import_kernel_cmdline_legacy(bool in_qemu,
+                           const std::function<void(const std::string&, bool)>& fn) { 
+    std::string cmdline;
+    android::base::ReadFileToString("/proc/cmdline", &cmdline);
+
+    for (const auto& entry : android::base::Split(android::base::Trim(cmdline), " ")) {
+        fn(entry, in_qemu);
+    }
+}
+
 int make_dir(const char *path, mode_t mode)
 {
     int rc;
