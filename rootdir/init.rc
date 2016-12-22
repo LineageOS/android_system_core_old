@@ -668,6 +668,8 @@ on property:ro.debuggable=1
     # Give writes to anyone for the trace folder on debug builds.
     # The folder is used to store method traces.
     chmod 0773 /data/misc/trace
+
+on property:ro.console.enable=1
     start console
 
 service flash_recovery /system/bin/install-recovery.sh
