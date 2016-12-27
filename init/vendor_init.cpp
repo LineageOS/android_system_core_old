@@ -33,7 +33,17 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* init vendor override stubs */
 
 __attribute__ ((weak))
-void vendor_load_properties()
+void vendor_load_default_properties()
+{
+}
+
+__attribute__ ((weak))
+void vendor_load_system_properties()
+{
+}
+
+__attribute__ ((weak))
+void vendor_load_persist_properties()
 {
 }
 

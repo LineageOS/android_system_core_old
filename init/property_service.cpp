@@ -483,6 +483,7 @@ static void load_persistent_properties() {
 
 void property_load_boot_defaults() {
     load_properties_from_file(PROP_PATH_RAMDISK_DEFAULT, NULL);
+    vendor_load_default_properties();
 }
 
 static void load_override_properties() {
@@ -551,9 +552,11 @@ void load_system_props() {
     /* update with vendor-specific property runtime
      * overrides
      */
-    vendor_load_properties();
+    vendor_load_persist_properties();
 
     load_recovery_id_prop();
+
+    vendor_load_system_properties();
 }
 
 void start_property_service() {
