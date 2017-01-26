@@ -44,10 +44,20 @@ FingerprintDaemonProxy::~FingerprintDaemonProxy() {
 void FingerprintDaemonProxy::hal_notify_callback(const fingerprint_msg_t *msg) {
     FingerprintDaemonProxy* instance = FingerprintDaemonProxy::getInstance();
     const sp<IFingerprintDaemonCallback> callback = instance->mCallback;
+    int samples_remaining = msg->data.enroll.samples_remaining;
     if (callback == NULL) {
         ALOGE("Invalid callback object");
         return;
     }
+
+#ifdef FINGERPRINT_SAMSUNG
+    /*
+     * Samsung/LSI specific: Instead of having x remaining attempts, we need to
+     * do 100 - x.
+     */
+    samples_remaining = 100 - samples_remaining;
+#endif
+
     const int64_t device = (int64_t) instance->mDevice;
     switch (msg->type) {
         case FINGERPRINT_ERROR:
@@ -74,11 +84,11 @@ void FingerprintDaemonProxy::hal_notify_callback(const fingerprint_msg_t *msg) {
             ALOGD("onEnrollResult(fid=%d, gid=%d, rem=%d)",
                     msg->data.enroll.finger.fid,
                     msg->data.enroll.finger.gid,
-                    msg->data.enroll.samples_remaining);
+                    samples_remaining);
             callback->onEnrollResult(device,
                     msg->data.enroll.finger.fid,
                     msg->data.enroll.finger.gid,
-                    msg->data.enroll.samples_remaining);
+                    samples_remaining);
             break;
         case FINGERPRINT_TEMPLATE_REMOVED:
             ALOGD("onRemove(fid=%d, gid=%d)",
