@@ -23,6 +23,11 @@ LOCAL_SRC_FILES := \
 	IFingerprintDaemon.cpp \
 	IFingerprintDaemonCallback.cpp \
 	fingerprintd.cpp
+
+ifeq ($(BOARD_SAMSUNG_TZ_FINGERPRINT),true)
+LOCAL_CFLAGS += -DFINGERPRINT_SAMSUNG
+endif
+
 LOCAL_MODULE := fingerprintd
 LOCAL_SHARED_LIBRARIES := \
 	libbinder \
