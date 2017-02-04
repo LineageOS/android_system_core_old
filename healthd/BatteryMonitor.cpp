@@ -363,6 +363,10 @@ bool BatteryMonitor::update(void) {
                               (access(path.string(), R_OK) == 0) ? getIntField(path) :
                               DEFAULT_VBUS_VOLTAGE;
 
+                            if (ChargingVoltage <= 0) {
+                                ChargingVoltage = DEFAULT_VBUS_VOLTAGE;
+                            }
+
                             double power = ((double)ChargingCurrent / MILLION) *
                                     ((double)ChargingVoltage / MILLION);
                             if (MaxPower < power) {
