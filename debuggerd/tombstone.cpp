@@ -173,7 +173,7 @@ static void dump_header_info(log_t* log) {
   property_get("ro.build.fingerprint", fingerprint, "unknown");
   property_get("ro.revision", revision, "unknown");
 
-  _LOG(log, logtype::HEADER, "CM Version: '%s'\n", cm_version);
+  _LOG(log, logtype::HEADER, "LineageOS Version: '%s'\n", cm_version);
   _LOG(log, logtype::HEADER, "Build fingerprint: '%s'\n", fingerprint);
   _LOG(log, logtype::HEADER, "Revision: '%s'\n", revision);
   _LOG(log, logtype::HEADER, "ABI: '%s'\n", ABI_STRING);
