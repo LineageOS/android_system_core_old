@@ -36,6 +36,7 @@
 #include <linux/ipv6_route.h>
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
+#include <linux/un.h>
 
 #include "netutils/ifc.h"
 
@@ -709,4 +710,78 @@ ifc_configure(const char *ifname,
     property_set(dns_prop_name, gateway ? ipaddr_to_string(gateway) : "");
 
     return 0;
+}
+
+static int ifc_netd_sock_init(void)
+{
+    int ifc_netd_sock;
+    const int one = 1;
+    struct sockaddr_un netd_addr;
+  
+        ifc_netd_sock = socket(AF_UNIX, SOCK_STREAM, 0);
+        if (ifc_netd_sock < 0) {
+            printerr("ifc_netd_sock_init: create socket failed");
+            return -1;
+        }
+  
+        setsockopt(ifc_netd_sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+        memset(&netd_addr, 0, sizeof(netd_addr));
+        netd_addr.sun_family = AF_UNIX;
+        strlcpy(netd_addr.sun_path, "/dev/socket/netd",
+            sizeof(netd_addr.sun_path));
+        if (TEMP_FAILURE_RETRY(connect(ifc_netd_sock,
+                     (const struct sockaddr*) &netd_addr,
+                     sizeof(netd_addr))) != 0) {
+            printerr("ifc_netd_sock_init: connect to netd failed, fd=%d, err: %d(%s)", 
+                ifc_netd_sock, errno, strerror(errno));
+            close(ifc_netd_sock);
+            return -1;
+        }
+  
+    if (DBG) printerr("ifc_netd_sock_init fd=%d", ifc_netd_sock);
+    return ifc_netd_sock;
+}
+
+/*do not call this function in netd*/
+int ifc_set_throttle(const char *ifname, int rxKbps, int txKbps)
+{
+    FILE* fnetd = NULL;
+    int ret = -1;
+    int seq = 1;
+    char rcv_buf[24];
+	int nread = 0;
+	int netd_sock = 0;
+	
+    ALOGD("enter ifc_set_throttle: ifname = %s, rx = %d kbs, tx = %d kbs", ifname, rxKbps, txKbps);
+
+    netd_sock = ifc_netd_sock_init();
+    if(netd_sock <= 0)
+        goto exit;
+    
+    // Send the request.
+    fnetd = fdopen(netd_sock, "r+");
+	if(fnetd == NULL){
+		ALOGE("open netd socket failed, err:%d(%s)", errno, strerror(errno));
+		goto exit;
+	}
+    if (fprintf(fnetd, "%d interface setthrottle %s %d %d", seq, ifname, rxKbps, txKbps) < 0) {
+        goto exit;
+    }
+    // literal NULL byte at end, required by FrameworkListener
+    if (fputc(0, fnetd) == EOF ||
+        fflush(fnetd) != 0) {
+        goto exit;
+    }
+    ret = 0;
+
+	//Todo: read the whole response from netd
+	nread = fread(rcv_buf, 1, 20, fnetd);
+	rcv_buf[23] = 0;
+	ALOGD("response: %s", rcv_buf);
+exit:
+    if (fnetd != NULL) {
+        fclose(fnetd);
+    }
+  
+    return ret;
 }

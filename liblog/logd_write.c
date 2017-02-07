@@ -410,6 +410,26 @@ int __android_log_buf_write(int bufID, int prio, const char *tag, const char *ms
     if (!tag)
         tag = "";
 
+    // MediaTek: Prevent log spamming of audio.
+    if (!strcmp(tag, "AudioMTKFilterManager") ||
+        !strcmp(tag, "AudioMTKFilter") ||
+        !strcmp(tag, "AudioMTKStreamOut") ||
+        !strcmp(tag, "AudioVPWStreamIn") ||
+        !strcmp(tag, "AudioDigitalControl") ||
+        !strcmp(tag, "AudioLoopbackController") ||
+        !strcmp(tag, "AudioMTKVolumeController") ||
+        !strcmp(tag, "AudioDigitalControl") ||
+        !strcmp(tag, "AudioAnalogControl") ||
+        !strcmp(tag, "AudioAfeReg") ||
+        !strcmp(tag, "AudioAnalogReg") ||
+        !strcmp(tag, "AudioPlatformDevice") ||
+        !strcmp(tag, "AudioMachineDevice") ||
+        !strcmp(tag, "MtkAudioLoud") ||
+        !strcmp(tag, "LoopbackManager") ||
+        !strcmp(tag, "AudioInterConnection")) {
+            return 0;
+    }
+
     /* XXX: This needs to go! */
     if ((bufID != LOG_ID_RADIO) &&
          (!strcmp(tag, "HTC_RIL") ||

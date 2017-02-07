@@ -38,11 +38,21 @@ void write_string_to_file(char* file, char* string)
     fclose(f);
 }
 
+void maybe_skip_mtk_header(FILE* f, int is_mtk)
+{
+    if (!is_mtk) {
+        return;
+    }
+
+    fseek(f, MTK_HEADER_SIZE, SEEK_CUR);
+}
+
 int usage() {
     printf("usage: unpackbootimg\n");
     printf("\t-i|--input boot.img\n");
     printf("\t[ -o|--output output_directory]\n");
     printf("\t[ -p|--pagesize <size-in-hexadecimal> ]\n");
+    printf("\t[ --mtk 1 ]\n");
     return 0;
 }
 
@@ -52,6 +62,7 @@ int main(int argc, char** argv)
     char* directory = "./";
     char* filename = NULL;
     int pagesize = 0;
+    int is_mtk = 0;
 
     argc--;
     argv++;
@@ -66,6 +77,12 @@ int main(int argc, char** argv)
             directory = val;
         } else if(!strcmp(arg, "--pagesize") || !strcmp(arg, "-p")) {
             pagesize = strtoul(val, 0, 16);
+        } else if (!strcmp(arg, "--mtk")) {
+            if (!strcmp(val, "1")) {
+                is_mtk = 1;
+            }
+
+            return usage();
         } else {
             return usage();
         }
@@ -153,23 +170,27 @@ int main(int argc, char** argv)
     //printf("total read: %d\n", total_read);
     total_read += read_padding(f, sizeof(header), pagesize);
 
+    int mtk_size_adjust = is_mtk ? -MTK_HEADER_SIZE : 0;
+
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-zImage");
     FILE *k = fopen(tmp, "wb");
-    byte* kernel = (byte*)malloc(header.kernel_size);
+    byte* kernel = (byte*)malloc(header.kernel_size + mtk_size_adjust);
     //printf("Reading kernel...\n");
-    fread(kernel, header.kernel_size, 1, f);
+    maybe_skip_mtk_header(f, is_mtk);
+    fread(kernel, header.kernel_size + mtk_size_adjust, 1, f);
     total_read += header.kernel_size;
-    fwrite(kernel, header.kernel_size, 1, k);
+    fwrite(kernel, header.kernel_size + mtk_size_adjust, 1, k);
     fclose(k);
 
     //printf("total read: %d\n", header.kernel_size);
     total_read += read_padding(f, header.kernel_size, pagesize);
 
 
-    byte* ramdisk = (byte*)malloc(header.ramdisk_size);
+    byte* ramdisk = (byte*)malloc(header.ramdisk_size + mtk_size_adjust);
     //printf("Reading ramdisk...\n");
-    fread(ramdisk, header.ramdisk_size, 1, f);
+    maybe_skip_mtk_header(f, is_mtk);
+    fread(ramdisk, header.ramdisk_size + mtk_size_adjust, 1, f);
     total_read += header.ramdisk_size;
     sprintf(tmp, "%s/%s", directory, basename(filename));
     if(ramdisk[0] == 0x02 && ramdisk[1]== 0x21)
@@ -177,7 +198,7 @@ int main(int argc, char** argv)
     else
         strcat(tmp, "-ramdisk.gz");
     FILE *r = fopen(tmp, "wb");
-    fwrite(ramdisk, header.ramdisk_size, 1, r);
+    fwrite(ramdisk, header.ramdisk_size + mtk_size_adjust, 1, r);
     fclose(r);
 
     total_read += read_padding(f, header.ramdisk_size, pagesize);
@@ -185,11 +206,12 @@ int main(int argc, char** argv)
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-second");
     FILE *s = fopen(tmp, "wb");
-    byte* second = (byte*)malloc(header.second_size);
+    byte* second = (byte*)malloc(header.second_size + mtk_size_adjust);
     //printf("Reading second...\n");
-    fread(second, header.second_size, 1, f);
+    maybe_skip_mtk_header(f, is_mtk);
+    fread(second, header.second_size + mtk_size_adjust, 1, f);
     total_read += header.second_size;
-    fwrite(second, header.second_size, 1, r);
+    fwrite(second, header.second_size + mtk_size_adjust, 1, r);
     fclose(s);
 
     total_read += read_padding(f, header.second_size, pagesize);
@@ -197,11 +219,12 @@ int main(int argc, char** argv)
     sprintf(tmp, "%s/%s", directory, basename(filename));
     strcat(tmp, "-dt");
     FILE *d = fopen(tmp, "wb");
-    byte* dt = (byte*)malloc(header.dt_size);
+    byte* dt = (byte*)malloc(header.dt_size + mtk_size_adjust);
     //printf("Reading dt...\n");
-    fread(dt, header.dt_size, 1, f);
+    maybe_skip_mtk_header(f, is_mtk);
+    fread(dt, header.dt_size + mtk_size_adjust, 1, f);
     total_read += header.dt_size;
-    fwrite(dt, header.dt_size, 1, r);
+    fwrite(dt, header.dt_size + mtk_size_adjust, 1, r);
     fclose(d);
     
     fclose(f);

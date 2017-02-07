@@ -28,6 +28,8 @@ typedef struct boot_img_hdr boot_img_hdr;
 #define BOOT_ARGS_SIZE 512
 #define BOOT_EXTRA_ARGS_SIZE 1024
 
+#define MTK_HEADER_SIZE 512
+
 struct boot_img_hdr
 {
     uint8_t magic[BOOT_MAGIC_SIZE];
