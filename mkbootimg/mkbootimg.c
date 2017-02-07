@@ -26,10 +26,12 @@
 #include "mincrypt/sha.h"
 #include "bootimg.h"
 
-static void *load_file(const char *fn, unsigned *_sz)
+static void *load_file(const char *fn, unsigned *_sz, int is_mtk, const char *mtk_fn)
 {
     char *data;
+    char *buf_start;
     int sz;
+    int buf_sz;
     int fd;
 
     data = 0;
@@ -41,13 +43,36 @@ static void *load_file(const char *fn, unsigned *_sz)
 
     if(lseek(fd, 0, SEEK_SET) != 0) goto oops;
 
-    data = (char*) malloc(sz);
+    buf_sz = sz + (is_mtk ? MTK_HEADER_SIZE : 0);
+    data = buf_start = (char*) malloc(buf_sz);
     if(data == 0) goto oops;
 
-    if(read(fd, data, sz) != sz) goto oops;
+    if (is_mtk) {
+        /* MTK magic */
+        data[0] = 0x88;
+        data[1] = 0x16;
+        data[2] = 0x88;
+        data[3] = 0x58;
+
+        /* file length in little endian */
+        data[4] = sz & 0xFF;
+        data[5] = (sz >> 8) & 0xFF;
+        data[6] = (sz >> 16) & 0xFF;
+        data[7] = (sz >> 24) & 0xFF;
+
+        /* MTK "file name" */
+        strncpy(data + 8, mtk_fn, 32);
+
+        /* MTK header padding */
+        memset(data + 40, 0xff, MTK_HEADER_SIZE - 40);
+
+        buf_start += MTK_HEADER_SIZE;
+    }
+
+    if(read(fd, buf_start, sz) != sz) goto oops;
     close(fd);
 
-    if(_sz) *_sz = sz;
+    if(_sz) *_sz = buf_sz;
     return data;
 
 oops:
@@ -71,6 +96,7 @@ int usage(void)
             "       [ --second_offset <address> ]\n"
             "       [ --tags_offset <address> ]\n"
             "       [ --id ]\n"
+            "       [ --mtk <boot|recovery> ]\n"
             "       -o|--output <filename>\n"
             );
     return 1;
@@ -111,6 +137,8 @@ int main(int argc, char **argv)
 {
     boot_img_hdr hdr;
 
+    int is_mtk = 0;
+    int is_mtk_boot = 0;
     char *kernel_fn = NULL;
     void *kernel_data = NULL;
     char *ramdisk_fn = NULL;
@@ -182,6 +210,16 @@ int main(int argc, char **argv)
                 }
             } else if(!strcmp(arg, "--dt")) {
                 dt_fn = val;
+            } else if (!strcmp(arg, "--mtk")) {
+                if (!strcmp(val, "boot")) {
+                    is_mtk = 1;
+                    is_mtk_boot = 1;
+                } else if (!strcmp(val, "recovery")) {
+                    is_mtk = 1;
+                    is_mtk_boot = 0;
+                } else {
+                    return usage();
+                }
             } else {
                 return usage();
             }
@@ -229,7 +267,7 @@ int main(int argc, char **argv)
         strncpy((char *)hdr.extra_cmdline, cmdline, BOOT_EXTRA_ARGS_SIZE);
     }
 
-    kernel_data = load_file(kernel_fn, &hdr.kernel_size);
+    kernel_data = load_file(kernel_fn, &hdr.kernel_size, is_mtk, "KERNEL");
     if(kernel_data == 0) {
         fprintf(stderr,"error: could not load kernel '%s'\n", kernel_fn);
         return 1;
@@ -239,7 +277,7 @@ int main(int argc, char **argv)
         ramdisk_data = 0;
         hdr.ramdisk_size = 0;
     } else {
-        ramdisk_data = load_file(ramdisk_fn, &hdr.ramdisk_size);
+        ramdisk_data = load_file(ramdisk_fn, &hdr.ramdisk_size, is_mtk, is_mtk_boot ? "ROOTFS" : "RECOVERY");
         if(ramdisk_data == 0) {
             fprintf(stderr,"error: could not load ramdisk '%s'\n", ramdisk_fn);
             return 1;
@@ -247,7 +285,7 @@ int main(int argc, char **argv)
     }
 
     if(second_fn) {
-        second_data = load_file(second_fn, &hdr.second_size);
+        second_data = load_file(second_fn, &hdr.second_size, is_mtk, "");
         if(second_data == 0) {
             fprintf(stderr,"error: could not load secondstage '%s'\n", second_fn);
             return 1;
@@ -255,7 +293,7 @@ int main(int argc, char **argv)
     }
 
     if(dt_fn) {
-        dt_data = load_file(dt_fn, &hdr.dt_size);
+        dt_data = load_file(dt_fn, &hdr.dt_size, is_mtk, "");
         if (dt_data == 0) {
             fprintf(stderr,"error: could not load device tree image '%s'\n", dt_fn);
             return 1;
