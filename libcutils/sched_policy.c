@@ -46,7 +46,11 @@ static inline SchedPolicy _policy(SchedPolicy p)
 #define POLICY_DEBUG 0
 
 // This prctl is only available in Android kernels.
+#ifdef KERNEL_TIMERSLACK_PID
+#define PR_SET_TIMERSLACK_PID KERNEL_TIMERSLACK_PID
+#else
 #define PR_SET_TIMERSLACK_PID 41
+#endif
 
 // timer slack value in nS enforced when the thread moves to background
 #define TIMER_SLACK_BG 40000000
