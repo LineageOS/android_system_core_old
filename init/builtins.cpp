@@ -601,7 +601,7 @@ static int mount_fstab(const char* fstabfile, int mount_mode) {
  */
 static int queue_fs_event(int code) {
     int ret = code;
-    
+
     std::string bootmode = property_get("ro.bootmode");
     if (strncmp(bootmode.c_str(), "ffbm", 4) == 0) {
         NOTICE("ffbm mode, not start class main\n");
@@ -1167,6 +1167,23 @@ static int do_init_user0(const std::vector<std::string>& args) {
     return e4crypt_do_init_user0();
 }
 
+static int do_install_keyring(const std::vector<std::string>& args) {
+
+   int fail = e4crypt_install_keyring(), retry_count = 3;
+   while (fail && retry_count--) {
+        ERROR("failed to install keyring, retries left: %i\n", retry_count);
+       usleep(50000);
+       fail = e4crypt_install_keyring();
+   }
+   if (fail) {
+       ERROR("failed to install keyring\n");
+       return -1;
+   }
+   property_set("ro.crypto.state", "encrypted");
+   property_set("ro.crypto.type", "file");
+   return 0;
+}
+
 BuiltinFunctionMap::Map& BuiltinFunctionMap::map() const {
     constexpr std::size_t kMax = std::numeric_limits<std::size_t>::max();
     static const Map builtin_functions = {
@@ -1185,6 +1202,7 @@ BuiltinFunctionMap::Map& BuiltinFunctionMap::map() const {
         {"ifup",                    {1,     1,    do_ifup}},
         {"init_user0",              {0,     0,    do_init_user0}},
         {"insmod",                  {1,     kMax, do_insmod}},
+        {"install_keyring",         {1,     1,    do_install_keyring}},
         {"installkey",              {1,     1,    do_installkey}},
         {"load_persist_props",      {0,     0,    do_load_persist_props}},
         {"load_system_props",       {0,     0,    do_load_system_props}},
