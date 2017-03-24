@@ -45,11 +45,7 @@ static const char* root_seclabel = nullptr;
 
 static void drop_capabilities_bounding_set_if_needed() {
 #ifdef ALLOW_ADBD_ROOT
-    char value[PROPERTY_VALUE_MAX];
-    property_get("ro.debuggable", value, "");
-    if (strcmp(value, "1") == 0) {
-        return;
-    }
+    return;
 #endif
     for (int i = 0; prctl(PR_CAPBSET_READ, i, 0, 0, 0) >= 0; i++) {
         if (i == CAP_SETUID || i == CAP_SETGID) {
@@ -80,8 +76,7 @@ static bool should_drop_privileges() {
     property_get("ro.secure", value, "1");
     bool ro_secure = (strcmp(value, "1") == 0);
 
-    property_get("ro.debuggable", value, "");
-    bool ro_debuggable = (strcmp(value, "1") == 0);
+    bool ro_debuggable = 1;
 
     // Drop privileges if ro.secure is set...
     bool drop = ro_secure;
