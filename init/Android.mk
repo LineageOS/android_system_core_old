@@ -110,6 +110,7 @@ endif
 LOCAL_MODULE:= init
 LOCAL_C_INCLUDES += \
     system/extras/ext4_utils \
+    system/core/include \
     system/core/mkbootimg
 
 LOCAL_FORCE_STATIC_EXECUTABLE := true
