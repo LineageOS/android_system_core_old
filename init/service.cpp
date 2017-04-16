@@ -785,11 +785,17 @@ bool ServiceManager::ReapOneProcess() {
     Service* svc = FindServiceByPid(pid);
 
     std::string name;
+	std::string realname(128, '\0');
     if (svc) {
         name = android::base::StringPrintf("Service '%s' (pid %d)",
                                            svc->name().c_str(), pid);
     } else {
-        name = android::base::StringPrintf("Untracked pid %d", pid);
+		realname = svc->name();
+		if (realname != "") {
+			name = android::base::StringPrintf("Untracked pid %d name: %s", pid, realname.c_str()); 
+		} else {
+	        name = android::base::StringPrintf("Untracked pid %d", pid);
+		}
     }
 
     if (WIFEXITED(status)) {
