@@ -7,7 +7,7 @@ common_static_libraries := \
     libfec \
     libfec_rs \
     libbase \
-    libcrypto_utils_static \
+    libmincrypt \
     libcrypto_static \
     libext4_utils_static \
     libsquashfs_utils \
