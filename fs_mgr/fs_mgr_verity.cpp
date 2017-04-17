@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <inttypes.h>
-#include <libgen.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <ctype.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libgen.h>
 #include <time.h>
-#include <unistd.h>
 
 #include <android-base/file.h>
 #include <android-base/strings.h>
 #include <android-base/unique_fd.h>
-#include <crypto_utils/android_pubkey.h>
 #include <cutils/properties.h>
 #include <logwrap/logwrap.h>
-#include <openssl/obj_mac.h>
-#include <openssl/rsa.h>
-#include <openssl/sha.h>
-#include <private/android_filesystem_config.h>
+
+#include "mincrypt/rsa.h"
+#include "mincrypt/sha.h"
+#include "mincrypt/sha256.h"
 
 #include "fec/io.h"
 
@@ -87,45 +86,48 @@ struct verity_state {
 
 extern struct fs_info info;
 
-static RSA *load_key(const char *path)
+static RSAPublicKey *load_key(const char *path)
 {
-    uint8_t key_data[ANDROID_PUBKEY_ENCODED_SIZE];
+    RSAPublicKey* key = static_cast<RSAPublicKey*>(malloc(sizeof(RSAPublicKey)));
+    if (!key) {
+        ERROR("Can't malloc key\n");
+        return NULL;
+    }
 
     FILE* f = fopen(path, "r");
     if (!f) {
         ERROR("Can't open '%s'\n", path);
-        free(key_data);
+        free(key);
         return NULL;
     }
 
-    if (!fread(key_data, sizeof(key_data), 1, f)) {
+    if (!fread(key, sizeof(*key), 1, f)) {
         ERROR("Could not read key!\n");
         fclose(f);
-        free(key_data);
+        free(key);
+        return NULL;
+    }
+
+    if (key->len != RSANUMWORDS) {
+        ERROR("Invalid key length %d\n", key->len);
+        fclose(f);
+        free(key);
         return NULL;
     }
 
     fclose(f);
-
-    RSA* key = NULL;
-    if (!android_pubkey_decode(key_data, sizeof(key_data), &key)) {
-        ERROR("Could not parse key!\n");
-        free(key_data);
-        return NULL;
-    }
-
     return key;
 }
 
-static int verify_table(const uint8_t *signature, size_t signature_size,
-        const char *table, uint32_t table_length)
+static int verify_table(const uint8_t *signature, const char *table,
+        uint32_t table_length)
 {
-    RSA *key;
-    uint8_t hash_buf[SHA256_DIGEST_LENGTH];
+    RSAPublicKey *key;
+    uint8_t hash_buf[SHA256_DIGEST_SIZE];
     int retval = -1;
 
     // Hash the table
-    SHA256((uint8_t*)table, table_length, hash_buf);
+    SHA256_hash((uint8_t*)table, table_length, hash_buf);
 
     // Now get the public key from the keyfile
     key = load_key(VERITY_TABLE_RSA_KEY);
@@ -135,8 +137,11 @@ static int verify_table(const uint8_t *signature, size_t signature_size,
     }
 
     // verify the result
-    if (!RSA_verify(NID_sha256, hash_buf, sizeof(hash_buf), signature,
-                    signature_size, key)) {
+    if (!RSA_verify(key,
+                    signature,
+                    RSANUMBYTES,
+                    (uint8_t*) hash_buf,
+                    SHA256_DIGEST_SIZE)) {
         ERROR("Couldn't verify table\n");
         goto out;
     }
@@ -144,16 +149,16 @@ static int verify_table(const uint8_t *signature, size_t signature_size,
     retval = 0;
 
 out:
-    RSA_free(key);
+    free(key);
     return retval;
 }
 
 static int verify_verity_signature(const struct fec_verity_metadata& verity)
 {
-    if (verify_table(verity.signature, sizeof(verity.signature),
-            verity.table, verity.table_length) == 0 ||
-        verify_table(verity.ecc_signature, sizeof(verity.signature),
-            verity.table, verity.table_length) == 0) {
+    if (verify_table(verity.signature, verity.table,
+            verity.table_length) == 0 ||
+        verify_table(verity.ecc_signature, verity.table,
+            verity.table_length) == 0) {
         return 0;
     }
 
@@ -654,8 +659,8 @@ static int compare_last_signature(struct fstab_rec *fstab, int *match)
     off64_t offset = 0;
     struct fec_handle *f = NULL;
     struct fec_verity_metadata verity;
-    uint8_t curr[SHA256_DIGEST_LENGTH];
-    uint8_t prev[SHA256_DIGEST_LENGTH];
+    uint8_t curr[SHA256_DIGEST_SIZE];
+    uint8_t prev[SHA256_DIGEST_SIZE];
 
     *match = 1;
 
@@ -673,7 +678,7 @@ static int compare_last_signature(struct fstab_rec *fstab, int *match)
         goto out;
     }
 
-    SHA256(verity.signature, sizeof(verity.signature), curr);
+    SHA256_hash(verity.signature, RSANUMBYTES, curr);
 
     if (snprintf(tag, sizeof(tag), VERITY_LASTSIG_TAG "_%s",
             basename(fstab->mount_point)) >= (int)sizeof(tag)) {
@@ -681,7 +686,7 @@ static int compare_last_signature(struct fstab_rec *fstab, int *match)
         goto out;
     }
 
-    if (metadata_find(fstab->verity_loc, tag, SHA256_DIGEST_LENGTH,
+    if (metadata_find(fstab->verity_loc, tag, SHA256_DIGEST_SIZE,
             &offset) < 0) {
         goto out;
     }
@@ -700,7 +705,7 @@ static int compare_last_signature(struct fstab_rec *fstab, int *match)
         goto out;
     }
 
-    *match = !memcmp(curr, prev, SHA256_DIGEST_LENGTH);
+    *match = !memcmp(curr, prev, SHA256_DIGEST_SIZE);
 
     if (!*match) {
         /* update current signature hash */
