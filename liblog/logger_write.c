@@ -581,3 +581,27 @@ LIBLOG_ABI_PUBLIC int __android_log_security_bswrite(int32_t tag,
 
     return write_to_log(LOG_ID_SECURITY, vec, 4);
 }
+
+#ifdef MTK_HARDWARE
+
+#ifndef __unused
+#define __unused  __attribute__((__unused__))
+#endif
+
+struct xlog_record {
+    const char *tag_str;
+    const char *fmt_str;
+    int prio;
+};
+
+LIBLOG_ABI_PUBLIC void __attribute__((weak)) __xlog_buf_printf(int bufid __unused, const struct xlog_record *xlog_record __unused, ...) {
+    char prop[32]="0";
+    __system_property_get("ro.forward.xlog",prop);
+    if (strcmp(prop, "0"))
+    {
+	va_list args;
+	va_start(args, xlog_record);
+	__android_log_vprint(xlog_record->prio, xlog_record->tag_str, xlog_record->fmt_str, args);
+    }
+}
+#endif
