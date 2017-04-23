@@ -341,11 +341,11 @@ static int find_mtd_device_prefix(const char *path, char *buf, ssize_t buf_sz)
 {
     const char *start, *end;
 
-    if (strncmp(path, "/devices/virtual/mtd", 20))
+    if (strncmp(path, "/class/mtd", 10))
         return -1;
 
     /* Beginning of the prefix is the initial "mtdXX" after "/devices/virtual/mtd/" */
-    start = path + 21;
+    start = path + 11;
 
     /* End of the prefix is one path '/' later, capturing the partition number
      * Example: mtd8 */
@@ -543,7 +543,7 @@ static char **get_block_device_symlinks(struct uevent *uevent)
 
     if(!strcmp(type, "mtd")) {
         snprintf(mtd_name_path, sizeof(mtd_name_path),
-            "/sys/devices/virtual/%s/%s/name", type, device);
+            "/sys/class/%s/%s/name", type, device);
         mtd_fd = open(mtd_name_path, O_RDONLY);
             if(mtd_fd < 0) {
                 ERROR("Unable to open %s for reading", mtd_name_path);
