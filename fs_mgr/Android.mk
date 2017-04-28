@@ -28,7 +28,7 @@ LOCAL_C_INCLUDES := \
     system/vold \
     system/extras/ext4_utils \
     external/openssl/include \
-    bootable/recovery \
+    $(call project-path-for,recovery) \
     external/e2fsprogs/lib
 
 LOCAL_MODULE:= libfs_mgr
