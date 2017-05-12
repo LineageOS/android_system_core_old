@@ -31,6 +31,9 @@ ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
 LOCAL_CFLAGS += -DCHARGER_ENABLE_SUSPEND
 LOCAL_SHARED_LIBRARIES += libsuspend
 endif
+ifneq ($(wildcard $(TOP)/system/core/healthd/animation.h),)
+LOCAL_CFLAGS += -DTW_USE_MINUI_CUSTOM_FONTS
+endif
 LOCAL_SRC_FILES := \
     healthd_mode_android.cpp \
     healthd_mode_charger.cpp \
