@@ -332,7 +332,11 @@ static void import_kernel_nv(const std::string& key, const std::string& value, b
         return;
     }
 
-    if (key == "qemu") {
+    if (key == "androidboot.verifiedbootstate" ||
+            key == "androidboot.veritymode" ||
+            key == "androidboot.warranty_bit") {
+        return;
+    } else if (key == "qemu") {
         strlcpy(qemu, value.c_str(), sizeof(qemu));
     } else if (key == BOARD_CHARGING_CMDLINE_NAME) {
         strlcpy(battchg_pause, value.c_str(), sizeof(battchg_pause));
