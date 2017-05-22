@@ -446,7 +446,11 @@ static void import_kernel_nv(const std::string& key, const std::string& value, b
         return;
     }
 
-    if (key == "qemu") {
+    if (key == "androidboot.verifiedbootstate" ||
+            key == "androidboot.veritymode" ||
+            key == "androidboot.warranty_bit") {
+        return;
+    } else if (key == "qemu") {
         strlcpy(qemu, value.c_str(), sizeof(qemu));
     } else if (android::base::StartsWith(key, "androidboot.")) {
         property_set(StringPrintf("ro.boot.%s", key.c_str() + 12).c_str(), value.c_str());
