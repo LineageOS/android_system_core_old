@@ -46,6 +46,7 @@
 
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
+#include <android-base/strings.h>
 #include <android-base/unique_fd.h>
 #include <cutils/list.h>
 #include <cutils/uevent.h>
@@ -54,7 +55,6 @@
 #include "ueventd_parser.h"
 #include "util.h"
 #include "log.h"
-#include "property_service.h"
 
 #define SYSFS_PREFIX    "/sys"
 static const char *firmware_dirs[] = { "/etc/firmware",
@@ -63,7 +63,9 @@ static const char *firmware_dirs[] = { "/etc/firmware",
 
 extern struct selabel_handle *sehandle;
 
-extern std::string boot_device;
+static std::string boot_device;
+static bool is_cmdline_parsed = false;
+static bool bootdevice_symlink_done = false;
 
 static android::base::unique_fd device_fd;
 
@@ -529,17 +531,29 @@ err:
     return NULL;
 }
 
-static void make_link_init(const char* oldpath, const char* newpath) {
+static bool make_link_init(const char* oldpath, const char* newpath) {
   const char* slash = strrchr(newpath, '/');
-  if (!slash) return;
+  if (!slash) return false;
 
   if (mkdir_recursive(dirname(newpath), 0755)) {
     PLOG(ERROR) << "Failed to create directory " << dirname(newpath);
+    return false;
   }
 
   if (symlink(oldpath, newpath) && errno != EEXIST) {
     PLOG(ERROR) << "Failed to symlink " << oldpath << " to " << newpath;
+    return false;
   }
+  return true;
+}
+
+static void get_bootdevice_from_cmdline(const std::string& key, const std::string& value,
+        bool for_emulator)
+{
+    is_cmdline_parsed = true;
+    if (android::base::EndsWith(key, "bootdevice")) {
+        boot_device = value;
+    }
 }
 
 char** get_block_device_symlinks(struct uevent* uevent) {
@@ -601,9 +615,15 @@ char** get_block_device_symlinks(struct uevent* uevent) {
     else
         links[link_num] = NULL;
 
-    if (pdev && !boot_device.empty() && strstr(device, boot_device.c_str())) {
+    if (!is_cmdline_parsed) {
+        // Parse the kernel cmdline only once, and get the bootdevice that we use to create
+        // the bootdevice symlink to support early mount.
+        import_kernel_cmdline(false, get_bootdevice_from_cmdline);
+    }
+
+    if (pdev && !boot_device.empty() && strstr(device, boot_device.c_str()) && !bootdevice_symlink_done) {
         /* Create bootdevice symlink for platform boot stroage device */
-        make_link_init(link_path, "/dev/block/bootdevice");
+        bootdevice_symlink_done = make_link_init(link_path, "/dev/block/bootdevice");
     }
 
     return links;
