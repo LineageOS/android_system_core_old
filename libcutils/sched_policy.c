@@ -129,6 +129,7 @@ static void __initialize(void) {
 
 #ifdef USE_SCHEDBOOST
     if (!access("/dev/stune/tasks", F_OK)) {
+        char* filename;
         filename = "/dev/stune/top-app/tasks";
         ta_schedboost_fd = open(filename, O_WRONLY | O_CLOEXEC);
         filename = "/dev/stune/foreground/tasks";
