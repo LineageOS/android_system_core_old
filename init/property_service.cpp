@@ -201,16 +201,6 @@ static int property_set_impl(const char* name, const char* value) {
     if (!is_legal_property_name(name, namelen)) return -1;
     if (valuelen >= PROP_VALUE_MAX) return -1;
 
-    if (strcmp("selinux.reload_policy", name) == 0 && strcmp("1", value) == 0) {
-        if (selinux_reload_policy() != 0) {
-            ERROR("Failed to reload policy\n");
-        }
-    } else if (strcmp("selinux.restorecon_recursive", name) == 0 && valuelen > 0) {
-        if (restorecon_recursive(value) != 0) {
-            ERROR("Failed to restorecon_recursive %s\n", value);
-        }
-    }
-
     prop_info* pi = (prop_info*) __system_property_find(name);
 
     if(pi != 0) {
@@ -247,7 +237,48 @@ static int property_set_impl(const char* name, const char* value) {
     return 0;
 }
 
+pid_t restorecon_recursive_pid;
+static void restorecon_recursive_async(const char* path)
+{
+    static const char* name = "selinux.restorecon_recursive";
+
+    while (restorecon_recursive_pid) {
+        usleep(100000); // 100ms
+    }
+    pid_t pid = fork();
+    if (pid < 0) {
+        ERROR("Failed to fork for restorecon_recursive %s\n", path);
+        return;
+    }
+    if (pid != 0) {
+        restorecon_recursive_pid = pid;
+        return;
+    }
+
+    if (*path) {
+        if (restorecon_recursive(path) != 0) {
+            ERROR("Failed to restorecon_recursive %s\n", path);
+        }
+    }
+    int rc = property_set_impl("selinux.restorecon_recursive", path);
+    if (rc == -1) {
+        ERROR("property_set(\"%s\", \"%s\") failed\n", name, path);
+    }
+    exit(0);
+}
+
 int property_set(const char* name, const char* value) {
+
+    // Handle magic properties
+    if (strcmp("selinux.reload_policy", name) == 0 && strcmp("1", value) == 0) {
+        if (selinux_reload_policy() != 0) {
+            ERROR("Failed to reload policy\n");
+        }
+    } else if (strcmp("selinux.restorecon_recursive", name) == 0) {
+        restorecon_recursive_async(value);
+        return 0;
+    }
+
     int rc = property_set_impl(name, value);
     if (rc == -1) {
         ERROR("property_set(\"%s\", \"%s\") failed\n", name, value);

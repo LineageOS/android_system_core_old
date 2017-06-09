@@ -780,6 +780,9 @@ bool ServiceManager::ReapOneProcess() {
     } else if (pid == -1) {
         ERROR("waitpid failed: %s\n", strerror(errno));
         return false;
+    } else if (pid == restorecon_recursive_pid) {
+        restorecon_recursive_pid = 0;
+        return true;
     }
 
     Service* svc = FindServiceByPid(pid);
