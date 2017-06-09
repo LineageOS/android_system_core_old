@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_c93c9396",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 14144
+      },
+      "writtenOn": "2017-06-09T23:37:37Z",
+      "side": 1,
+      "message": "I\u0027m not sure you can safely call property_set_impl() here, as you\u0027re now the forked property service. May be better to call __system_set_property (sp?) which connects back to the \"real\" property service via its domain socket.",
+      "revId": "f0d397ae08b197e609df237b61fa596257a3e94b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
