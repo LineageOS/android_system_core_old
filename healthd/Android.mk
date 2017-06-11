@@ -37,6 +37,31 @@ LOCAL_SRC_FILES := \
     AnimationParser.cpp \
     BatteryPropertiesRegistrar.cpp \
 
+HEALTHD_CHARGER_DEFINES := RED_LED_PATH \
+    GREEN_LED_PATH \
+    BLUE_LED_PATH \
+    BLINK_PATH \
+    BACKLIGHT_PATH \
+    CHARGING_ENABLED_PATH
+
+$(foreach healthd_charger_define,$(HEALTHD_CHARGER_DEFINES), \
+  $(if $($(healthd_charger_define)), \
+    $(eval LOCAL_CFLAGS += -D$(healthd_charger_define)=\"$($(healthd_charger_define))\") \
+  ) \
+)
+
+ifeq ($(strip $(BOARD_CHARGER_DISABLE_INIT_BLANK)),true)
+LOCAL_CFLAGS += -DCHARGER_DISABLE_INIT_BLANK
+endif
+
+ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
+LOCAL_CFLAGS += -DCHARGER_ENABLE_SUSPEND
+endif
+
+ifeq ($(strip $(BOARD_NO_CHARGER_LED)),true)
+LOCAL_CFLAGS += -DNO_CHARGER_LED
+endif
+
 LOCAL_MODULE := libhealthd_internal
 LOCAL_C_INCLUDES := $(call project-path-for,recovery)
 LOCAL_EXPORT_C_INCLUDE_DIRS := \
@@ -71,31 +96,6 @@ LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT_SBIN)
 LOCAL_UNSTRIPPED_PATH := $(TARGET_ROOT_OUT_SBIN_UNSTRIPPED)
 
 LOCAL_CFLAGS := -D__STDC_LIMIT_MACROS -Werror
-
-HEALTHD_CHARGER_DEFINES := RED_LED_PATH \
-    GREEN_LED_PATH \
-    BLUE_LED_PATH \
-    BLINK_PATH \
-    BACKLIGHT_PATH \
-    CHARGING_ENABLED_PATH
-
-$(foreach healthd_charger_define,$(HEALTHD_CHARGER_DEFINES), \
-  $(if $($(healthd_charger_define)), \
-    $(eval LOCAL_CFLAGS += -D$(healthd_charger_define)=\"$($(healthd_charger_define))\") \
-  ) \
-)
-
-ifeq ($(strip $(BOARD_CHARGER_DISABLE_INIT_BLANK)),true)
-LOCAL_CFLAGS += -DCHARGER_DISABLE_INIT_BLANK
-endif
-
-ifeq ($(strip $(BOARD_CHARGER_ENABLE_SUSPEND)),true)
-LOCAL_CFLAGS += -DCHARGER_ENABLE_SUSPEND
-endif
-
-ifeq ($(strip $(BOARD_NO_CHARGER_LED)),true)
-LOCAL_CFLAGS += -DNO_CHARGER_LED
-endif
 
 ifneq ($(BOARD_PERIODIC_CHORES_INTERVAL_FAST),)
 LOCAL_CFLAGS += -DBOARD_PERIODIC_CHORES_INTERVAL_FAST=$(BOARD_PERIODIC_CHORES_INTERVAL_FAST)
