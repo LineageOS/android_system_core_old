@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_0e77dc03",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 2511
+      },
+      "writtenOn": "2017-06-12T10:15:08Z",
+      "side": 1,
+      "message": "And queue_fs_event calls e4crypt_install_keyring here.\n\nTWRP needs e4crypt_install_keyring to be called and e4crypt_install_keyring must be called by the init binary or it does not work. (See Google\u0027s documentation here: https://android.googlesource.com/platform/system/extras/+/android-7.1.1_r43/ext4_utils/ext4_crypt_init_extensions.h#23)\n\nIn TWRP especially, but probably any recovery really, we don\u0027t want to call mount_all and have partitions like /system mounted. Calling mount_all is the only way to get the keyring installed that\u0027s needed for decrypt.\n\nOf course, I totally understand if no one wants this merged in mainline and I\u0027ll abandon if so. Devs can always cherry pick if they need this locally.",
+      "revId": "b3b3c72df24041cf0e9596f0a7b6040edaf9c727",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da87b5cf_6e6a281c",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 2511
+      },
+      "writtenOn": "2017-06-12T10:15:08Z",
+      "side": 1,
+      "message": "queue_fs_event is called here",
+      "revId": "b3b3c72df24041cf0e9596f0a7b6040edaf9c727",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
