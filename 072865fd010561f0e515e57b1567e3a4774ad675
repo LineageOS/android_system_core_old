@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da87b5cf_0c0364b9",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 5503
+      },
+      "writtenOn": "2017-06-12T20:19:22Z",
+      "side": 1,
+      "message": "For full async prop support, rename to property_set_async and add a func argument to be called instead of restorecon_recursive().",
+      "revId": "072865fd010561f0e515e57b1567e3a4774ad675",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da87b5cf_2c00a8a9",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 5503
+      },
+      "writtenOn": "2017-06-12T20:19:22Z",
+      "side": 1,
+      "message": "Probably should return an error here.",
+      "revId": "072865fd010561f0e515e57b1567e3a4774ad675",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
