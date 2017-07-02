@@ -16,6 +16,7 @@
 
 LOCAL_PATH := $(call my-dir)
 
+ifneq ($(TARGET_USES_CUSTOM_FP_DAEMON),true)
 include $(CLEAR_VARS)
 LOCAL_CFLAGS := -Wall -Wextra -Werror -Wunused
 LOCAL_SRC_FILES := \
@@ -31,3 +32,4 @@ LOCAL_SHARED_LIBRARIES := \
 	libutils \
 	libkeystore_binder
 include $(BUILD_EXECUTABLE)
+endif
