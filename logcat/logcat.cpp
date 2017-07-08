@@ -1302,7 +1302,7 @@ int main(int argc, char **argv)
             if (ret == -EINVAL) {
                 logcat_panic(false, "read: unexpected length.\n");
             }
-            logcat_panic(false, "logcat read failure");
+            logcat_panic(false, "logcat read failure\n");
         }
 
         for (d = devices; d; d = d->next) {
