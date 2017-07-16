@@ -751,6 +751,7 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
     char *m;
 
     if (!fstab) {
+		ERROR("No fstab provided!\n");
         return ret;
     }
 
@@ -758,6 +759,8 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
         if (!fs_match(fstab->recs[i].mount_point, n_name)) {
             continue;
         }
+
+		INFO("Fstab %s matched\n", fstab->recs[i].mount_point);
 
         /* We found our match */
         /* If this swap or a raw partition, report an error */
@@ -771,12 +774,14 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
 
         /* First check the filesystem if requested */
         if (fstab->recs[i].fs_mgr_flags & MF_WAIT) {
+			INFO("wait fs triggered\n"); 
             wait_for_file(n_blk_device, WAIT_TIMEOUT);
         }
 
         if (fstab->recs[i].fs_mgr_flags & MF_CHECK) {
             check_fs(n_blk_device, fstab->recs[i].fs_type,
                      fstab->recs[i].mount_point);
+			INFO("fsck triggered\n");
         }
 
         if ((fstab->recs[i].fs_mgr_flags & MF_VERIFY) && device_is_secure()) {
@@ -789,6 +794,8 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
             }
         }
 
+
+		INFO("Now mounting on %s\n", tmp_mount_point);
         /* Now mount it where requested */
         if (tmp_mount_point) {
             m = tmp_mount_point;
@@ -797,9 +804,10 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
         }
         if (__mount(n_blk_device, m, &fstab->recs[i])) {
             if (!first_mount_errno) first_mount_errno = errno;
-            mount_errors++;
+	           mount_errors++;
             continue;
         } else {
+			INFO("Mounted succesfully\n");
             ret = 0;
             goto out;
         }
@@ -818,6 +826,7 @@ int fs_mgr_do_mount(struct fstab *fstab, char *n_name, char *n_blk_device,
     }
 
 out:
+	INFO("fs_mgr_do_mount ret: %d\n",ret);
     return ret;
 }
 
@@ -953,8 +962,10 @@ int fs_mgr_swapon_all(struct fstab *fstab)
 int fs_mgr_get_crypt_info(struct fstab *fstab, char *key_loc, char *real_blk_device, int size)
 {
     int i = 0;
+	int rc = -2;
 
     if (!fstab) {
+		ERROR("No fstab provided\n"); 
         return -1;
     }
     /* Initialize return values to null strings */
@@ -969,22 +980,28 @@ int fs_mgr_get_crypt_info(struct fstab *fstab, char *key_loc, char *real_blk_dev
     for (i = 0; i < fstab->num_entries; i++) {
         /* Don't deal with vold managed enryptable partitions here */
         if (fstab->recs[i].fs_mgr_flags & MF_VOLDMANAGED) {
+			INFO("VOLD managed, continue\n");
             continue;
         }
         if (!(fstab->recs[i].fs_mgr_flags
               & (MF_CRYPT | MF_FORCECRYPT | MF_FORCEFDEORFBE))) {
+			INFO("Encrypt args not found. Skipping\n"); 
             continue;
         }
 
         /* We found a match */
+		rc = 0; 
         if (key_loc) {
             strlcpy(key_loc, fstab->recs[i].key_loc, size);
+			INFO("Key_loc found: %s\n", key_loc);
         }
         if (real_blk_device) {
             strlcpy(real_blk_device, fstab->recs[i].blk_device, size);
+			INFO("Real_blk_device found: %s\n", real_blk_device);
         }
         break;
     }
 
-    return 0;
+	INFO("leaving fs_mgr_get_crypt_info: key_loc %s, real_blk_dev %s\n", key_loc, real_blk_device);
+    return rc;
 }
