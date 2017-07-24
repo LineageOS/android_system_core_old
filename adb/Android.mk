@@ -76,6 +76,11 @@ LIBADB_CFLAGS := \
     $(ADB_COMMON_CFLAGS) \
     -fvisibility=hidden \
 
+ifeq ($(TARGET_USES_LEGACY_ADB_INTERFACE),true)
+LIBADB_CFLAGS += \
+    -DLEGACY_ADB_INTERFACE
+endif
+
 LIBADB_linux_CFLAGS := \
     $(ADB_COMMON_linux_CFLAGS) \
 
