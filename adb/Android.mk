@@ -113,6 +113,10 @@ LOCAL_MODULE := libadbd_usb
 LOCAL_CFLAGS := $(LIBADB_CFLAGS) -DADB_HOST=0
 LOCAL_SRC_FILES := daemon/usb.cpp
 
+ifeq ($(TARGET_USES_LEGACY_ADB_INTERFACE),true)
+LOCAL_CFLAGS += -DLEGACY_ADB_INTERFACE
+endif
+
 LOCAL_SANITIZE := $(adb_target_sanitize)
 
 # Even though we're building a static library (and thus there's no link step for
@@ -355,6 +359,10 @@ LOCAL_CFLAGS += -DALLOW_ADBD_NO_AUTH=$(if $(filter userdebug eng,$(TARGET_BUILD_
 ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
 LOCAL_CFLAGS += -DALLOW_ADBD_DISABLE_VERITY=1
 LOCAL_CFLAGS += -DALLOW_ADBD_ROOT=1
+endif
+
+ifeq ($(TARGET_USES_LEGACY_ADB_INTERFACE),true)
+LOCAL_CFLAGS += -DLEGACY_ADB_INTERFACE
 endif
 
 LOCAL_MODULE := adbd
