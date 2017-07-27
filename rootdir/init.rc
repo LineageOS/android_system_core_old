@@ -151,7 +151,7 @@ on init
     chown system system /dev/cpuctl/tasks
     chmod 0666 /dev/cpuctl/tasks
     write /dev/cpuctl/cpu.rt_period_us 1000000
-    write /dev/cpuctl/cpu.rt_runtime_us 950000
+    write /dev/cpuctl/cpu.rt_runtime_us 900000
 
     # sets up initial cpusets for ActivityManager
     mkdir /dev/cpuset
@@ -670,6 +670,8 @@ on property:ro.debuggable=1
     # Give writes to anyone for the trace folder on debug builds.
     # The folder is used to store method traces.
     chmod 0773 /data/misc/trace
+
+on property:ro.console.enable=1
     start console
 
 service flash_recovery /system/bin/install-recovery.sh
