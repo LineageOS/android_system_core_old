@@ -443,7 +443,7 @@ static void selinux_init_all_handles(void)
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
 static selinux_enforcing_status selinux_status_from_cmdline() {
-    selinux_enforcing_status status = SELINUX_ENFORCING;
+    selinux_enforcing_status status = SELINUX_PERMISSIVE;
 
     import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
         if (key == "androidboot.selinux" && value == "permissive") {
