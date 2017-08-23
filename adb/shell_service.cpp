@@ -324,12 +324,22 @@ bool Subprocess::ForkAndExec(std::string* error) {
         // processes, so we need to manually reset back to SIG_DFL here (http://b/35209888).
         signal(SIGPIPE, SIG_DFL);
 
-        if (command_.empty()) {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-", nullptr, cenv.data());
-        } else {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-c", command_.c_str(), nullptr, cenv.data());
+        static const char* _PATH_BSHELL_RECOVERY = "/sbin/sh";
+        const char* shell_path;
+        struct stat st;
+        if (stat(_PATH_BSHELL_RECOVERY, &st) == 0) {
+            shell_path = _PATH_BSHELL_RECOVERY;
         }
-        WriteFdExactly(child_error_sfd, "exec '" _PATH_BSHELL "' failed: ");
+        else {
+            shell_path = _PATH_BSHELL;
+        }
+
+        if (command_.empty()) {
+            execle(shell_path, shell_path, "-", nullptr, cenv.data());
+        } else {
+            execle(shell_path, shell_path, "-c", command_.c_str(), nullptr, cenv.data());
+        }
+        WriteFdExactly(child_error_sfd, std::string("exec '") + std::string(shell_path) + std::string("' failed: "));
         WriteFdExactly(child_error_sfd, strerror(errno));
         child_error_sfd.reset(-1);
         _Exit(1);
