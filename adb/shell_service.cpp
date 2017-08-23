@@ -86,6 +86,7 @@
 #include <pty.h>
 #include <pwd.h>
 #include <sys/select.h>
+#include <sys/stat.h>
 #include <termios.h>
 
 #include <memory>
@@ -104,7 +105,25 @@
 #include "adb_utils.h"
 #include "security_log_tags.h"
 
+#include "cutils/properties.h"
+
 namespace {
+
+static std::string get_sh_path()
+{
+    if (recovery_mode) {
+        return "/sbin/sh";
+    }
+
+    char propbuf[PROPERTY_VALUE_MAX];
+    struct stat st;
+
+    property_get("persist.sys.adb.shell", propbuf, "");
+    if (propbuf[0] && stat(propbuf, &st) == 0) {
+        return propbuf;
+    }
+    return _PATH_BSHELL;
+}
 
 // Reads from |fd| until close or failure.
 std::string ReadAll(int fd) {
@@ -324,12 +343,15 @@ bool Subprocess::ForkAndExec(std::string* error) {
         // processes, so we need to manually reset back to SIG_DFL here (http://b/35209888).
         signal(SIGPIPE, SIG_DFL);
 
+        std::string sh_path = get_sh_path();
+
         if (command_.empty()) {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-", nullptr, cenv.data());
+            execle(sh_path.c_str(), sh_path.c_str(), "-", nullptr, cenv.data());
         } else {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-c", command_.c_str(), nullptr, cenv.data());
+            execle(sh_path.c_str(), sh_path.c_str(), "-c", command_.c_str(), nullptr, cenv.data());
         }
-        WriteFdExactly(child_error_sfd, "exec '" _PATH_BSHELL "' failed: ");
+        std::string errmsg = "exec '" + sh_path + "' failed: ";
+        WriteFdExactly(child_error_sfd, errmsg.c_str());
         WriteFdExactly(child_error_sfd, strerror(errno));
         child_error_sfd.reset(-1);
         _Exit(1);
