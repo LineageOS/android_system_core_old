@@ -106,6 +106,13 @@
 
 namespace {
 
+#if !ADB_HOST
+static const char* sh_path()
+{
+    return (recovery_mode ? "/sbin/bu" : _PATH_BSHELL);
+}
+#endif
+
 // Reads from |fd| until close or failure.
 std::string ReadAll(int fd) {
     char buffer[512];
@@ -325,11 +332,13 @@ bool Subprocess::ForkAndExec(std::string* error) {
         signal(SIGPIPE, SIG_DFL);
 
         if (command_.empty()) {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-", nullptr, cenv.data());
+            execle(sh_path(), sh_path(), "-", nullptr, cenv.data());
         } else {
-            execle(_PATH_BSHELL, _PATH_BSHELL, "-c", command_.c_str(), nullptr, cenv.data());
+            execle(sh_path(), sh_path(), "-c", command_.c_str(), nullptr, cenv.data());
         }
-        WriteFdExactly(child_error_sfd, "exec '" _PATH_BSHELL "' failed: ");
+        WriteFdExactly(child_error_sfd, std::string("exec '") +
+                                        std::string(sh_path()) +
+                                        std::string("' failed: "));
         WriteFdExactly(child_error_sfd, strerror(errno));
         child_error_sfd.reset(-1);
         _Exit(1);
