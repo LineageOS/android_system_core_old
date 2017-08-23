@@ -193,6 +193,10 @@ int local_connect_arbitrary_ports(int console_port, int adb_port, std::string* e
 
 ConnectionState connection_state(atransport* t);
 
+#if !ADB_HOST
+extern int recovery_mode;
+#endif
+
 extern const char* adb_device_banner;
 
 #define CHUNK_SIZE (64 * 1024)

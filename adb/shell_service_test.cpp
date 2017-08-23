@@ -29,6 +29,8 @@
 #include "adb_io.h"
 #include "sysdeps.h"
 
+int recovery_mode = 0;
+
 class ShellServiceTest : public ::testing::Test {
   public:
     static void SetUpTestCase() {
