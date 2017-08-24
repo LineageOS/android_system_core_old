@@ -59,6 +59,7 @@ cc_library {
         "hashmap.c",
         "iosched_policy.c",
         "load_file.c",
+        "process_name.c",
         "native_handle.c",
         "open_memstream.c",
         "record_stream.c",
