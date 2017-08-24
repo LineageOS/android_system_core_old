@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a088a286_534b93f6",
+        "filename": "adb/shell_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-08-24T15:54:22Z",
+      "side": 1,
+      "message": "move to header?",
+      "range": {
+        "startLine": 327,
+        "startChar": 8,
+        "endLine": 327,
+        "endChar": 62
+      },
+      "revId": "9342ec584d72f0db7b53e5f9e04c17a92e22147b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c3a2c6a_d60f9248",
+        "filename": "adb/shell_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-08-24T15:54:22Z",
+      "side": 1,
+      "message": "same line } else {",
+      "revId": "9342ec584d72f0db7b53e5f9e04c17a92e22147b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2eb4e7b_8d6247cc",
+        "filename": "adb/shell_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-08-24T15:54:22Z",
+      "side": 1,
+      "message": "100 chars",
+      "revId": "9342ec584d72f0db7b53e5f9e04c17a92e22147b",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
