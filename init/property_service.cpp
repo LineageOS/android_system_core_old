@@ -661,6 +661,13 @@ void load_system_props() {
     load_properties_from_file("/odm/build.prop", NULL);
     load_properties_from_file("/vendor/build.prop", NULL);
     load_properties_from_file("/factory/factory.prop", "ro.*");
+
+    /*
+     * update with vendor-specific property runtime
+     * overrides
+     */
+    vendor_load_properties();
+
     load_recovery_id_prop();
 }
 
