@@ -139,7 +139,6 @@
 /* The range 2900-2999 is reserved for OEM, and must never be
  * used here */
 #define AID_OEM_RESERVED_START 2900
-#define AID_QCOM_DIAG 2950          /* access to QTI diagnostic resources */
 #define AID_RFS 2951                /* Remote Filesystem for peripheral processors */
 #define AID_RFS_SHARED 2952         /* Shared files for Remote Filesystem for peripheral processors */
 #define AID_OEM_RESERVED_END 2999
