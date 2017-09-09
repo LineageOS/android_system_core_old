@@ -139,6 +139,11 @@
 /* The range 2900-2999 is reserved for OEM, and must never be
  * used here */
 #define AID_OEM_RESERVED_START 2900
+#define AID_UPDATEMISCTA 2994       /* SONY updatemiscta */
+#define AID_TRIMAREA 2995           /* SONY trimarea */
+#define AID_CREDMGR_CLIENT 2996     /* SONY credmgr_client */
+#define AID_TAD 2997                /* SONY tad */
+#define AID_TA_QMI 2998             /* SONY ta_qmi */
 #define AID_OEM_RESERVED_END 2999
 
 /* The 3000 series are intended for use as supplemental group id's only.
@@ -152,6 +157,7 @@
 #define AID_NET_BW_ACCT 3007  /* change bandwidth statistics accounting */
 #define AID_READPROC 3009     /* Allow /proc read access */
 #define AID_WAKELOCK 3010     /* Allow system wakelock read/write access */
+#define AID_SENSORS 3011      /* access to /dev/socket/sensor_ctl_socket & QCCI/QCSI */
 
 /* The range 5000-5999 is also reserved for OEM, and must never be used here. */
 #define AID_OEM_RESERVED_2_START 5000
