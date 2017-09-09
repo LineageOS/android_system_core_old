@@ -142,6 +142,12 @@
 #define AID_QCOM_DIAG 2950          /* access to QTI diagnostic resources */
 #define AID_RFS 2951                /* Remote Filesystem for peripheral processors */
 #define AID_RFS_SHARED 2952         /* Shared files for Remote Filesystem for peripheral processors */
+
+#define AID_UPDATEMISCTA 2994  /* SONY updatemiscta */
+#define AID_TRIMAREA 2995  /* SONY trimarea */
+#define AID_CREDMGR_CLIENT 2996  /* SONY credmgr_client */
+#define AID_TAD 2997  /* SONY tad */
+#define AID_TA_QMI 2998  /* SONY ta_qmi */
 #define AID_OEM_RESERVED_END 2999
 
 /* The 3000 series are intended for use as supplemental group id's only.
