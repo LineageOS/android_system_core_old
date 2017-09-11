@@ -31,8 +31,6 @@ typedef enum {
 extern int android_set_ioprio(int pid, IoSchedClass clazz, int ioprio);
 extern int android_get_ioprio(int pid, IoSchedClass *clazz, int *ioprio);
 
-extern int android_set_rt_ioprio(int pid, int rt);
-
 #ifdef __cplusplus
 }
 #endif
