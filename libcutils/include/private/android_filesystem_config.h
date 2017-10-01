@@ -153,6 +153,9 @@
 #define AID_READPROC 3009     /* Allow /proc read access */
 #define AID_WAKELOCK 3010     /* Allow system wakelock read/write access */
 
+#define AID_RFS_OLD 3012        /* DEPRECATED OLD ID FOR RFS, DO NOT USE */
+#define AID_RFS_SHARED_OLD 3013 /* DEPRECATED OLD ID FOR RFS-SHARED  */
+
 /* The range 5000-5999 is also reserved for OEM, and must never be used here. */
 #define AID_OEM_RESERVED_2_START 5000
 #define AID_OEM_RESERVED_2_END 5999
