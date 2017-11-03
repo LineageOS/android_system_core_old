@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "59b2c8cc_41aa175e",
+        "filename": "adb/daemon/main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-03T11:53:41Z",
+      "side": 1,
+      "message": "This should a dual if under an #ifdef to avoid considering the legacy path when only the ffs support is enabled.",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03b7350f_eeb6353a",
+        "filename": "adb/daemon/usb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-03T11:53:41Z",
+      "side": 1,
+      "message": "I would still have kept the if (access(USB_FFS_ADB_EP0, F_OK) \u003d\u003d 0) logic to preserve dual compatibility in that situation, if a ROM / builder decides to allow it globally for example.",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eed1eda7_f2450eba",
         "filename": "rootdir/ueventd.rc",
         "patchSetId": 4
@@ -13,6 +47,30 @@
       "writtenOn": "2017-11-03T11:27:49Z",
       "side": 1,
       "message": "I guess this can be moved to device trees (ueventd.qcom.rc).",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 47
+      },
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f837195_429d3f02",
+        "filename": "rootdir/ueventd.rc",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-03T11:53:41Z",
+      "side": 1,
+      "message": "I\u0027m fine with keep it, makes more sense to keep it with the related code instead of randomly per-device.",
+      "parentUuid": "eed1eda7_f2450eba",
       "range": {
         "startLine": 42,
         "startChar": 0,
