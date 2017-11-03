@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cb18c858_b4717e7f",
+        "filename": "adb/daemon/main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 13648
+      },
+      "writtenOn": "2017-11-03T12:36:35Z",
+      "side": 1,
+      "message": "I don\u0027t see why we should do that here. That\u0027s already taken into account in usb_init().\n\nBut maybe moving the legacy path check to the end would be more clean.",
+      "parentUuid": "59b2c8cc_41aa175e",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03b7350f_eeb6353a",
         "filename": "adb/daemon/usb.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-11-03T11:53:41Z",
       "side": 1,
       "message": "I would still have kept the if (access(USB_FFS_ADB_EP0, F_OK) \u003d\u003d 0) logic to preserve dual compatibility in that situation, if a ROM / builder decides to allow it globally for example.",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35b588b5_2905884f",
+        "filename": "adb/daemon/usb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 13648
+      },
+      "writtenOn": "2017-11-03T12:36:35Z",
+      "side": 1,
+      "message": "From what I understood per Mike\u0027s suggestion, we want to avoid dual compatibility at all costs. Otherwise, we wouldn\u0027t be making this opt-in, right?",
+      "parentUuid": "03b7350f_eeb6353a",
       "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
@@ -71,6 +107,30 @@
       "side": 1,
       "message": "I\u0027m fine with keep it, makes more sense to keep it with the related code instead of randomly per-device.",
       "parentUuid": "eed1eda7_f2450eba",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 47
+      },
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14d9a490_940d76ce",
+        "filename": "rootdir/ueventd.rc",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 13648
+      },
+      "writtenOn": "2017-11-03T12:36:35Z",
+      "side": 1,
+      "message": "Okay. I was thinking of moving it along with the sepolicies. But I got your point on the other change, and it makes sense.",
+      "parentUuid": "4f837195_429d3f02",
       "range": {
         "startLine": 42,
         "startChar": 0,
