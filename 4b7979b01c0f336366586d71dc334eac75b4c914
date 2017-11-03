@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e49de678_de1cad0b",
+        "filename": "adb/daemon/main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-03T17:50:04Z",
+      "side": 1,
+      "message": "I think it could trigger a sepolicy denial, especially if it\u0027s unlabeled (which we agreed not to do), but anyways, if we make it specific, I think it should not be unspecific here.\n\nEither keep the original code and #ifdef for both, or #ifdef to legacy only to be very specific.",
+      "parentUuid": "cb18c858_b4717e7f",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03b7350f_eeb6353a",
         "filename": "adb/daemon/usb.cpp",
         "patchSetId": 4
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "From what I understood per Mike\u0027s suggestion, we want to avoid dual compatibility at all costs. Otherwise, we wouldn\u0027t be making this opt-in, right?",
       "parentUuid": "03b7350f_eeb6353a",
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04949974_d7eeafb4",
+        "filename": "adb/daemon/usb.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-03T17:50:04Z",
+      "side": 1,
+      "message": "Fine. But refer to the previous comment too in regards of this suggestion.",
+      "parentUuid": "35b588b5_2905884f",
       "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
