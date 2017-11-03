@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eed1eda7_f2450eba",
+        "filename": "rootdir/ueventd.rc",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 13648
+      },
+      "writtenOn": "2017-11-03T11:27:49Z",
+      "side": 1,
+      "message": "I guess this can be moved to device trees (ueventd.qcom.rc).",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 47
+      },
+      "revId": "4b7979b01c0f336366586d71dc334eac75b4c914",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
