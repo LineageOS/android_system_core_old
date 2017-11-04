@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eb97614_641bd4a6",
+        "filename": "adb/Android.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-04T17:57:25Z",
+      "side": 1,
+      "message": "We just discussed it with Bruno, it is indeed needed here rather than the adbd.\n\nHowever for the reasons of my next comment, I think we should re-add the adbd one too.",
+      "revId": "40f597b0c43796e5b6cf38cb5d2956fa91a9d5d8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba46e42f_5381e140",
+        "filename": "adb/daemon/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 13589
+      },
+      "writtenOn": "2017-11-04T17:57:25Z",
+      "side": 1,
+      "message": "To continue on my concerns of PS4 here, I\u0027d really prefer for the if to be specific to FFS or Legacy.\n\nLegacy support + FFS support : Ok\nLegacy support only : If disabled, it would open dummy_fd + is_usb \u003d true while not working\nFFS support only : If enabled, it would open dummy_fd + is_usb \u003d true while not working\n\nIt\u0027s a developer / bringup situation but I don\u0027t like having a very specific code on one side and a possibly mismatching use of it.",
+      "revId": "40f597b0c43796e5b6cf38cb5d2956fa91a9d5d8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
