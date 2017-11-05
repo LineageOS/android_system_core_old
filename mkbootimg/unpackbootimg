@@ -136,8 +136,10 @@ def fix_ramdisk_extension(filename):
 
     if bytes[0]==0x02 and bytes[1]==0x21:
         rename(filename, filename+'.lz4')
-    else:
+    elif bytes[0]==0x1f and bytes[1]==0x8b:
         rename(filename, filename+'.gz')
+    elif bytes[0]==0x5d and bytes[1]==0x00:
+        rename(filename, filename+'.lzma')
 
 def is_gzip_package(filename):
     bytes = []
