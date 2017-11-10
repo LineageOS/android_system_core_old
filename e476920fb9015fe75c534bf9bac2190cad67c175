@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "927e307c_800dcbf1",
+        "filename": "libutils/Unicode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 15644
+      },
+      "writtenOn": "2017-11-10T17:39:12Z",
+      "side": 1,
+      "message": "Prevent undeclared SSIZE_MAX.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "e476920fb9015fe75c534bf9bac2190cad67c175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
