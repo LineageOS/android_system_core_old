@@ -408,6 +408,8 @@ static void draw_battery(const struct charger* charger)
     }
     draw_clock(anim);
     draw_percent(anim);
+
+    healthd_board_mode_charger_draw_battery(batt_prop);
 }
 
 static void redraw_screen(struct charger *charger)
@@ -479,6 +481,7 @@ static void update_screen_state(struct charger *charger, int64_t now)
         init_status_display(batt_anim);
 
 #ifndef CHARGER_DISABLE_INIT_BLANK
+        healthd_board_mode_charger_set_backlight(false);
         gr_fb_blank(true);
 #endif
         minui_inited = true;
@@ -488,6 +491,7 @@ static void update_screen_state(struct charger *charger, int64_t now)
     if (batt_anim->num_cycles > 0 && batt_anim->cur_cycle == batt_anim->num_cycles) {
         reset_animation(batt_anim);
         charger->next_screen_transition = -1;
+        healthd_board_mode_charger_set_backlight(false);
         gr_fb_blank(true);
         LOGV("[%" PRId64 "] animation done\n", now);
         if (charger->charger_connected)
@@ -524,6 +528,7 @@ static void update_screen_state(struct charger *charger, int64_t now)
     /* unblank the screen  on first cycle */
     if (batt_anim->cur_cycle == 0)
         gr_fb_blank(false);
+        healthd_board_mode_charger_set_backlight(true);
 
     /* draw the new frame (@ cur_frame) */
     redraw_screen(charger);
@@ -677,6 +682,8 @@ static void handle_power_supply_state(struct charger *charger, int64_t now)
 {
     if (!charger->have_battery_state)
         return;
+
+    healthd_board_mode_charger_battery_update(batt_prop);
 
     if (!charger->charger_connected) {
 
@@ -840,6 +847,8 @@ void healthd_mode_charger_init(struct healthd_config* config)
     dump_last_kmsg();
 
     LOGW("--------------- STARTING CHARGER MODE ---------------\n");
+
+    healthd_board_mode_charger_init();
 
     ret = ev_init(std::bind(&input_callback, charger, std::placeholders::_1,
                             std::placeholders::_2));
