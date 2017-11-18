@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce21e141_dcd83974",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 3075
+      },
+      "writtenOn": "2017-11-18T07:48:03Z",
+      "side": 1,
+      "message": "Nice thought but, in general, it\u0027s preferable not to fix comment formatting in AOSP code because it\u0027s more likely to result in a future merge conflict.",
+      "revId": "c7772599acab18f894acedcae5cf2cf2d662b930",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
