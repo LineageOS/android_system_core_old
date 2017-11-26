@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4eae532b_3843515c",
+        "filename": "libbfqio/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2017-11-26T15:05:01Z",
+      "side": 1,
+      "message": "vendor_available: true should create this lib automatically",
+      "range": {
+        "startLine": 49,
+        "startChar": 11,
+        "endLine": 49,
+        "endChar": 26
+      },
+      "revId": "f8d25d3100f035406d914bdf9ced88e93762e027",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
