@@ -22,6 +22,30 @@
       "revId": "cb29eb817b35f1c275c97a82e4b589870331787c",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a296c4e_907ea538",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 10067
+      },
+      "writtenOn": "2017-12-09T22:36:13Z",
+      "side": 1,
+      "message": "Yes, HVDCP goes to like 2.5A on USB-C while HVDCP_3 goes to 3.0A. Basically HVDCP is so called \"Quick Charge 2.0\" and HCDCP_3 is \"Quick Charge 3.0\". Without this patch I\u0027m able to notice that phone goes to \u0027Rapidly charging\u0027 for a while and then it switches to QC3.0 mode which this patch adds.",
+      "parentUuid": "332ae2ae_a090df29",
+      "range": {
+        "startLine": 153,
+        "startChar": 15,
+        "endLine": 153,
+        "endChar": 26
+      },
+      "revId": "cb29eb817b35f1c275c97a82e4b589870331787c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
