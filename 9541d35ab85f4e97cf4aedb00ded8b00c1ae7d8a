@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c7f927b_c16d7c50",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2017-12-09T22:34:30Z",
+      "side": 1,
+      "message": "I\u0027m not super familiar with DASH, is that technically different from HVDCP?",
+      "range": {
+        "startLine": 159,
+        "startChar": 15,
+        "endLine": 159,
+        "endChar": 19
+      },
+      "revId": "9541d35ab85f4e97cf4aedb00ded8b00c1ae7d8a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
