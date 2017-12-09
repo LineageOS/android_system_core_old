@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "332ae2ae_a090df29",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2017-12-09T22:33:22Z",
+      "side": 1,
+      "message": "Have to ask though, is there actually any difference between HVDCP vs HVDCP_3?",
+      "range": {
+        "startLine": 153,
+        "startChar": 15,
+        "endLine": 153,
+        "endChar": 26
+      },
+      "revId": "cb29eb817b35f1c275c97a82e4b589870331787c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
