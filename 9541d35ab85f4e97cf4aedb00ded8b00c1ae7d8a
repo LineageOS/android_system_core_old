@@ -22,6 +22,30 @@
       "revId": "9541d35ab85f4e97cf4aedb00ded8b00c1ae7d8a",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "503646c6_e4c7230a",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 8328
+      },
+      "writtenOn": "2017-12-21T07:39:18Z",
+      "side": 1,
+      "message": "You can let the kernel report HVDCP instead of DASH to get the fast charge indication from AOSP to work, but it might confuse blobs (not sure if placebo but it took longer to charge my device).",
+      "parentUuid": "9c7f927b_c16d7c50",
+      "range": {
+        "startLine": 159,
+        "startChar": 15,
+        "endLine": 159,
+        "endChar": 19
+      },
+      "revId": "9541d35ab85f4e97cf4aedb00ded8b00c1ae7d8a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
