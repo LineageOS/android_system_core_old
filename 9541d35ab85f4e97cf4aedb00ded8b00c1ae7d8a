@@ -46,6 +46,24 @@
       "revId": "9541d35ab85f4e97cf4aedb00ded8b00c1ae7d8a",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be201f2c_a7161b2d",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1063
+      },
+      "writtenOn": "2017-12-21T08:16:50Z",
+      "side": 1,
+      "message": "DASH \u003d\u003d VOOC is high current charging (charging multiple cells in parallel), not high voltage charging. Not sure whether that justifies another entry?",
+      "parentUuid": "",
+      "revId": "9541d35ab85f4e97cf4aedb00ded8b00c1ae7d8a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
