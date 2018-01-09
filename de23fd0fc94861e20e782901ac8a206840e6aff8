@@ -22,6 +22,30 @@
       "revId": "de23fd0fc94861e20e782901ac8a206840e6aff8",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9cbecaa_98b79003",
+        "filename": "init/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 3671
+      },
+      "writtenOn": "2018-01-09T12:20:00Z",
+      "side": 1,
+      "message": "Yea, after looking again that was probably unnecessary.",
+      "parentUuid": "de2ee27c_f6d8aaaa",
+      "range": {
+        "startLine": 29,
+        "startChar": 10,
+        "endLine": 29,
+        "endChar": 36
+      },
+      "revId": "de23fd0fc94861e20e782901ac8a206840e6aff8",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
