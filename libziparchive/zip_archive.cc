@@ -634,8 +634,8 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
   }
 
   uint32_t lfh_start_bytes;
-  if (!ReadAtOffset(archive->fd, reinterpret_cast<uint8_t*>(&lfh_start_bytes),
-                    sizeof(uint32_t), 0)) {
+  if (ReadAtOffset(archive->fd, reinterpret_cast<uint8_t*>(&lfh_start_bytes),
+                   sizeof(uint32_t), 0) != sizeof(uint32_t)) {
     ALOGW("Zip: Unable to read header for entry at offset == 0.");
     return -1;
   }
