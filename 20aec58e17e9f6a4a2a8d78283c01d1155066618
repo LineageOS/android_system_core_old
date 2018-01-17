@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0685a56f_1dfa400c",
+        "filename": "libcutils/fs_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 4550
+      },
+      "writtenOn": "2018-01-17T18:14:41Z",
+      "side": 1,
+      "message": "Lineage",
+      "range": {
+        "startLine": 169,
+        "startChar": 7,
+        "endLine": 169,
+        "endChar": 9
+      },
+      "revId": "20aec58e17e9f6a4a2a8d78283c01d1155066618",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
