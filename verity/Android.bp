@@ -1,0 +1,41 @@
+
+cc_library_shared {
+    name: "libveritytool",
+    srcs: ["verity.cpp"],
+    shared_libs: [
+        "libbase",
+        "libcrypto",
+        "libcrypto_utils",
+        "libfec"
+    ],
+    static_libs: [
+        "libavb_user",
+        "libfs_mgr"
+    ],
+    cflags: ["-Werror"],
+}
+
+cc_library_static {
+    name: "libveritytool_static",
+    srcs: ["verity.cpp"],
+    static_libs: [
+        "libavb_user",
+        "libbase",
+        "libcrypto",
+        "libcrypto_utils",
+        "libfec",
+        "libfs_mgr"
+    ],
+    cflags: ["-Werror"],
+}
+
+cc_binary {
+    name: "veritytool",
+    srcs: ["main.cpp"],
+    shared_libs: ["libveritytool"],
+    static_libs: [
+        "libavb_user",
+        "libfs_mgr"
+    ],
+    cflags: ["-Werror"],
+}
