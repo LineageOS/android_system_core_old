@@ -87,6 +87,7 @@ LOCAL_STATIC_LIBRARIES := \
     libprocessgroup \
     libavb \
     libkeyutils \
+    libveritytool \
 
 LOCAL_REQUIRED_MODULES := \
     e2fsdroid \
