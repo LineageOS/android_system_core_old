@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3d23c60_972c4386",
+        "filename": "init/builtins.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-01-23T06:08:23Z",
+      "side": 1,
+      "message": "put this next to do_installkey ?",
+      "revId": "98d16299e178b2962f7bda83a3f6ed50921e2db7",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
