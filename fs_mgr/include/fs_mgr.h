@@ -87,6 +87,8 @@ int fs_mgr_do_format(struct fstab_rec *fstab, bool reserve_footer);
 #define FS_MGR_SETUP_VERITY_SUCCESS 0
 int fs_mgr_setup_verity(struct fstab_rec *fstab, bool wait_for_verity_dev);
 
+int fs_mgr_enable_verity(const char* blk_device, bool enable);
+
 __END_DECLS
 
 #endif /* __CORE_FS_MGR_H */
