@@ -659,6 +659,14 @@ static int do_sysclktz(const std::vector<std::string>& args) {
     return -1;
 }
 
+static int do_verity_disable(const std::vector<std::string>& args) {
+    return fs_mgr_enable_verity(args[1].c_str(), false);
+}
+
+static int do_verity_enable(const std::vector<std::string>& args) {
+    return fs_mgr_enable_verity(args[1].c_str(), true);
+}
+
 static int do_verity_load_state(const std::vector<std::string>& args) {
     int mode = -1;
     bool loaded = fs_mgr_load_verity_state(&mode);
@@ -937,6 +945,8 @@ const BuiltinFunctionMap::Map& BuiltinFunctionMap::map() const {
         {"symlink",                 {2,     2,    do_symlink}},
         {"sysclktz",                {1,     1,    do_sysclktz}},
         {"trigger",                 {1,     1,    do_trigger}},
+        {"verity_disable",          {1,     1,    do_verity_disable}},
+        {"verity_enable",           {1,     1,    do_verity_enable}},
         {"verity_load_state",       {0,     0,    do_verity_load_state}},
         {"verity_update_state",     {0,     0,    do_verity_update_state}},
         {"wait",                    {1,     2,    do_wait}},

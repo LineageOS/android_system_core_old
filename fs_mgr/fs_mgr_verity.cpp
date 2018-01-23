@@ -951,3 +951,55 @@ out:
 
     return retval;
 }
+
+int fs_mgr_enable_verity(const char* blk_device, bool enable) {
+    int rc = -1;
+    int fd;
+    int disable = 0;
+    struct fec_handle* f = NULL;
+    struct fec_verity_metadata verity;
+
+    fd = open(blk_device, O_RDONLY | O_CLOEXEC);
+    if (fd == -1) {
+        PERROR << "Failed to open '" << blk_device << "'";
+        return rc;
+    }
+
+    if (ioctl(fd, BLKROSET, &disable) == -1) {
+        PERROR << "Failed to make '" << blk_device << "' writable";
+        goto close_fd;
+    }
+
+    if (fec_open(&f, blk_device, O_RDWR, 0, FEC_DEFAULT_ROOTS) == -1) {
+        PERROR << "Failed to open '" << blk_device << "'";
+        goto close_fd;
+    }
+
+    if (fec_verity_get_metadata(f, &verity) == -1) {
+        PERROR << "Failed to get verity metadata '" << blk_device << "'";
+        goto close_fec;
+    }
+
+    if (!enable && verity.disabled) {
+        PERROR << "Verity already disabled";
+        goto close_fec;
+    }
+
+    if (enable && !verity.disabled) {
+        PERROR << "Verity already enabled";
+        goto close_fec;
+    }
+
+    if (!fec_verity_set_status(f, enable)) {
+        PERROR << "Failed to set verity " << enable ? "enabled" : "disabled";
+        goto close_fec;
+    }
+
+    rc = 0;
+
+close_fec:
+    fec_close(f);
+close_fd:
+    close(fd);
+    return rc;
+}
