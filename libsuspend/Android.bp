@@ -9,6 +9,7 @@ cc_library {
 
     srcs: [
         "autosuspend.c",
+        "autosuspend_earlysuspend.c",
         "autosuspend_wakeup_count.c",
     ],
     export_include_dirs: ["include"],
@@ -17,6 +18,13 @@ cc_library {
         "liblog",
         "libcutils",
     ],
+
+    product_variables: {
+        uses_early_suspend: {
+            cflags: ["-DUSES_EARLY_SUSPEND=\"%d\""],
+        },
+    },
+
     cflags: [
         "-Werror",
         // "-DLOG_NDEBUG=0",

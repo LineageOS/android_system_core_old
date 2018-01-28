@@ -34,6 +34,13 @@ static int autosuspend_init(void)
         return 0;
     }
 
+#ifdef USES_EARLY_SUSPEND
+    autosuspend_ops = autosuspend_earlysuspend_init();
+    if (autosuspend_ops) {
+        goto out;
+    }
+#endif
+
     autosuspend_ops = autosuspend_wakeup_count_init();
     if (autosuspend_ops) {
         goto out;
