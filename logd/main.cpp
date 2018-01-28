@@ -98,17 +98,17 @@ static int drop_privs(bool klogd, bool auditd) {
 
     if (set_sched_policy(0, SP_BACKGROUND) < 0) {
         android::prdebug("failed to set background scheduling policy");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (sched_setscheduler((pid_t)0, SCHED_BATCH, &param) < 0) {
         android::prdebug("failed to set batch scheduler");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (setpriority(PRIO_PROCESS, 0, ANDROID_PRIORITY_BACKGROUND) < 0) {
         android::prdebug("failed to set background cgroup");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (!eng && (prctl(PR_SET_DUMPABLE, 0) < 0)) {
@@ -118,7 +118,7 @@ static int drop_privs(bool klogd, bool auditd) {
 
     if (prctl(PR_SET_KEEPCAPS, 1) < 0) {
         android::prdebug("failed to set PR_SET_KEEPCAPS");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     std::unique_ptr<struct _cap_struct, int (*)(void*)> caps(cap_init(),
@@ -139,24 +139,24 @@ static int drop_privs(bool klogd, bool auditd) {
         android::prdebug(
             "failed to set CAP_SETGID, CAP_SYSLOG or CAP_AUDIT_CONTROL (%d)",
             errno);
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     gid_t groups[] = { AID_READPROC };
 
     if (setgroups(arraysize(groups), groups) == -1) {
         android::prdebug("failed to set AID_READPROC groups");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (setgid(AID_LOGD) != 0) {
         android::prdebug("failed to set AID_LOGD gid");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (setuid(AID_LOGD) != 0) {
         android::prdebug("failed to set AID_LOGD uid");
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     if (cap_set_flag(caps.get(), CAP_PERMITTED, 1, cap_value, CAP_CLEAR) < 0) {
@@ -167,7 +167,7 @@ static int drop_privs(bool klogd, bool auditd) {
     }
     if (cap_set_proc(caps.get()) < 0) {
         android::prdebug("failed to clear CAP_SETGID (%d)", errno);
-        if (!eng) return -1;
+        //if (!eng) return -1;
     }
 
     return 0;
