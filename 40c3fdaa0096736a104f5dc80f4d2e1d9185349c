@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "512174af_223eebbf",
+        "filename": "libsuspend/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 17401
+      },
+      "writtenOn": "2018-01-28T17:13:00Z",
+      "side": 1,
+      "message": "souldnt this be surrounded by \u0027lineage: {}\u0027 ?",
+      "revId": "40c3fdaa0096736a104f5dc80f4d2e1d9185349c",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
