@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c10c568a_f3da36f7",
+        "filename": "fs_mgr/fs_mgr_format.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-06T03:19:09Z",
+      "side": 1,
+      "message": "Why not use the int64_t fixed width type?",
+      "range": {
+        "startLine": 37,
+        "startChar": 39,
+        "endLine": 37,
+        "endChar": 48
+      },
+      "revId": "13066443e96bbb2758158c667f3763548c3713fd",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba992ae6_3f4a0ab8",
+        "filename": "fs_mgr/fs_mgr_format.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-06T03:19:09Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 56,
+        "startChar": 60,
+        "endLine": 56,
+        "endChar": 69
+      },
+      "revId": "13066443e96bbb2758158c667f3763548c3713fd",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
