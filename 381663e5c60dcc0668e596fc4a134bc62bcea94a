@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b325386_8f564e78",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-08T03:48:08Z",
+      "side": 1,
+      "message": "yo dawg I herd you like case statements",
+      "range": {
+        "startLine": 279,
+        "startChar": 24,
+        "endLine": 287,
+        "endChar": 34
+      },
+      "revId": "381663e5c60dcc0668e596fc4a134bc62bcea94a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21e540de_cfbd10ce",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-08T03:48:08Z",
+      "side": 1,
+      "message": "this is redundant",
+      "range": {
+        "startLine": 316,
+        "startChar": 12,
+        "endLine": 317,
+        "endChar": 22
+      },
+      "revId": "381663e5c60dcc0668e596fc4a134bc62bcea94a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
