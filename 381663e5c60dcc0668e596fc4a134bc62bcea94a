@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "deee91a1_6cb154ae",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 15525
+      },
+      "writtenOn": "2018-02-08T05:19:00Z",
+      "side": 1,
+      "message": "This is just the old logics form line 260~267, 3 times indented",
+      "parentUuid": "5b325386_8f564e78",
+      "range": {
+        "startLine": 279,
+        "startChar": 24,
+        "endLine": 287,
+        "endChar": 34
+      },
+      "revId": "381663e5c60dcc0668e596fc4a134bc62bcea94a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21e540de_cfbd10ce",
         "filename": "healthd/BatteryMonitor.cpp",
         "patchSetId": 1
