@@ -659,11 +659,11 @@ static void load_persistent_properties() {
 // So we need to apply the same rule of build/make/tools/post_process_props.py
 // on runtime.
 static void update_sys_usb_config() {
-    bool is_debuggable = android::base::GetBoolProperty("ro.debuggable", false);
+    bool is_secure = android::base::GetBoolProperty("ro.adb.secure", true);
     std::string config = android::base::GetProperty("persist.sys.usb.config", "");
     if (config.empty()) {
-        property_set("persist.sys.usb.config", is_debuggable ? "adb" : "none");
-    } else if (is_debuggable && config.find("adb") == std::string::npos &&
+        property_set("persist.sys.usb.config", !is_secure ? "adb" : "none");
+    } else if (!is_secure && config.find("adb") == std::string::npos &&
                config.length() + 4 < PROP_VALUE_MAX) {
         config.append(",adb");
         property_set("persist.sys.usb.config", config);
