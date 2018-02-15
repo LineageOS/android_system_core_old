@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9f4a780_9f9e935f",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-15T00:19:34Z",
+      "side": 1,
+      "message": "Line length, also consider using constexpr instead.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 52
+      },
+      "revId": "e4d5a44e11bbe04bfd1e0c3e8862a5cddba5dbae",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2912ee16_4fa23ed9",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-15T00:19:34Z",
+      "side": 1,
+      "message": "Can you move the mod parsing into a separate function which is then called from this one, to make it obvious that this logic is for Mod devices?",
+      "range": {
+        "startLine": 353,
+        "startChar": 4,
+        "endLine": 412,
+        "endChar": 5
+      },
+      "revId": "e4d5a44e11bbe04bfd1e0c3e8862a5cddba5dbae",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "588c2057_e8c507a3",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-02-15T00:19:34Z",
+      "side": 1,
+      "message": "Isn\u0027t this an unconditional append?",
+      "range": {
+        "startLine": 444,
+        "startChar": 12,
+        "endLine": 455,
+        "endChar": 53
+      },
+      "revId": "e4d5a44e11bbe04bfd1e0c3e8862a5cddba5dbae",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
