@@ -236,7 +236,7 @@ static int wait_for_coldboot_done_action(const std::vector<std::string>& args) {
     // Now we're tracking boot time, just log the time taken to a system
     // property. We still panic if it takes more than a minute though,
     // because any build that slow isn't likely to boot at all, and we'd
-    // rather any test lab devices fail back to the bootloader.
+    // rather any test lab devices fail back to the recovery.
     if (wait_for_file(COLDBOOT_DONE, 60s) < 0) {
         LOG(ERROR) << "Timed out waiting for " COLDBOOT_DONE;
         panic();
@@ -975,7 +975,7 @@ static void InstallRebootSignalHandlers() {
             _exit(signal);
         }
 
-        // panic() reboots to bootloader
+        // panic() reboots to recovery
         panic();
     };
     action.sa_flags = SA_RESTART;
@@ -1000,7 +1000,7 @@ int main(int argc, char** argv) {
         return watchdogd_main(argc, argv);
     }
 
-    if (REBOOT_BOOTLOADER_ON_PANIC) {
+    if (REBOOT_RECOVERY_ON_PANIC) {
         InstallRebootSignalHandlers();
     }
 

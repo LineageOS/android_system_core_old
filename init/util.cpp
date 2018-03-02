@@ -371,9 +371,9 @@ bool expand_props(const std::string& src, std::string* dst) {
 }
 
 void panic() {
-    LOG(ERROR) << "panic: rebooting to bootloader";
+    LOG(ERROR) << "panic: rebooting to recovery";
     // Do not queue "shutdown" trigger since we want to shutdown immediately
-    DoReboot(ANDROID_RB_RESTART2, "reboot", "bootloader", false);
+    DoReboot(ANDROID_RB_RESTART2, "reboot", "recovery", false);
 }
 
 static std::string init_android_dt_dir() {
