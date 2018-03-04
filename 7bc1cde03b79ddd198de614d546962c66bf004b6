@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72d6fb7e_b6cd70ef",
+        "filename": "adb/commandline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-03-04T22:37:53Z",
+      "side": 1,
+      "message": "I\u0027m sure some of this the compiler is smart enough to do for you, but tv is basically constant here, you could hoist it out of the loop. It doesn\u0027t look like fds will change either?",
+      "range": {
+        "startLine": 885,
+        "startChar": 8,
+        "endLine": 885,
+        "endChar": 26
+      },
+      "revId": "7bc1cde03b79ddd198de614d546962c66bf004b6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
