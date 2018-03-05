@@ -22,6 +22,30 @@
       "revId": "7bc1cde03b79ddd198de614d546962c66bf004b6",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4a16e23_6557bcd4",
+        "filename": "adb/commandline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 5503
+      },
+      "writtenOn": "2018-03-05T19:37:28Z",
+      "side": 1,
+      "message": "No, both should be in the loop as the select call will modify them.",
+      "parentUuid": "72d6fb7e_b6cd70ef",
+      "range": {
+        "startLine": 885,
+        "startChar": 8,
+        "endLine": 885,
+        "endChar": 26
+      },
+      "revId": "7bc1cde03b79ddd198de614d546962c66bf004b6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
