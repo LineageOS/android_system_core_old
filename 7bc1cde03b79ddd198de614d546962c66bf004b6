@@ -46,6 +46,30 @@
       "revId": "7bc1cde03b79ddd198de614d546962c66bf004b6",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38b2580a_9d6be2ab",
+        "filename": "adb/commandline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-03-06T04:58:10Z",
+      "side": 1,
+      "message": "Huh, didn\u0027t realize that was the case for tv. I had to go look this up, turns out the expected state of tv after calling select is not defined by POSIX, TIL.",
+      "parentUuid": "e4a16e23_6557bcd4",
+      "range": {
+        "startLine": 885,
+        "startChar": 8,
+        "endLine": 885,
+        "endChar": 26
+      },
+      "revId": "7bc1cde03b79ddd198de614d546962c66bf004b6",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }
