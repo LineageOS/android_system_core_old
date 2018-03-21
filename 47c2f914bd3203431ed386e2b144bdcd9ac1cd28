@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ec0dc8a_d8d023bd",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 10258
+      },
+      "writtenOn": "2018-03-21T10:41:09Z",
+      "side": 0,
+      "message": "Allright, ro.adb.secure is 1 on userdebug builds, so this case always wins. Ignore my foolish typo, it doesn\u0027t really matter here.",
+      "range": {
+        "startLine": 664,
+        "startChar": 0,
+        "endLine": 665,
+        "endChar": 76
+      },
+      "revId": "47c2f914bd3203431ed386e2b144bdcd9ac1cd28",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
