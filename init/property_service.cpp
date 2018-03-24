@@ -681,7 +681,9 @@ void property_load_boot_defaults() {
     load_properties_from_file("/odm/default.prop", NULL);
     load_properties_from_file("/vendor/default.prop", NULL);
 
-    update_sys_usb_config();
+    if (android::base::GetProperty("ro.persistent_properties.ready", "") != "true") {
+        update_sys_usb_config();
+    }
 }
 
 static void load_override_properties() {
