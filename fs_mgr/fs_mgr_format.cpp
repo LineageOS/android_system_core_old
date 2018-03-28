@@ -113,7 +113,7 @@ static int format_f2fs(char *fs_blkdev, uint64_t dev_sz, bool crypt_footer)
         dev_sz -= CRYPT_FOOTER_OFFSET;
     }
 
-    std::string size_str = std::to_string(dev_sz / 4096);
+    std::string size_str = std::to_string(dev_sz / 512);
     const char* const args[] = {
         "/system/bin/make_f2fs", "-d1", "-f",
         "-O", "encrypt", "-O", "quota",
