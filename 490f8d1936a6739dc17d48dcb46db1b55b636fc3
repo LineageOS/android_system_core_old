@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f265bbd8_7369e1b9",
+        "filename": "init/property_service.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-03-29T03:06:25Z",
+      "side": 1,
+      "message": "GetBoolProperty?",
+      "range": {
+        "startLine": 684,
+        "startChar": 23,
+        "endLine": 684,
+        "endChar": 34
+      },
+      "revId": "490f8d1936a6739dc17d48dcb46db1b55b636fc3",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
