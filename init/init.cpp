@@ -581,7 +581,7 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
         }
     });
 
-    return status;
+    return SELINUX_PERMISSIVE;
 }
 
 static bool selinux_is_enforcing(void)
