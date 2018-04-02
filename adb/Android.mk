@@ -273,7 +273,7 @@ LOCAL_CFLAGS_darwin := \
     -Wno-sizeof-pointer-memaccess -Wno-unused-parameter \
 
 LOCAL_MODULE := adb
-LOCAL_MODULE_TAGS := debug
+LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_HOST_OS := darwin linux windows
 
 LOCAL_SANITIZE := $(adb_host_sanitize)
