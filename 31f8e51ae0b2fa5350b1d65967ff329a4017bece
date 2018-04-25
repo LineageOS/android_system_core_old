@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "059d62ab_64c085af",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-04-25T03:50:49Z",
+      "side": 1,
+      "message": "Maybe you want to break some of this out into functions to make it more readable? (And to move large chunks of device-specific code out of the generic codepath)",
+      "range": {
+        "startLine": 360,
+        "startChar": 4,
+        "endLine": 401,
+        "endChar": 5
+      },
+      "revId": "31f8e51ae0b2fa5350b1d65967ff329a4017bece",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
