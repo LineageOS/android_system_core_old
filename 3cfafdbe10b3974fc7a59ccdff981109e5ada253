@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c507d67_7a742bdb",
+        "filename": "libsystem/include/system/camera.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-03T04:06:53Z",
+      "side": 1,
+      "message": "whats up with the extra spaces?",
+      "range": {
+        "startLine": 228,
+        "startChar": 27,
+        "endLine": 228,
+        "endChar": 32
+      },
+      "revId": "3cfafdbe10b3974fc7a59ccdff981109e5ada253",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
