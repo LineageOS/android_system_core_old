@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a14ea6b_1f436eb5",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-05T20:03:42Z",
+      "side": 1,
+      "message": "You can declare i inline, and it\u0027s probably better to make this size_t so you don\u0027t need to do a weird cast of ARRAY_SIZE to int.",
+      "range": {
+        "startLine": 258,
+        "startChar": 9,
+        "endLine": 258,
+        "endChar": 10
+      },
+      "revId": "3831e3884d1db0a8c4d4dff7c5ea6eb467228d6f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a649e82a_be486264",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-05T20:03:42Z",
+      "side": 1,
+      "message": "ternary works equally well here, although I think you can just go ahead and write \"255\" and \"0\" directly without needing the buffer variable at all.\n\nAlso, snprintf here with sizeof(int) doesn\u0027t actually make sense.",
+      "range": {
+        "startLine": 265,
+        "startChar": 12,
+        "endLine": 268,
+        "endChar": 57
+      },
+      "revId": "3831e3884d1db0a8c4d4dff7c5ea6eb467228d6f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bdfbf3a_1f6f161d",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-05T20:03:42Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this just be added to the charger struct?",
+      "range": {
+        "startLine": 592,
+        "startChar": 15,
+        "endLine": 592,
+        "endChar": 22
+      },
+      "revId": "3831e3884d1db0a8c4d4dff7c5ea6eb467228d6f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
