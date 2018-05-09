@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f4fcc54_2edbc384",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-09T05:07:32Z",
+      "side": 1,
+      "message": "There\u0027s a bool type in C++",
+      "range": {
+        "startLine": 257,
+        "startChar": 28,
+        "endLine": 257,
+        "endChar": 31
+      },
+      "revId": "880b49c16e162c60e20273e361363ae76fb5a30e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9b8fa83_35da37eb",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-09T05:07:32Z",
+      "side": 1,
+      "message": "Why not just make old_color part of the struct and pass a reference to the struct?",
+      "range": {
+        "startLine": 286,
+        "startChar": 4,
+        "endLine": 286,
+        "endChar": 29
+      },
+      "revId": "880b49c16e162c60e20273e361363ae76fb5a30e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dad76df_bb611707",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-09T05:07:32Z",
+      "side": 1,
+      "message": "size_t i \u003d 0; i \u003c ARRAY_SIZE(soc_leds); i++",
+      "range": {
+        "startLine": 288,
+        "startChar": 9,
+        "endLine": 288,
+        "endChar": 50
+      },
+      "revId": "880b49c16e162c60e20273e361363ae76fb5a30e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b53fa06_9b2d66df",
+        "filename": "healthd/healthd_mode_charger.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-05-09T05:07:32Z",
+      "side": 1,
+      "message": "This is kind of a weird API, why not do an unconditional set to the color so you don\u0027t need to clear the old color? If you did that, you wouldn\u0027t need to keep some global state about your old color.",
+      "range": {
+        "startLine": 294,
+        "startChar": 8,
+        "endLine": 295,
+        "endChar": 35
+      },
+      "revId": "880b49c16e162c60e20273e361363ae76fb5a30e",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
