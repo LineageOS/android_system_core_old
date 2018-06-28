@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db1f61e2_cde6e128",
+        "filename": "libsuspend/autosuspend_wakeup_count.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-06-28T05:07:25Z",
+      "side": 1,
+      "message": "Could use property_get_int32 instead",
+      "range": {
+        "startLine": 180,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 20
+      },
+      "revId": "145186defcfcf5575489f730fafaeaf24a01065f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0647ba2d_3e113bad",
+        "filename": "libsuspend/autosuspend_wakeup_count.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-06-28T05:07:25Z",
+      "side": 1,
+      "message": "nit: opening brace goes on the line above",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 5
+      },
+      "revId": "145186defcfcf5575489f730fafaeaf24a01065f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d84461dd_67e3fdc6",
+        "filename": "libsuspend/autosuspend_wakeup_count.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 2936
+      },
+      "writtenOn": "2018-06-28T05:07:25Z",
+      "side": 1,
+      "message": "Consider a less noisy ALOG macro",
+      "range": {
+        "startLine": 183,
+        "startChar": 8,
+        "endLine": 183,
+        "endChar": 13
+      },
+      "revId": "145186defcfcf5575489f730fafaeaf24a01065f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
