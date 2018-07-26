@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c95a5eb_cb5eebbd",
+        "filename": "healthd/BatteryMonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 13648
+      },
+      "writtenOn": "2018-07-26T08:58:30Z",
+      "side": 1,
+      "message": "It seems that this variable is only used here, so you can simply initialise it here:\n\nfor (int i \u003d 0; i \u003c mChargerNames.size(); i++)",
+      "range": {
+        "startLine": 283,
+        "startChar": 9,
+        "endLine": 283,
+        "endChar": 10
+      },
+      "revId": "3aa066bb80b555be6c59a573a59978a51aecd13a",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
