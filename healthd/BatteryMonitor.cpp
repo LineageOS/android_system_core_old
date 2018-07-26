@@ -243,7 +243,7 @@ bool BatteryMonitor::update(void) {
     if (readFromFile(mHealthdConfig->batteryTechnologyPath, &buf) > 0)
         props.batteryTechnology = String8(buf.c_str());
 
-    unsigned int i;
+    unsigned int i = 0;
     double MaxPower = 0;
 
     // Rescan for the available charger types
