@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8592a390_b1acfc76",
+        "filename": "mkbootimg/mkbootimg",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 18205
+      },
+      "writtenOn": "2018-08-09T00:14:30Z",
+      "side": 1,
+      "message": "11I?",
+      "revId": "4c806e1cbcabce46168d7a4859cb4c15da9d8d38",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    }
+  ]
+}
