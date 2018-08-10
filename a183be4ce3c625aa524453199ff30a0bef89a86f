@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52160199_089de776",
+        "filename": "mkbootimg/mkbootimg",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2018-08-10T13:14:34Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "a183be4ce3c625aa524453199ff30a0bef89a86f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1886b0fb_7f3cc3b7",
+        "filename": "mkbootimg/mkbootimg",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2018-08-10T13:14:34Z",
+      "side": 1,
+      "message": "if it\u0027s working I doubt this is used at all",
+      "revId": "a183be4ce3c625aa524453199ff30a0bef89a86f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}
