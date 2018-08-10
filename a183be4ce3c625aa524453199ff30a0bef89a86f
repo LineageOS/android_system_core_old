@@ -33,6 +33,24 @@
       "revId": "a183be4ce3c625aa524453199ff30a0bef89a86f",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61734f3a_112ec1cc",
+        "filename": "mkbootimg/mkbootimg",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 18205
+      },
+      "writtenOn": "2018-08-10T13:15:59Z",
+      "side": 1,
+      "message": "My G2 really wants this to be one int earlier (where header_version is)",
+      "parentUuid": "1886b0fb_7f3cc3b7",
+      "revId": "a183be4ce3c625aa524453199ff30a0bef89a86f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
     }
   ]
 }
